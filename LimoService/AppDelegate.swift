@@ -34,14 +34,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ParseCrashReporting.enable()
         //
         // Uncomment and fill in with your Parse credentials:
-        Parse.setApplicationId("brSR3KXtm3YzfznbA5BfvA4YHrBXXtArMD5SJ4am", clientKey: "9wNp6dzYFQI3euW7NCUe8UFYKl4hSzg7mW2d7680")
+        Parse.setApplicationId(KeysAndSecrets.parseApplicationId, clientKey: KeysAndSecrets.parseClientKey)
         //
         // If you are using Facebook, uncomment and add your FacebookAppID to your bundle's plist as
         // described here: https://developers.facebook.com/docs/getting-started/facebook-sdk-for-ios/
         // Uncomment the line inside ParseStartProject-Bridging-Header and the following line here:
         PFFacebookUtils.initializeFacebook()
             
-        PFTwitterUtils.initializeWithConsumerKey("l6jnnDoULFWghbDp804MivnPK", consumerSecret:"ePAcoF554UOoIRJx11Dm04ZDxZrX5QeYBenupJA2jKlBmbQYVZ")
+        PFTwitterUtils.initializeWithConsumerKey(KeysAndSecrets.twitterConsumerKey, consumerSecret: KeysAndSecrets.twitterConsumerSecret)
             
         // ****************************************************************************
             
@@ -119,9 +119,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         PFPush.subscribeToChannelInBackground("", block: { (succeeded: Bool, error: NSError!) -> Void in
             if succeeded {
-                println("ParseStarterProject successfully subscribed to push notifications on the broadcast channel.");
+                println("LimoService App successfully subscribed to push notifications on the broadcast channel.");
             } else {
-                println("ParseStarterProject failed to subscribe to push notifications on the broadcast channel with error = %@.", error)
+                println("LimoService App failed to subscribe to push notifications on the broadcast channel with error = %@.", error)
             }
         })
     }

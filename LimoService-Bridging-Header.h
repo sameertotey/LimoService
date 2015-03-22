@@ -3,6 +3,7 @@
 //
 
 #import <ParseFacebookUtils/PFFacebookUtils.h>
-//#import <ParseCrashReporting/ParseCrashReporting.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import <Parse/PFObject+Subclass.h>

@@ -1,30 +1,35 @@
 //
-//  ViewController.swift
+//  LimoRequestViewController.swift
 //  LimoService
 //
-//  Created by Sameer Totey on 3/11/15.
+//  Created by Sameer Totey on 3/14/15.
 //  Copyright (c) 2015 Sameer Totey. All rights reserved.
 //
 
 import UIKit
 
-class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
+class LimoRequestViewController: UIViewController , PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
+    
+    var limoUser: LimoUser?
 
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var logoutButton: UIButton!
     
+    @IBOutlet weak var loginOrProfileBarButtonItem: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-//        signUpButton.enabled = false
-//        logoutButton.enabled = false
+        //        signUpButton.enabled = false
+        //        logoutButton.enabled = false
+        setupLoginOrProfileButton()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         println("View did appear")
@@ -40,6 +45,72 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
         } else {
             println("is NOT linked with anon")
             self.enableLogOutButton()
+        }
+    }
+    
+    func setupLoginOrProfileButton() {
+        if let currentUser = PFUser.currentUser() {
+            println("Found current user")
+            println("Current user is : \(currentUser)")
+            
+            loginOrProfileBarButtonItem.title = "Profile"
+            loginOrProfileBarButtonItem.enabled = false
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+            var query = LimoUser.query()
+            query.whereKey("user", equalTo: currentUser)
+            query.findObjectsInBackgroundWithBlock {
+                (objects: [AnyObject]!, error: NSError!) -> Void in
+                if error == nil {
+                    // The find succeeded.
+                    println("Successfully retrieved \(objects.count) limoUser.")
+                    // Assume the first object is the associated limoUser
+                    if let limoUser = objects.first as? LimoUser {
+                        self.limoUser = limoUser
+                    } else {
+                        self.limoUser = LimoUser()
+                        if let limoUser = self.limoUser {
+                            limoUser.user = currentUser
+                            limoUser.saveEventually()
+                        }
+                    }
+
+                    if let objects = objects as? [PFObject] {
+                        for object in objects {
+                            println(object.objectId)
+                        }
+                    }
+                } else {
+                    // Log details of the failure
+                    println("Error: \(error) \(error.userInfo!)")
+                }
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                self.loginOrProfileBarButtonItem.enabled = true
+            }
+        } else {
+            println("did not find current user")
+            loginOrProfileBarButtonItem.title = "Login"
+        }
+    }
+    
+    @IBAction func loginOrProfileTarget(sender: UIBarButtonItem) {
+        if sender.title == "Login" {
+            login()
+        } else {
+            performSegueWithIdentifier("Show Profile", sender: nil)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+            case "Show Profile":
+                if segue.destinationViewController is UserProfileTableViewController {
+                    let toVC = segue.destinationViewController as UserProfileTableViewController
+                    toVC.limoUser = limoUser
+                }
+            default:
+                break
+            }
         }
     }
     
@@ -65,32 +136,35 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
         if let currentUser = PFUser.currentUser() {
             println("Current user is \(currentUser)")
             testObject["username"] = currentUser.username
+            testObject["user"] = currentUser
+            testObject["abc"] = "123"
         } else
         {
             println("There is no user here")
         }
-        testObject.saveInBackground()
-
+        testObject.saveEventually()
+        
     }
     
     func login() {
         // Create the log in view controller
-        var logInViewController = PFLogInViewController()
+        var logInViewController = LimoUserLogInViewController()
         logInViewController.delegate = self // Set ourselves as the delegate
         
         // add the facebook field to the login controller
         logInViewController.fields = .Default |  .Facebook | .Twitter
         
         // Create the sign up view controller
-        var signUpViewController = PFSignUpViewController()
+        var signUpViewController = LimoUserSignUpViewController()
         signUpViewController.delegate = self // Set ourselves as the delegate
         
         // Assign our sign up controller to be displayed from the login controller
         logInViewController.signUpController = signUpViewController
         
+        logInViewController.emailAsUsername = true
         // Present the log in view controller
-        modalTransitionStyle = .FlipHorizontal
-        modalPresentationStyle = .FullScreen
+        logInViewController.modalTransitionStyle = .CoverVertical
+        logInViewController.modalPresentationStyle = .FullScreen
         presentViewController(logInViewController, animated: true) {
             println("Finished with the log in view controller")
         }
@@ -101,47 +175,44 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
     // MARK: - PFLoginViewControllerDelegate
     
     // Sent to the delegate to determine whether the log in request should be submitted to the server.
+
     func logInViewController(logInController: PFLogInViewController!, shouldBeginLogInWithUsername username: String!, password: String!) -> Bool {
         // Check if both fields are completed
-        if let username1 = username {
-            if let password1 = password {
-                if !username1.isEmpty && !password1.isEmpty {
+        if let username = username {
+            if let password = password {
+                if !username.isEmpty && !password.isEmpty {
                     return true // Begin login process
                 }
             }
         }
         // Create the AlertController
-        let actionSheetController: UIAlertController = UIAlertController(title: "Missing Information", message: "Make sure you fill out all of the information!", preferredStyle: .ActionSheet)
+        let alertController: UIAlertController = UIAlertController(title: "Missing Information", message: "Make sure you fill out both username and password information!", preferredStyle: .Alert)
         
         //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
             //Just dismiss the action sheet
         }
-        actionSheetController.addAction(cancelAction)
+        alertController.addAction(cancelAction)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            // ...
+        }
+        alertController.addAction(OKAction)
         //Create and add first option action
-//        let takePictureAction: UIAlertAction = UIAlertAction(title: "Take Picture", style: .Default) { action -> Void in
-            //Code for launching the camera goes here
-//        }
-//        actionSheetController.addAction(takePictureAction)
-//        //Create and add a second option action
-//        let choosePictureAction: UIAlertAction = UIAlertAction(title: "Choose From Camera Roll", style: .Default) { action -> Void in
-//            //Code for picking from camera roll goes here
-//        }
-//        actionSheetController.addAction(choosePictureAction)
-//        
-//        //We need to provide a popover sourceView when using it on iPad
-//        actionSheetController.popoverPresentationController?.sourceView = sender as UIView;
         
         //Present the AlertController
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        alertController.modalTransitionStyle = .CoverVertical
+        alertController.modalPresentationStyle = .FullScreen
+        logInController.presentViewController(alertController, animated: true, completion: nil)
         
         return false
     }
     
     // Sent to the delegate when a PFUser is logged in.
     func logInViewController(logInController: PFLogInViewController!, didLogInUser user: PFUser!) {
-        dismissViewControllerAnimated(true, completion: nil)
         println("Did login the user \(user)")
+        dismissViewControllerAnimated(true, completion: nil)
+        setupLoginOrProfileButton()
     }
     
     
@@ -154,6 +225,7 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
     // Sent to the delegate when the log in screen is dismissed.
     func logInViewControllerDidCancelLogIn(logInController: PFLogInViewController!) {
         println("Cancelled the login")
+        setupLoginOrProfileButton()
     }
     
     
@@ -178,16 +250,24 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
         // Display an alert if a field wasn't completed
         if !informationComplete {
             // Create the AlertController
-            let actionSheetController: UIAlertController = UIAlertController(title: "Missing Information", message: "Make sure you fill out all of the information!", preferredStyle: .ActionSheet)
+            let alertController: UIAlertController = UIAlertController(title: "Missing Information", message: "Make sure you fill out all required fields!", preferredStyle: .Alert)
             
             //Create and add the Cancel action
-            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
                 //Just dismiss the action sheet
             }
-            actionSheetController.addAction(cancelAction)
+            alertController.addAction(cancelAction)
+            
+            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                // ...
+            }
+            alertController.addAction(OKAction)
+            //Create and add first option action
+            
             //Present the AlertController
-            self.presentViewController(actionSheetController, animated: true, completion: nil)
-
+            alertController.modalTransitionStyle = .CoverVertical
+            alertController.modalPresentationStyle = .FullScreen
+            signUpController.presentViewController(alertController, animated: true, completion: nil)
         }
         
         return informationComplete
@@ -198,6 +278,7 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
     func signUpViewController(signUpController: PFSignUpViewController!, didSignUpUser user: PFUser!) {
         println("Did sign up user")
         dismissViewControllerAnimated(true, completion: nil)
+        setupLoginOrProfileButton()
     }
     
     // Sent to the delegate when the sign up attempt fails.
@@ -209,7 +290,8 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
     // Sent to the delegate when the sign up screen is dismissed.
     func signUpViewControllerDidCancelSignUp(signUpController: PFSignUpViewController!) {
         println("User dismissed the signUpViewController")
+        setupLoginOrProfileButton()
     }
-
+    
 }
 

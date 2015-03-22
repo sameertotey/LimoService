@@ -1,0 +1,13 @@
+LimoService/KeysAndSecrets.swift
+LimoService/Info.plist
+LimoService.xcodeproj/xcuserdata
+
+.DS_Store
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+
