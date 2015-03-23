@@ -48,10 +48,11 @@ class LocationMapViewController: UIViewController {
         println("Navigation title = \(ABCreateStringWithAddressDictionary(placemark.addressDictionary, false))")
         
         // set zoom to fit placemark
-        var circularRegion = CLCircularRegion()
-        circularRegion = placemark.region as CLCircularRegion  // can we downcast it safely?
+//        var circularRegion = CLCircularRegion()
+        let circularRegion = placemark.region as CLCircularRegion  // can we downcast it safely?
         
-        let distance = circularRegion.radius * 2.0
+        let distance = circularRegion.radius * 10.0
+        println("distance is \(distance)")
         
         let mapRegion = MKCoordinateRegionMakeWithDistance(placemark.location.coordinate, distance, distance)
         mapView.setRegion(mapRegion, animated: false)

@@ -99,18 +99,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aWC-9E-S2Q">
-                                                    <rect key="frame" x="28" y="10" width="448" height="30"/>
+                                                    <rect key="frame" x="28" y="10" width="458" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="0aT-SJ-FBw" id="rqZ-N4-Hdj"/>
                                                     </connections>
                                                 </textField>
-                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ag-Yx-S7x">
-                                                    <rect key="frame" x="486" y="10" width="96" height="32"/>
-                                                    <state key="normal" title="LookUp" image="magnifier">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
+                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ag-Yx-S7x">
+                                                    <rect key="frame" x="496" y="10" width="86" height="32"/>
+                                                    <state key="normal" title="LookUp" image="magnifier"/>
                                                     <connections>
                                                         <action selector="preferredDestinationGeoCodeButtonTouchUpInside:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="Jqk-WA-ABF"/>
                                                     </connections>
@@ -339,7 +337,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ELV-bV-BfR">
-                                                    <rect key="frame" x="28" y="10" width="478" height="30"/>
+                                                    <rect key="frame" x="28" y="10" width="446" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
@@ -347,10 +345,8 @@
                                                     </connections>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Cp-Lf-TAQ">
-                                                    <rect key="frame" x="516" y="10" width="66" height="30"/>
-                                                    <state key="normal" title="GeoCode">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
+                                                    <rect key="frame" x="484" y="10" width="98" height="32"/>
+                                                    <state key="normal" title="GeoCode" image="earth"/>
                                                     <connections>
                                                         <action selector="homeLocationGeoCodeButtonTouchUpInside:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="OQl-sd-QTK"/>
                                                     </connections>
@@ -385,7 +381,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="na9-s8-fsE">
-                                                    <rect key="frame" x="28" y="10" width="478" height="30"/>
+                                                    <rect key="frame" x="28" y="10" width="446" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
@@ -393,10 +389,8 @@
                                                     </connections>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUd-ge-u65">
-                                                    <rect key="frame" x="516" y="10" width="66" height="30"/>
-                                                    <state key="normal" title="GeoCode">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
+                                                    <rect key="frame" x="484" y="10" width="98" height="32"/>
+                                                    <state key="normal" title="GeoCode" image="earth"/>
                                                     <connections>
                                                         <action selector="preferredDestinationGeoCodeButtonTouchUpInside:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="Sdi-Z7-OdT"/>
                                                     </connections>
@@ -518,6 +512,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="earth" width="32" height="32"/>
         <image name="magnifier" width="32" height="32"/>
     </resources>
 </document>

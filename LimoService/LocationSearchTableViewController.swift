@@ -59,25 +59,27 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         // hierarchy until it finds the root view controller or one that defines a presentation context.
         definesPresentationContext = true
         
-        searchController.searchBar.text = searchText
+//        searchController.searchBar.text = searchText
         
      }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        geoCoder?.geocodeAddressString(searchText) { placemarks, error in
-            if error == nil {
-                self.searchResults = placemarks as [CLPlacemark]
-                self.tableView.reloadData()
-            } else {
-                println("Error in geocoding: \(error) for string: \(self.searchText)")
-                
-            }
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-        }
-        searchController.searchBar.becomeFirstResponder()
+//        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+//        geoCoder?.geocodeAddressString(searchText) { placemarks, error in
+//            if error == nil {
+//                self.searchResults = placemarks as [CLPlacemark]
+//                self.tableView.reloadData()
+//            } else {
+//                println("Error in geocoding: \(error) for string: \(self.searchText)")
+//                
+//            }
+//            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+//        }
+        searchController.searchBar.text = searchText
+        searchController.active = true
+//        searchController.searchBar.becomeFirstResponder()
     }
     
     // MARK: UISearchBarDelegate
@@ -89,23 +91,23 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
     // MARK: UISearchControllerDelegate
     
     func presentSearchController(searchController: UISearchController) {
-//        NSLog(__FUNCTION__)
+        NSLog(__FUNCTION__)
     }
     
     func willPresentSearchController(searchController: UISearchController) {
-//        NSLog(__FUNCTION__)
+        NSLog(__FUNCTION__)
     }
     
     func didPresentSearchController(searchController: UISearchController) {
-//        NSLog(__FUNCTION__)
+        NSLog(__FUNCTION__)
     }
     
     func willDismissSearchController(searchController: UISearchController) {
-//        NSLog(__FUNCTION__)
+        NSLog(__FUNCTION__)
     }
     
     func didDismissSearchController(searchController: UISearchController) {
-//        NSLog(__FUNCTION__)
+        NSLog(__FUNCTION__)
     }
     
     
@@ -114,8 +116,9 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         geoCoder?.geocodeAddressString(searchString) { placemarks, error in
             if error == nil {
-//                self.searchResults = placemarks as [CLPlacemark]
+                self.searchResults = placemarks as [CLPlacemark]
                 // Hand over the filtered results to our search results table.
+                println("received \(placemarks.count) results")
                 let resultsController = self.searchController.searchResultsController as LocationResultsTableViewController
                 resultsController.possibleMatches = placemarks as [CLPlacemark]
                 resultsController.searchText = self.searchText
@@ -176,14 +179,12 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
     
     // MARK: - Helpers
     
-    
     func addressStringAtIndexPath(indexPath: NSIndexPath) -> NSString {
         let placemark = searchResults[indexPath.row]
         return ABCreateStringWithAddressDictionary(placemark.addressDictionary, false) as NSString
     }
     
     func attributedAddressStringAtIndexPath(indexPath: NSIndexPath) -> NSAttributedString {
-        
         let string = addressStringAtIndexPath(indexPath)
         // get standard body font and bold variant
         let bodyFont = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
@@ -240,8 +241,6 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         return ceil(neededSize.height) + 20
     }
     
-    
-    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         var selectedPlacemark: CLPlacemark
         
@@ -261,6 +260,5 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         
         navigationController!.pushViewController(mapViewController, animated: true)
     }
-    
   
 }
