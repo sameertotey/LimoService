@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LimoRequestViewController: UIViewController , PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
+class LimoRequestViewController: UITableViewController , PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
     
     var limoUser: LimoUser?
 
@@ -20,9 +20,8 @@ class LimoRequestViewController: UIViewController , PFLogInViewControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        //        signUpButton.enabled = false
-        //        logoutButton.enabled = false
         setupLoginOrProfileButton()
+        configureDatePicker()
     }
     
     override func didReceiveMemoryWarning() {
@@ -72,7 +71,7 @@ class LimoRequestViewController: UIViewController , PFLogInViewControllerDelegat
                         if let limoUser = self.limoUser {
                             println("Created a new LimoUser = \(self.limoUser)")
                             limoUser.user = currentUser
-                            currentUser.saveEventually()    // only needed to ensure the user is updated is needed
+                            currentUser.saveInBackground()    // only needed to ensure the user is updated is needed
                             limoUser.saveEventually()
                         } else {
                             println("LimoUser creation failed")
@@ -300,5 +299,48 @@ class LimoRequestViewController: UIViewController , PFLogInViewControllerDelegat
         setupLoginOrProfileButton()
     }
     
+    
+    @IBOutlet weak var limoRequestDatePicker: UIDatePicker!
+    @IBOutlet weak var limoRequestDateLabel: UILabel!
+    
+    // MARK: Configuration
+    
+    func configureDatePicker() {
+        limoRequestDatePicker.datePickerMode = .DateAndTime
+        
+        // Set min/max date for the date picker.
+        // As an example we will limit the date between now and 7 days from now.
+        let now = NSDate()
+        limoRequestDatePicker.minimumDate = now
+        
+        let currentCalendar = NSCalendar.currentCalendar()
+        
+        let dateComponents = NSDateComponents()
+        dateComponents.day = 7
+        
+        let sevenDaysFromNow = currentCalendar.dateByAddingComponents(dateComponents, toDate: now, options: nil)
+        limoRequestDatePicker.maximumDate = sevenDaysFromNow
+        
+        limoRequestDatePicker.minuteInterval = 2
+        
+        limoRequestDatePicker.addTarget(self, action: "updateDatePickerLabel", forControlEvents: .ValueChanged)
+        
+        updateDatePickerLabel()
+    }
+
+    /// A date formatter to format the `date` property of `datePicker`.
+    lazy var dateFormatter: NSDateFormatter = {
+        let dateFormatter = NSDateFormatter()
+        
+        dateFormatter.dateStyle = .MediumStyle
+        dateFormatter.timeStyle = .ShortStyle
+        
+        return dateFormatter
+        }()
+    
+    func updateDatePickerLabel() {
+        limoRequestDateLabel.text = dateFormatter.stringFromDate(limoRequestDatePicker.date)
+    }
+
 }
 

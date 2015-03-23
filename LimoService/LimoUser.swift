@@ -27,6 +27,7 @@ class LimoUser : PFObject, PFSubclassing {
     @NSManaged var user: PFUser?
     
     @NSManaged var homeLocation: LimoUserLocation?
+    @NSManaged var preferredDestination: LimoUserLocation?
 
     var billingAddressStreet: String?
     var billingAddressStreetPrefix: String?
@@ -40,5 +41,4 @@ class LimoUser : PFObject, PFSubclassing {
     var creditCardNumber: String?
     var creditCardExp: String?
     
-    var preferredDestination: String?
 }

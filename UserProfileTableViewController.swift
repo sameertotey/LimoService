@@ -29,32 +29,55 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         phoneNumberTextField.text = limoUser.phoneNumer
         emailTextFeild.text = limoUser.user?.email
         if let location = limoUser.homeLocation {
-            println("Location is \(location)")
             location.fetchIfNeededInBackgroundWithBlock{ (fetchedLocation, error) in
                 if error == nil {
-                    println("Found the location \(fetchedLocation)")
                     if let locName = fetchedLocation["name"] as? String {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.homeLocationTextField.text = locName
                         }
                     } else {
-                        println("Empty name")
+                        println("Empty name for homeLocation")
                     }
                     if let locAddress = fetchedLocation["address"] as? String {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.homeLocationTextView.text = locAddress
                         }
                     } else {
+                        println("Empty address for homeLocation")
+                    }
+                    
+                } else {
+                    println("Got error for home location = \(error) ")
+                }
+            }
+        }
+        if let location = limoUser.preferredDestination {
+            println("Location is \(location)")
+            location.fetchIfNeededInBackgroundWithBlock{ (fetchedLocation, error) in
+                if error == nil {
+                    println("Found the location \(fetchedLocation)")
+                    if let locName = fetchedLocation["name"] as? String {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.preferredDestinationTextField.text = locName
+                        }
+                    } else {
+                        println("Empty name")
+                    }
+                    if let locAddress = fetchedLocation["address"] as? String {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.preferredDestinationTextView.text = locAddress
+                        }
+                    } else {
                         println("Empty address")
                     }
-
+                    
                 } else {
                     println("Got error \(error)")
                 }
             }
-
         }
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -151,6 +174,9 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     @IBOutlet weak var homeLocationTextField: UITextField!
     @IBOutlet weak var homeLocationTextView: UITextView!
     
+    @IBOutlet weak var preferredDestinationTextField: UITextField!
+    @IBOutlet weak var preferredDestinationTextView: UITextView!
+    
     // MARK: UITextFieldDelegate
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -174,6 +200,8 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             limoUser.user?.saveEventually()
         case homeLocationTextField:
             setHomeLocation(textField.text)
+        case preferredDestinationTextField:
+            setpreferredDestination(textField.text)
             
             //        case maximumBetAmountTextField:
             //            if let number = NSNumberFormatter().numberFromString(textField.text) {
@@ -211,6 +239,26 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         
     }
     
+    func setpreferredDestination(text: String!) {
+        println("The prefered destination location is : \(limoUser.preferredDestination) :text - \(text)")
+        
+        if let preferredDestinationLocation = limoUser.preferredDestination {
+            preferredDestinationLocation.fetchIfNeededInBackgroundWithBlock({ (location, error)in
+                if error == nil {
+                    println("Found the location: \(location)")
+                    location["name"] = text
+                    location.saveEventually()
+                } else {
+                    println("Got error \(error)")
+                }
+            })
+        } else {
+            limoUser.preferredDestination = LimoUserLocation()
+            limoUser.preferredDestination?.name = text
+        }
+        
+    }
+
     func textFieldDidEndEditing(textField: UITextField) {
         saveTextFieldToLimoUser(textField)
     }
@@ -223,6 +271,17 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         } else {
             println("There is no location to save")
         }
+    }
+    
+    @IBAction func preferredDestinationGeoCodeButtonTouchUpInside(sender: UIButton) {
+        if let locationToSave = limoUser.preferredDestination {
+            self.locationToSave = locationToSave
+            println("The locationToSave = \(locationToSave)")
+            performSegueWithIdentifier("ShowGeoCoding", sender: locationToSave["name"] as? String)
+        } else {
+            println("There is no location to save")
+        }
+
     }
     
     var locationToSave: LimoUserLocation!
@@ -266,5 +325,6 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                 locationToSave.saveEventually()
             }
         }
+        displayCurrentValues()
     }
 }
