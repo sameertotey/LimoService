@@ -141,26 +141,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
         
-        /////////////////////////////////////////////////////////
-        // Uncomment this method if you want to use Push Notifications with Background App Refresh
-        /////////////////////////////////////////////////////////
-        func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-            if application.applicationState == UIApplicationState.Inactive {
-                PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-            }
+    /////////////////////////////////////////////////////////
+    // Uncomment this method if you want to use Push Notifications with Background App Refresh
+    /////////////////////////////////////////////////////////
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        if application.applicationState == UIApplicationState.Inactive {
+            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }
-        
-        //--------------------------------------
-        // MARK: Facebook SDK Integration
-        //--------------------------------------
-        
-        /////////////////////////////////////////////////////////
-        // Uncomment this method if you are using Facebook
-        /////////////////////////////////////////////////////////
-        func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
-            return FBAppCall.handleOpenURL(url, sourceApplication: sourceApplication, withSession: PFFacebookUtils.session())
-        }
-
+    }
+    
+    //--------------------------------------
+    // MARK: Facebook SDK Integration
+    //--------------------------------------
+    
+    /////////////////////////////////////////////////////////
+    // Uncomment this method if you are using Facebook
+    /////////////////////////////////////////////////////////
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        return FBAppCall.handleOpenURL(url, sourceApplication: sourceApplication, withSession: PFFacebookUtils.session())
+    }
+    
     
 }
 

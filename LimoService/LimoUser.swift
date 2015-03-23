@@ -40,5 +40,5 @@ class LimoUser : PFObject, PFSubclassing {
     var creditCardNumber: String?
     var creditCardExp: String?
     
-    var prefferredDestination: String?
+    var preferredDestination: String?
 }

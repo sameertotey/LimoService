@@ -62,22 +62,29 @@ class LimoRequestViewController: UIViewController , PFLogInViewControllerDelegat
                 (objects: [AnyObject]!, error: NSError!) -> Void in
                 if error == nil {
                     // The find succeeded.
-                    println("Successfully retrieved \(objects.count) limoUser.")
+                    println("Successfully retrieved = \(objects.count) limoUser. This should be 1 or 0")
                     // Assume the first object is the associated limoUser
                     if let limoUser = objects.first as? LimoUser {
                         self.limoUser = limoUser
                     } else {
+                        println("Going to create a new LimoUser because we have 0")
                         self.limoUser = LimoUser()
                         if let limoUser = self.limoUser {
+                            println("Created a new LimoUser = \(self.limoUser)")
                             limoUser.user = currentUser
+                            currentUser.saveEventually()    // only needed to ensure the user is updated is needed
                             limoUser.saveEventually()
+                        } else {
+                            println("LimoUser creation failed")
                         }
                     }
 
                     if let objects = objects as? [PFObject] {
+                        println("Print all the LimoUser objects for the current user ---")
                         for object in objects {
                             println(object.objectId)
                         }
+                        println("End LimoUser objects")
                     }
                 } else {
                     // Log details of the failure

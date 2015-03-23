@@ -27,6 +27,7 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
     
     // text in the search bar
     var searchText = ""
+    let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
 
     
     // MARK: View Life Cycle
@@ -59,6 +60,7 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         definesPresentationContext = true
         
         searchController.searchBar.text = searchText
+        
      }
     
     override func viewDidAppear(animated: Bool) {
@@ -75,7 +77,7 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
             }
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         }
-
+        searchController.searchBar.becomeFirstResponder()
     }
     
     // MARK: UISearchBarDelegate

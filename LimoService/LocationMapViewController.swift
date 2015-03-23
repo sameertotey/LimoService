@@ -22,10 +22,13 @@ class LocationMapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     var placemark: CLPlacemark!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        let saveBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveLocation")
+        self.navigationItem.rightBarButtonItem = saveBarButtonItem
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,6 +45,8 @@ class LocationMapViewController: UIViewController {
         // set title from first address line
         self.navigationItem.title = ABCreateStringWithAddressDictionary(placemark.addressDictionary, false)
         
+        println("Navigation title = \(ABCreateStringWithAddressDictionary(placemark.addressDictionary, false))")
+        
         // set zoom to fit placemark
         var circularRegion = CLCircularRegion()
         circularRegion = placemark.region as CLCircularRegion  // can we downcast it safely?
@@ -57,6 +62,12 @@ class LocationMapViewController: UIViewController {
         mapView.addAnnotation(mkPlacemark)
 
     }
+    
+    func saveLocation() {
+        println("save location selected")
+        performSegueWithIdentifier("unwindToUserProfile", sender: self)
+    }
+    
     
     // MARK: Factory Methods
     

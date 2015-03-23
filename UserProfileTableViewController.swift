@@ -40,6 +40,14 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                     } else {
                         println("Empty name")
                     }
+                    if let locAddress = fetchedLocation["address"] as? String {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.homeLocationTextView.text = locAddress
+                        }
+                    } else {
+                        println("Empty address")
+                    }
+
                 } else {
                     println("Got error \(error)")
                 }
@@ -141,13 +149,14 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     @IBOutlet weak var emailTextFeild: UITextField!
     
     @IBOutlet weak var homeLocationTextField: UITextField!
+    @IBOutlet weak var homeLocationTextView: UITextView!
     
     // MARK: UITextFieldDelegate
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-//        saveTextFieldToLimoUser(textField)
-        return true
+        saveTextFieldToLimoUser(textField)
+        return false
     }
 
     func saveTextFieldToLimoUser(textField: UITextField) {
@@ -207,9 +216,16 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     }
     
     @IBAction func homeLocationGeoCodeButtonTouchUpInside(sender: UIButton) {
-        performSegueWithIdentifier("ShowGeoCoding", sender: homeLocationTextField.text)
+        if let locationToSave = limoUser.homeLocation {
+            self.locationToSave = locationToSave
+            println("The locationToSave = \(locationToSave)")
+            performSegueWithIdentifier("ShowGeoCoding", sender: locationToSave["name"] as? String)
+        } else {
+            println("There is no location to save")
+        }
     }
     
+    var locationToSave: LimoUserLocation!
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let identifier = segue.identifier {
@@ -217,7 +233,13 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             case "ShowGeoCoding":
                 if segue.destinationViewController is LocationSearchTableViewController {
                     let toVC = segue.destinationViewController as LocationSearchTableViewController
-                    toVC.searchText = sender as String
+                    if sender != nil {
+                        let text = sender as? String
+                        println("Sender String = \(text)")
+                        if text != nil {
+                            toVC.searchText = text!
+                        }
+                    }
                 }
             default:
                 break
@@ -225,5 +247,24 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         }
     }
 
-    
+    // unwind from a location selection
+    @IBAction func unwindToUserProfile(sender: UIStoryboardSegue)
+    {
+        let sourceViewController: AnyObject = sender.sourceViewController
+        // Pull any data from the view controller which initiated the unwind segue.
+        println("The locationToSave = \(locationToSave)")
+
+        if sourceViewController is LocationMapViewController {
+            let svc: LocationMapViewController = sourceViewController as LocationMapViewController
+            if locationToSave != nil && svc.placemark.location != nil {
+                println("we got save location: \(svc.placemark.location)")
+                let geoPoint = PFGeoPoint(location: svc.placemark.location)
+                locationToSave["location"] = geoPoint
+                locationToSave["address"] = svc.navigationItem.title
+                println("The address reported is \(svc.navigationItem.title)")
+                homeLocationTextView.text = svc.navigationItem.title
+                locationToSave.saveEventually()
+            }
+        }
+    }
 }
