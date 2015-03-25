@@ -209,7 +209,7 @@
                         <segue destination="0aT-SJ-FBw" kind="show" identifier="Show Profile" id="Eji-Pe-pcy"/>
                         <segue destination="84V-ln-ARg" kind="show" identifier="Location Lookup" id="8kx-XM-svs"/>
                         <segue destination="zvJ-jv-o4X" kind="show" identifier="Find Address" id="Z7c-6G-sgU"/>
-                        <segue destination="RGQ-c4-8EU" kind="show" identifier="Search Location" id="AXy-LU-J2J"/>
+                        <segue destination="g53-wN-AG4" kind="show" identifier="Search Location" id="NQT-2h-ZpT"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1W-mS-AvB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -394,7 +394,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="84V-ln-ARg" id="Kew-wb-xKg"/>
+                                                        <outlet property="delegate" destination="0aT-SJ-FBw" id="wpG-sD-lsQ"/>
                                                     </connections>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Cp-Lf-TAQ">
@@ -617,22 +617,36 @@
             <point key="canvasLocation" x="2703" y="1030"/>
         </scene>
         <!--Local Search Table View Controller-->
-        <scene sceneID="3bt-Ni-ffm">
+        <scene sceneID="sWi-0S-cMe">
             <objects>
-                <tableViewController id="RGQ-c4-8EU" customClass="LocalSearchTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Ryy-hS-NLH">
+                <viewController id="g53-wN-AG4" customClass="LocalSearchTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="IYB-qm-lAq"/>
+                        <viewControllerLayoutGuide type="bottom" id="ihp-YO-50R"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="NXn-a8-3HZ">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="aEZ-xN-C7K">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </mapView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="RGQ-c4-8EU" id="i55-5H-JlX"/>
-                            <outlet property="delegate" destination="RGQ-c4-8EU" id="sdL-XE-oE3"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BzT-RI-fno" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <constraints>
+                            <constraint firstItem="aEZ-xN-C7K" firstAttribute="leading" secondItem="NXn-a8-3HZ" secondAttribute="leadingMargin" constant="-16" id="C8E-Gn-3bR"/>
+                            <constraint firstItem="ihp-YO-50R" firstAttribute="top" secondItem="aEZ-xN-C7K" secondAttribute="bottom" id="ElB-GP-kMr"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aEZ-xN-C7K" secondAttribute="trailing" constant="-16" id="otc-TG-krs"/>
+                            <constraint firstItem="aEZ-xN-C7K" firstAttribute="top" secondItem="NXn-a8-3HZ" secondAttribute="topMargin" id="qug-1m-qwQ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="aEZ-xN-C7K" id="3TJ-nh-5mE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nQh-ql-JLw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2717" y="1759"/>
+            <point key="canvasLocation" x="1969" y="1470"/>
         </scene>
         <!--Location Map View Controller-->
         <scene sceneID="Z2h-6M-YyP">

@@ -52,7 +52,7 @@ class LocationResultsTableViewController: UITableViewController {
         return ceil(neededSize.height) + 20
     }
     
-        
+    
     // MARK: - Helpers
     
     

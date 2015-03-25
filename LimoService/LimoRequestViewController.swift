@@ -311,6 +311,7 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         return informationComplete
     }
     
+
     
     // Sent to the delegate when a PFUser is signed up.
     func signUpViewController(signUpController: PFSignUpViewController!, didSignUpUser user: PFUser!) {
@@ -418,7 +419,6 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         lookUpSelectionController!.addAction(actionAddressLookUp)
         lookUpSelectionController!.addAction(actionLocalSearch)
         lookUpSelectionController!.addAction(actionDelete)
-
     }
 
     
