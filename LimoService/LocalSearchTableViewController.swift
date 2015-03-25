@@ -82,7 +82,9 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
                         println("Item location = \(item.placemark.location)")
                         placemarks.append(item.placemark)
                     }
-                    
+                    self.mapView.removeAnnotations(self.mapView.annotations)
+                    self.mapView.addAnnotations(placemarks)
+                    self.mapView.showAnnotations(self.mapView.annotations, animated: false)
                     self.searchResults = response.mapItems as [MKMapItem]
                     // Hand over the filtered results to our search results table.
                     println("received \(placemarks.count) results")
