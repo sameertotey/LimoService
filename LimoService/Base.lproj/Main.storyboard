@@ -207,8 +207,8 @@
                         <outlet property="toLocationTextField" destination="eho-rg-wBe" id="7TE-Wx-JLx"/>
                         <outlet property="toLocationTextView" destination="hlV-DN-c4o" id="QKf-kq-T74"/>
                         <segue destination="0aT-SJ-FBw" kind="show" identifier="Show Profile" id="Eji-Pe-pcy"/>
-                        <segue destination="zvJ-jv-o4X" kind="show" identifier="Find Address" id="Z7c-6G-sgU"/>
                         <segue destination="g53-wN-AG4" kind="show" identifier="Search Location" id="NQT-2h-ZpT"/>
+                        <segue destination="yqg-Kv-s4w" kind="show" identifier="Find Address" id="qEb-9c-d4S"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1W-mS-AvB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -485,30 +485,12 @@
                         <outlet property="phoneNumberTextField" destination="3Nv-hL-okf" id="xp2-Am-nIv"/>
                         <outlet property="preferredDestinationTextField" destination="na9-s8-fsE" id="bZ6-3S-0Kb"/>
                         <outlet property="preferredDestinationTextView" destination="JlF-vz-Vzq" id="jH4-KY-nms"/>
-                        <segue destination="zvJ-jv-o4X" kind="show" identifier="ShowGeoCoding" id="7YN-NK-xzf"/>
+                        <segue destination="yqg-Kv-s4w" kind="show" identifier="ShowGeoCoding" id="0NA-1d-nRj"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qEv-pg-GXA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2717" y="290"/>
-        </scene>
-        <!--Location Search Table View Controller-->
-        <scene sceneID="cgf-xl-y97">
-            <objects>
-                <tableViewController id="zvJ-jv-o4X" customClass="LocationSearchTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="IMb-Fo-Ahl">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="zvJ-jv-o4X" id="dF6-MR-IIP"/>
-                            <outlet property="delegate" destination="zvJ-jv-o4X" id="F4m-gh-up9"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="d9p-Ts-2Mt" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3449" y="284"/>
         </scene>
         <!--Local Search Table View Controller-->
         <scene sceneID="sWi-0S-cMe">
@@ -541,6 +523,38 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nQh-ql-JLw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2686" y="1040"/>
+        </scene>
+        <!--Location Search Table View Controller-->
+        <scene sceneID="pMo-D6-o0a">
+            <objects>
+                <viewController id="yqg-Kv-s4w" customClass="LocationSearchTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NzW-EN-Xbx"/>
+                        <viewControllerLayoutGuide type="bottom" id="LWZ-IG-Ly3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fEx-c5-AOf">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="1yv-cY-rz3">
+                                <rect key="frame" x="16" y="0.0" width="568" height="600"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottomMargin" secondItem="1yv-cY-rz3" secondAttribute="bottom" id="8tu-gd-rdv"/>
+                            <constraint firstItem="1yv-cY-rz3" firstAttribute="top" secondItem="fEx-c5-AOf" secondAttribute="topMargin" id="PwO-qq-s05"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="1yv-cY-rz3" secondAttribute="trailing" id="dd3-4H-ucS"/>
+                            <constraint firstItem="1yv-cY-rz3" firstAttribute="leading" secondItem="fEx-c5-AOf" secondAttribute="leadingMargin" id="nkK-Zh-HLh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="1yv-cY-rz3" id="cE8-c7-8ng"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SBp-zR-vxg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3449" y="290"/>
         </scene>
         <!--Location Map View Controller-->
         <scene sceneID="Z2h-6M-YyP">
@@ -600,6 +614,6 @@
         <image name="magnifier" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Z7c-6G-sgU"/>
+        <segue reference="qEb-9c-d4S"/>
     </inferredMetricsTieBreakers>
 </document>

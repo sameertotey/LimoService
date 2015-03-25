@@ -9,10 +9,13 @@
 import UIKit
 import AddressBook
 import AddressBookUI
+import MapKit
 
-class LocationSearchTableViewController: UITableViewController, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating  {
+class LocationSearchTableViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDelegate  {
 
     // MARK: Properties
+    
+    @IBOutlet weak var mapView: MKMapView!
     var geoCoder: CLGeocoder?
     var searchResults = [CLPlacemark]()
     
@@ -38,20 +41,17 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         
         resultsTableController = LocationResultsTableViewController()
         
-        // register the cell for both table views
-        tableView.registerClass(LocationTableViewCell.self, forCellReuseIdentifier: "locationCell")
-        
-        
         // We want to be the delegate for our filtered table so didSelectRowAtIndexPath(_:) is called for both tables.
         resultsTableController.tableView.delegate = self
         
         searchController = UISearchController(searchResultsController: resultsTableController)
         searchController.searchResultsUpdater = self
         searchController.searchBar.sizeToFit()
-        tableView.tableHeaderView = searchController.searchBar
+        navigationItem.titleView = searchController.searchBar
         
         searchController.delegate = self
-        searchController.dimsBackgroundDuringPresentation = false // default is YES
+        searchController.dimsBackgroundDuringPresentation = false // default is true
+        searchController.hidesNavigationBarDuringPresentation = false // default is True
         searchController.searchBar.delegate = self    // so we can monitor text changes + others
         
         // Search is now just presenting a view controller. As such, normal view controller
@@ -65,18 +65,7 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-//        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-//        geoCoder?.geocodeAddressString(searchText) { placemarks, error in
-//            if error == nil {
-//                self.searchResults = placemarks as [CLPlacemark]
-//                self.tableView.reloadData()
-//            } else {
-//                println("Error in geocoding: \(error) for string: \(self.searchText)")
-//                
-//            }
-//            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-//        }
+
         searchController.searchBar.text = searchText
         searchController.active = true
 //        searchController.searchBar.becomeFirstResponder()
@@ -119,6 +108,16 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
                 self.searchResults = placemarks as [CLPlacemark]
                 // Hand over the filtered results to our search results table.
                 println("received \(placemarks.count) results")
+                println(placemarks as [CLPlacemark])
+                self.mapView.removeAnnotations(self.mapView.annotations)
+                var pins = [CLLocation]()
+                for placemark in placemarks {
+                    if placemark is CLPlacemark{
+                        pins.append(placemark.location)
+                    }
+                }
+                self.mapView.addAnnotations(pins)
+                self.mapView.showAnnotations(self.mapView.annotations, animated: false)
                 let resultsController = self.searchController.searchResultsController as LocationResultsTableViewController
                 resultsController.possibleMatches = placemarks as [CLPlacemark]
                 resultsController.searchText = self.searchText
@@ -211,46 +210,18 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         return attribString
     }
 
-    // MARK: UITableViewDataSource
-    
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchResults.count
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("locationCell", forIndexPath: indexPath) as LocationTableViewCell
-        
-        cell.addressLabel!.attributedText = attributedAddressStringAtIndexPath(indexPath)
-        cell.accessoryType = .DisclosureIndicator
-        return cell
-    }
-    
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    // MARK: UITableView Delegate
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         // Check to see which table view cell was selected.
         
-        var attributedString: NSAttributedString
-
-        if tableView == self.tableView {
-            attributedString = attributedAddressStringAtIndexPath(indexPath)
-        }
-        else {
-            attributedString = resultsTableController.attributedAddressStringAtIndexPath(indexPath)
-        }
-
+        let attributedString = resultsTableController.attributedAddressStringAtIndexPath(indexPath)
         let neededSize = attributedString.size()
         return ceil(neededSize.height) + 20
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var selectedPlacemark: CLPlacemark
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        // Check to see which table view cell was selected.
-        if tableView == self.tableView {
-            selectedPlacemark = searchResults[indexPath.row]
-        }
-        else {
-            selectedPlacemark = resultsTableController.possibleMatches[indexPath.row]
-        }
+        let selectedPlacemark = resultsTableController.possibleMatches[indexPath.row]
         
         // Set up the detail view controller to show.
         let mapViewController = LocationMapViewController.forPlacemark(selectedPlacemark)
