@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LimoRequestViewController: UITableViewController , PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
+class LimoRequestViewController: UITableViewController , PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITextFieldDelegate {
     
     var limoUser: LimoUser?
 
@@ -22,6 +22,7 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         // Do any additional setup after loading the view, typically from a nib.
         setupLoginOrProfileButton()
         configureDatePicker()
+        configureLookUpSelector()
     }
     
     override func didReceiveMemoryWarning() {
@@ -47,6 +48,14 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         }
     }
     
+    // MARK: UITextFieldDelegate
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+//        saveTextFieldToLimoUser(textField)
+        return false
+    }
+
     func setupLoginOrProfileButton() {
         if let currentUser = PFUser.currentUser() {
             println("Found current user")
@@ -114,6 +123,29 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
                     let toVC = segue.destinationViewController as UserProfileTableViewController
                     toVC.limoUser = limoUser
                 }
+            case "Find Address":
+                if segue.destinationViewController is LocationSearchTableViewController {
+                    let toVC = segue.destinationViewController as LocationSearchTableViewController
+                    if sender != nil {
+                        let text = sender as? String
+                        println("Sender String = \(text)")
+                        if text != nil {
+                            toVC.searchText = text!
+                        }
+                    }
+                }
+            case "Search Location":
+                if segue.destinationViewController is LocalSearchTableViewController {
+                    let toVC = segue.destinationViewController as LocalSearchTableViewController
+                    if sender != nil {
+                        let text = sender as? String
+                        println("Sender String = \(text)")
+                        if text != nil {
+                            toVC.searchText = text!
+                        }
+                    }
+                }
+
             default:
                 break
             }
@@ -342,5 +374,127 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         limoRequestDateLabel.text = dateFormatter.stringFromDate(limoRequestDatePicker.date)
     }
 
+    var lookUpSelectionController:UIAlertController?
+   
+    var locationSpecifier = ""
+    var originalLocationText = ""
+    var fromLocation: LimoUserLocation?
+    var toLocation: LimoUserLocation?
+
+    @IBOutlet weak var fromLocationTextField: UITextField!
+    @IBOutlet weak var toLocationTextField: UITextField!
+    @IBOutlet weak var fromLocationTextView: UITextView!
+    @IBOutlet weak var toLocationTextView: UITextView!
+    @IBOutlet weak var fromLocationLookUp: UIButton!
+    @IBOutlet weak var toLocationLookUp: UIButton!
+    
+    func configureLookUpSelector() {
+        lookUpSelectionController = UIAlertController(
+            title: "Choose how you would like to Look Up \(locationSpecifier) Location",
+            message: "You can choose any method",
+            preferredStyle: .ActionSheet)
+        
+        let actionAddressLookUp = UIAlertAction(title: "Via Address Look Up",
+            style: UIAlertActionStyle.Default,
+            handler: {(paramAction:UIAlertAction!) in
+                /* Ask for address lookup */
+                self.performSegueWithIdentifier("Find Address", sender: self.originalLocationText)
+        })
+        
+        let actionLocalSearch = UIAlertAction(title: "Via Local Search",
+            style: UIAlertActionStyle.Default,
+            handler: {(paramAction:UIAlertAction!) in
+                /* Send for Local Search */
+                self.performSegueWithIdentifier("Search Location", sender: self.originalLocationText)
+
+        })
+        
+        let actionDelete = UIAlertAction(title: "Via Previus Locations",
+            style: UIAlertActionStyle.Default,
+            handler: {(paramAction:UIAlertAction!) in
+                /* Delete the photo here */
+        })
+        
+        lookUpSelectionController!.addAction(actionAddressLookUp)
+        lookUpSelectionController!.addAction(actionLocalSearch)
+        lookUpSelectionController!.addAction(actionDelete)
+
+    }
+
+    
+    @IBAction func locationLookUpTouchUpInside(sender: UIButton) {
+        switch sender {
+        case fromLocationLookUp:
+            locationSpecifier = "From"
+            originalLocationText = fromLocationTextField.text
+            presentViewController(lookUpSelectionController!, animated: true) {
+                println("finished presenting the lookup selector")
+            }
+        case toLocationLookUp:
+            locationSpecifier = "To"
+            originalLocationText = toLocationTextField.text
+            presentViewController(lookUpSelectionController!, animated: true) {
+                println("finished presenting the lookup selector")
+            }
+
+        default:
+            break
+        }
+        
+    }
+    
+    var locationToSave: LimoUserLocation!
+    
+    // unwind from a location selection
+    @IBAction func unwindToUserProfile(sender: UIStoryboardSegue)
+    {
+        let sourceViewController: AnyObject = sender.sourceViewController
+        // Pull any data from the view controller which initiated the unwind segue.
+        println("The locationToSave = \(locationToSave)")
+        
+        if sourceViewController is LocationMapViewController {
+            let svc: LocationMapViewController = sourceViewController as LocationMapViewController
+            if locationToSave == nil {
+                switch locationSpecifier {
+                case "From":
+                    locationToSave = LimoUserLocation()
+                    fromLocation = locationToSave
+                case "To":
+                    locationToSave = LimoUserLocation()
+                    toLocation = locationToSave
+                default:
+                    break
+                }
+            }
+            if locationToSave != nil && svc.placemark.location != nil {
+                println("we got save location: \(svc.placemark.location)")
+                let geoPoint = PFGeoPoint(location: svc.placemark.location)
+                locationToSave["location"] = geoPoint
+                if let address = svc.navigationItem.title {
+                    locationToSave["address"] = address
+                    println("The address reported is \(address)")
+                }
+                locationToSave.saveEventually()
+            }
+        }
+                updateLocationDisplay()
+    }
+
+    func updateLocationDisplay() {
+        switch locationSpecifier {
+        case "From":
+            if locationToSave["address"] is String {
+                fromLocationTextView.text = locationToSave["address"] as String
+            }
+        case "To":
+            if locationToSave["address"] is String {
+                toLocationTextView.text = locationToSave["address"] as String
+            }
+
+        default:
+            break
+        }
+    }
+    
 }
 

@@ -321,7 +321,6 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                 locationToSave["location"] = geoPoint
                 locationToSave["address"] = svc.navigationItem.title
                 println("The address reported is \(svc.navigationItem.title)")
-                homeLocationTextView.text = svc.navigationItem.title
                 locationToSave.saveEventually()
             }
         }

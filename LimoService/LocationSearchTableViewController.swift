@@ -261,4 +261,5 @@ class LocationSearchTableViewController: UITableViewController, UISearchBarDeleg
         navigationController!.pushViewController(mapViewController, animated: true)
     }
   
+
 }

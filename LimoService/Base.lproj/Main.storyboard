@@ -103,14 +103,14 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="0aT-SJ-FBw" id="rqZ-N4-Hdj"/>
+                                                        <outlet property="delegate" destination="Bk7-fr-97g" id="SrS-Om-ck5"/>
                                                     </connections>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ag-Yx-S7x">
                                                     <rect key="frame" x="496" y="10" width="86" height="32"/>
                                                     <state key="normal" title="LookUp" image="magnifier"/>
                                                     <connections>
-                                                        <action selector="preferredDestinationGeoCodeButtonTouchUpInside:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="Jqk-WA-ABF"/>
+                                                        <action selector="locationLookUpTouchUpInside:" destination="Bk7-fr-97g" eventType="touchUpInside" id="wDe-dO-hqT"/>
                                                     </connections>
                                                 </button>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rM9-Tv-mZa">
@@ -135,6 +135,50 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="To" id="u0Y-Q2-uET" userLabel="To">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="130" id="lt1-2Q-Mat" userLabel="Location">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lt1-2Q-Mat" id="60E-0t-7ua">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eho-rg-wBe">
+                                                    <rect key="frame" x="28" y="10" width="458" height="30"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Bk7-fr-97g" id="O73-TN-UsC"/>
+                                                    </connections>
+                                                </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hIa-fw-XA8">
+                                                    <rect key="frame" x="496" y="10" width="86" height="32"/>
+                                                    <state key="normal" title="LookUp" image="magnifier"/>
+                                                    <connections>
+                                                        <action selector="locationLookUpTouchUpInside:" destination="Bk7-fr-97g" eventType="touchUpInside" id="gjf-2A-Eh2"/>
+                                                    </connections>
+                                                </button>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hlV-DN-c4o">
+                                                    <rect key="frame" x="28" y="48" width="554" height="63.5"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="hlV-DN-c4o" secondAttribute="bottom" constant="10" id="0IU-le-uWu"/>
+                                                <constraint firstItem="eho-rg-wBe" firstAttribute="top" secondItem="60E-0t-7ua" secondAttribute="topMargin" constant="2" id="4Og-z1-gS7"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="hIa-fw-XA8" secondAttribute="trailing" constant="10" id="84B-6J-gWU"/>
+                                                <constraint firstItem="hIa-fw-XA8" firstAttribute="leading" secondItem="eho-rg-wBe" secondAttribute="trailing" constant="10" id="BBP-Cy-NkU"/>
+                                                <constraint firstItem="hlV-DN-c4o" firstAttribute="top" secondItem="eho-rg-wBe" secondAttribute="bottom" constant="8" id="JUN-Rx-j4U"/>
+                                                <constraint firstItem="hIa-fw-XA8" firstAttribute="top" secondItem="60E-0t-7ua" secondAttribute="topMargin" constant="2" id="ZFJ-EX-cSf"/>
+                                                <constraint firstItem="hlV-DN-c4o" firstAttribute="leading" secondItem="60E-0t-7ua" secondAttribute="leadingMargin" constant="20" id="nAJ-RH-WZR"/>
+                                                <constraint firstItem="eho-rg-wBe" firstAttribute="leading" secondItem="60E-0t-7ua" secondAttribute="leadingMargin" constant="20" id="pIP-R1-WFM"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="hlV-DN-c4o" secondAttribute="trailing" constant="10" id="r2P-dI-ff9"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Bk7-fr-97g" id="35Y-V5-iZ5"/>
@@ -151,12 +195,21 @@
                         <barButtonItem key="rightBarButtonItem" title="History" id="Z6k-D9-sOr"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="fromLocationLookUp" destination="3ag-Yx-S7x" id="PeT-AE-gaC"/>
+                        <outlet property="fromLocationTextField" destination="aWC-9E-S2Q" id="Agh-kM-x1f"/>
+                        <outlet property="fromLocationTextView" destination="rM9-Tv-mZa" id="IaW-Xy-j0O"/>
                         <outlet property="limoRequestDateLabel" destination="anm-he-urQ" id="9dU-6y-YuQ"/>
                         <outlet property="limoRequestDatePicker" destination="Rlc-X0-aRv" id="qfb-Uo-pG1"/>
                         <outlet property="loginOrProfileBarButtonItem" destination="pGQ-sL-HMJ" id="MRg-nY-veC"/>
                         <outlet property="logoutButton" destination="P0j-Ho-t8g" id="NkD-D9-ULt"/>
                         <outlet property="signUpButton" destination="Frd-uC-2xs" id="H7K-bq-u5s"/>
+                        <outlet property="toLocationLookUp" destination="hIa-fw-XA8" id="Xta-Td-eQk"/>
+                        <outlet property="toLocationTextField" destination="eho-rg-wBe" id="7TE-Wx-JLx"/>
+                        <outlet property="toLocationTextView" destination="hlV-DN-c4o" id="QKf-kq-T74"/>
                         <segue destination="0aT-SJ-FBw" kind="show" identifier="Show Profile" id="Eji-Pe-pcy"/>
+                        <segue destination="84V-ln-ARg" kind="show" identifier="Location Lookup" id="8kx-XM-svs"/>
+                        <segue destination="zvJ-jv-o4X" kind="show" identifier="Find Address" id="Z7c-6G-sgU"/>
+                        <segue destination="RGQ-c4-8EU" kind="show" identifier="Search Location" id="AXy-LU-J2J"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1W-mS-AvB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -341,14 +394,14 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="0aT-SJ-FBw" id="ji6-km-Kq8"/>
+                                                        <outlet property="delegate" destination="84V-ln-ARg" id="Kew-wb-xKg"/>
                                                     </connections>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Cp-Lf-TAQ">
                                                     <rect key="frame" x="484" y="10" width="98" height="32"/>
                                                     <state key="normal" title="GeoCode" image="earth"/>
                                                     <connections>
-                                                        <action selector="homeLocationGeoCodeButtonTouchUpInside:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="OQl-sd-QTK"/>
+                                                        <action selector="homeLocationGeoCodeButtonTouchUpInside:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="oU8-L6-kwQ"/>
                                                     </connections>
                                                 </button>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fww-EN-iXE">
@@ -426,8 +479,8 @@
                     <connections>
                         <outlet property="emailTextFeild" destination="pkU-xk-pLI" id="Ha8-LJ-0Vb"/>
                         <outlet property="firstNameTextField" destination="RpI-re-bP9" id="LaG-Kb-pwc"/>
-                        <outlet property="homeLocationTextField" destination="ELV-bV-BfR" id="mg0-mQ-gSc"/>
-                        <outlet property="homeLocationTextView" destination="Fww-EN-iXE" id="HF4-L8-DSn"/>
+                        <outlet property="homeLocationTextField" destination="ELV-bV-BfR" id="dNp-7J-1WX"/>
+                        <outlet property="homeLocationTextView" destination="Fww-EN-iXE" id="PZM-n0-wAv"/>
                         <outlet property="lastNameTextField" destination="65l-Kn-Igs" id="diP-Sv-mC3"/>
                         <outlet property="middleNameTextField" destination="hO5-MX-geM" id="vTS-Ow-woK"/>
                         <outlet property="phoneNumberTextField" destination="3Nv-hL-okf" id="xp2-Am-nIv"/>
@@ -457,6 +510,129 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d9p-Ts-2Mt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3449" y="284"/>
+        </scene>
+        <!--Location LookUp-->
+        <scene sceneID="cHL-Jw-v1V">
+            <objects>
+                <tableViewController title="Location LookUp" id="84V-ln-ARg" customClass="LocationLookUpTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Nag-DH-pb0">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Home Location " id="gZB-w8-tba" userLabel="Home Location">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="130" id="nUH-vF-njl" userLabel="Location">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nUH-vF-njl" id="C9J-xx-C69">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Vaj-hI-cHq">
+                                                    <rect key="frame" x="28" y="10" width="446" height="30"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="84V-ln-ARg" id="INU-BT-YCN"/>
+                                                    </connections>
+                                                </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="flV-wV-toy">
+                                                    <rect key="frame" x="484" y="10" width="98" height="32"/>
+                                                    <state key="normal" title="GeoCode" image="earth"/>
+                                                </button>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T7C-Lb-E5U">
+                                                    <rect key="frame" x="28" y="48" width="554" height="63.5"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Vaj-hI-cHq" firstAttribute="top" secondItem="C9J-xx-C69" secondAttribute="topMargin" constant="2" id="L2g-EV-eil"/>
+                                                <constraint firstItem="T7C-Lb-E5U" firstAttribute="top" secondItem="Vaj-hI-cHq" secondAttribute="bottom" constant="8" id="SSX-c0-Bry"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="T7C-Lb-E5U" secondAttribute="trailing" constant="10" id="StR-0M-h8G"/>
+                                                <constraint firstItem="T7C-Lb-E5U" firstAttribute="leading" secondItem="C9J-xx-C69" secondAttribute="leadingMargin" constant="20" id="XDU-91-8TN"/>
+                                                <constraint firstItem="flV-wV-toy" firstAttribute="leading" secondItem="Vaj-hI-cHq" secondAttribute="trailing" constant="10" id="cQs-b0-q2d"/>
+                                                <constraint firstItem="Vaj-hI-cHq" firstAttribute="leading" secondItem="C9J-xx-C69" secondAttribute="leadingMargin" constant="20" id="f5D-YS-h03"/>
+                                                <constraint firstItem="flV-wV-toy" firstAttribute="top" secondItem="C9J-xx-C69" secondAttribute="topMargin" constant="2" id="ftT-mL-zsM"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="flV-wV-toy" secondAttribute="trailing" constant="10" id="k9u-Ld-gkB"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="T7C-Lb-E5U" secondAttribute="bottom" constant="10" id="yB0-IP-94g"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Local Search" id="crE-6f-K4A">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="m8u-uQ-BGz">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="m8u-uQ-BGz" id="dHc-8G-0hR">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="bqr-lV-HTn">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bqr-lV-HTn" id="t6C-wa-msC">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="uct-N0-69e">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uct-N0-69e" id="a4D-A8-abQ">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Previous Locations" id="gtg-ag-Dql">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="1kF-0v-6cL">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1kF-0v-6cL" id="zIT-pL-0zJ">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="dPW-vd-gV4">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dPW-vd-gV4" id="ppA-Tl-arr">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="q11-XU-S0r">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="q11-XU-S0r" id="PPZ-8n-dgg">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="84V-ln-ARg" id="SgI-ng-Dgw"/>
+                            <outlet property="delegate" destination="84V-ln-ARg" id="K79-zW-wbS"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9JO-63-RbC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2703" y="1030"/>
+        </scene>
+        <!--Local Search Table View Controller-->
+        <scene sceneID="3bt-Ni-ffm">
+            <objects>
+                <tableViewController id="RGQ-c4-8EU" customClass="LocalSearchTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Ryy-hS-NLH">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="RGQ-c4-8EU" id="i55-5H-JlX"/>
+                            <outlet property="delegate" destination="RGQ-c4-8EU" id="sdL-XE-oE3"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BzT-RI-fno" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2717" y="1759"/>
         </scene>
         <!--Location Map View Controller-->
         <scene sceneID="Z2h-6M-YyP">
@@ -515,4 +691,7 @@
         <image name="earth" width="32" height="32"/>
         <image name="magnifier" width="32" height="32"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Z7c-6G-sgU"/>
+    </inferredMetricsTieBreakers>
 </document>
