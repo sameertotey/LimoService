@@ -42,6 +42,7 @@
 		05649C0D1AB4826E007566C3 /* UserProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05649C0C1AB4826E007566C3 /* UserProfileTableViewController.swift */; };
 		056E62AF1ABE444E003C6A7C /* KeysAndSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056E62AE1ABE444E003C6A7C /* KeysAndSecrets.swift */; };
 		056E62B31AC12378003C6A7C /* LocalSearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056E62B21AC12378003C6A7C /* LocalSearchTableViewController.swift */; };
+		056E62B71AC397F5003C6A7C /* LimoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056E62B61AC397F5003C6A7C /* LimoRequest.swift */; };
 		05DA9CBA1AB4CDB8004EE4DA /* LimoUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA9CB91AB4CDB8004EE4DA /* LimoUser.swift */; };
 		05DA9CC11AB61FD5004EE4DA /* LimoUserLogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */; };
 /* End PBXBuildFile section */
@@ -97,6 +98,7 @@
 		05649C0C1AB4826E007566C3 /* UserProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserProfileTableViewController.swift; path = ../UserProfileTableViewController.swift; sourceTree = "<group>"; };
 		056E62AE1ABE444E003C6A7C /* KeysAndSecrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysAndSecrets.swift; sourceTree = "<group>"; };
 		056E62B21AC12378003C6A7C /* LocalSearchTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalSearchTableViewController.swift; sourceTree = "<group>"; };
+		056E62B61AC397F5003C6A7C /* LimoRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoRequest.swift; sourceTree = "<group>"; };
 		05DA9CB91AB4CDB8004EE4DA /* LimoUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUser.swift; sourceTree = "<group>"; };
 		05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUserLogInViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -229,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				05DA9CB91AB4CDB8004EE4DA /* LimoUser.swift */,
+				056E62B61AC397F5003C6A7C /* LimoRequest.swift */,
 				0523BD821AB75D2A0056CFD8 /* LimoUserLocation.swift */,
 			);
 			name = Model;
@@ -311,7 +314,7 @@
 						DevelopmentTeam = 6QHDV6JE6P;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -379,6 +382,7 @@
 				056E62B31AC12378003C6A7C /* LocalSearchTableViewController.swift in Sources */,
 				05DA9CC11AB61FD5004EE4DA /* LimoUserLogInViewController.swift in Sources */,
 				0523BD871AB7AF510056CFD8 /* LocationSearchTableViewController.swift in Sources */,
+				056E62B71AC397F5003C6A7C /* LimoRequest.swift in Sources */,
 				056E62AF1ABE444E003C6A7C /* KeysAndSecrets.swift in Sources */,
 				05649C0D1AB4826E007566C3 /* UserProfileTableViewController.swift in Sources */,
 				05DA9CBA1AB4CDB8004EE4DA /* LimoUser.swift in Sources */,

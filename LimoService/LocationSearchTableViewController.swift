@@ -110,6 +110,7 @@ class LocationSearchTableViewController: UIViewController, UISearchBarDelegate, 
                 println("received \(placemarks.count) results")
                 println(placemarks as [CLPlacemark])
                 self.mapView.removeAnnotations(self.mapView.annotations)
+                // We need to change this to create custom annotations, so that we can provide more information
                 var pins = [CLLocation]()
                 for placemark in placemarks {
                     if placemark is CLPlacemark{

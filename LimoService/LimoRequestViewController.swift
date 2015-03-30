@@ -47,14 +47,6 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
             self.enableLogOutButton()
         }
     }
-    
-    // MARK: UITextFieldDelegate
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-//        saveTextFieldToLimoUser(textField)
-        return false
-    }
 
     func setupLoginOrProfileButton() {
         if let currentUser = PFUser.currentUser() {
@@ -166,21 +158,42 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
     
     @IBAction func logoutTouched(sender: UIButton) {
         PFUser.logOut()
+        setupLoginOrProfileButton()
     }
     
     @IBAction func writeDataTouched(sender: UIButton) {
-        let testObject = PFObject(className: "TestObject")
-        testObject["foo"] = "bar"
-        if let currentUser = PFUser.currentUser() {
-            println("Current user is \(currentUser)")
-            testObject["username"] = currentUser.username
-            testObject["user"] = currentUser
-            testObject["abc"] = "123"
-        } else
-        {
-            println("There is no user here")
+//        let testObject = PFObject(className: "TestObject")
+//        testObject["foo"] = "bar"
+//        if let currentUser = PFUser.currentUser() {
+//            println("Current user is \(currentUser)")
+//            testObject["username"] = currentUser.username
+//            testObject["user"] = currentUser
+//            testObject["abc"] = "123"
+//        } else
+//        {
+//            println("There is no user here")
+//        }
+//        testObject.saveEventually()
+        if let from = fromLocation {
+            if let to = toLocation {
+                if let user = limoUser {
+                    let limoRequest = LimoRequest()
+                    limoRequest["from"] = from
+                    limoRequest["to"] = to
+                    limoRequest["owner"] = user
+                    limoRequest["status"] = "New"
+                    limoRequest["when"] = limoRequestDatePicker.date
+                    limoRequest.saveInBackgroundWithBlock({ (succeeded, error)  in
+                        if succeeded {
+                            println("Succeed in creating a limo request")
+                        } else {
+                            println("Received error \(error)")
+                        }
+                    })
+                }
+            }
         }
-        testObject.saveEventually()
+        
         
     }
     
@@ -310,9 +323,7 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         
         return informationComplete
     }
-    
 
-    
     // Sent to the delegate when a PFUser is signed up.
     func signUpViewController(signUpController: PFSignUpViewController!, didSignUpUser user: PFUser!) {
         println("Did sign up user")
@@ -325,13 +336,11 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         println("Failed to sign up")
     }
     
-    
     // Sent to the delegate when the sign up screen is dismissed.
     func signUpViewControllerDidCancelSignUp(signUpController: PFSignUpViewController!) {
         println("User dismissed the signUpViewController")
         setupLoginOrProfileButton()
     }
-    
     
     @IBOutlet weak var limoRequestDatePicker: UIDatePicker!
     @IBOutlet weak var limoRequestDateLabel: UILabel!
@@ -389,6 +398,15 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
     @IBOutlet weak var fromLocationLookUp: UIButton!
     @IBOutlet weak var toLocationLookUp: UIButton!
     
+    
+    // MARK: UITextFieldDelegate
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+//        saveTextFieldToLimoUser(textField)
+        return false
+    }
+
     func configureLookUpSelector() {
         lookUpSelectionController = UIAlertController(
             title: "Choose how you would like to Look Up \(locationSpecifier) Location",
@@ -396,29 +414,36 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
             preferredStyle: .ActionSheet)
         
         let actionAddressLookUp = UIAlertAction(title: "Via Address Look Up",
-            style: UIAlertActionStyle.Default,
+            style: .Default,
             handler: {(paramAction:UIAlertAction!) in
                 /* Ask for address lookup */
                 self.performSegueWithIdentifier("Find Address", sender: self.originalLocationText)
         })
         
         let actionLocalSearch = UIAlertAction(title: "Via Local Search",
-            style: UIAlertActionStyle.Default,
+            style: .Default,
             handler: {(paramAction:UIAlertAction!) in
                 /* Send for Local Search */
                 self.performSegueWithIdentifier("Search Location", sender: self.originalLocationText)
 
         })
         
-        let actionDelete = UIAlertAction(title: "Via Previus Locations",
-            style: UIAlertActionStyle.Default,
+        let actionPreviousLocation = UIAlertAction(title: "Via Previous Locations",
+            style: .Default,
             handler: {(paramAction:UIAlertAction!) in
-                /* Delete the photo here */
+                /* Use previous location lookup here */
         })
         
+        let actionCancel = UIAlertAction(title: "Cancel",
+            style: .Destructive,
+            handler: {(paramAction:UIAlertAction!) in
+                /* Do nothing here */
+        })
+
         lookUpSelectionController!.addAction(actionAddressLookUp)
         lookUpSelectionController!.addAction(actionLocalSearch)
-        lookUpSelectionController!.addAction(actionDelete)
+        lookUpSelectionController!.addAction(actionPreviousLocation)
+        lookUpSelectionController!.addAction(actionCancel)
     }
 
     
@@ -427,12 +452,14 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         case fromLocationLookUp:
             locationSpecifier = "From"
             originalLocationText = fromLocationTextField.text
+            locationToSave = fromLocation
             presentViewController(lookUpSelectionController!, animated: true) {
                 println("finished presenting the lookup selector")
             }
         case toLocationLookUp:
             locationSpecifier = "To"
             originalLocationText = toLocationTextField.text
+            locationToSave = toLocation
             presentViewController(lookUpSelectionController!, animated: true) {
                 println("finished presenting the lookup selector")
             }
@@ -458,9 +485,13 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
                 switch locationSpecifier {
                 case "From":
                     locationToSave = LimoUserLocation()
+                    locationToSave["owner"] = limoUser
+                    locationToSave["name"] = originalLocationText
                     fromLocation = locationToSave
                 case "To":
                     locationToSave = LimoUserLocation()
+                    locationToSave["owner"] = limoUser
+                    locationToSave["name"] = originalLocationText
                     toLocation = locationToSave
                 default:
                     break
@@ -477,7 +508,7 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
                 locationToSave.saveEventually()
             }
         }
-                updateLocationDisplay()
+        updateLocationDisplay()
     }
 
     func updateLocationDisplay() {

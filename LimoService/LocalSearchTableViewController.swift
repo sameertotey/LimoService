@@ -83,6 +83,7 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
                         placemarks.append(item.placemark)
                     }
                     self.mapView.removeAnnotations(self.mapView.annotations)
+                    // this seems to work here, but we need to get custom annotations so that we can provide more information
                     self.mapView.addAnnotations(placemarks)
                     self.mapView.showAnnotations(self.mapView.annotations, animated: false)
                     self.searchResults = response.mapItems as [MKMapItem]

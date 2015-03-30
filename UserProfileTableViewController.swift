@@ -154,8 +154,10 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                 }
             })
         } else {
-            limoUser.homeLocation = LimoUserLocation()
-            limoUser.homeLocation?.name = text
+            let homeLocation = LimoUserLocation()
+            homeLocation["owner"] = limoUser
+            homeLocation["name"] = text
+            limoUser.homeLocation = homeLocation
         }
     }
     
@@ -173,8 +175,10 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                 }
             })
         } else {
-            limoUser.preferredDestination = LimoUserLocation()
-            limoUser.preferredDestination?.name = text
+            let preferredDestination = LimoUserLocation()
+            preferredDestination["owner"] = limoUser
+            preferredDestination["name"] = text
+            limoUser.preferredDestination = preferredDestination
         }
     }
 
