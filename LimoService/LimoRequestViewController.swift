@@ -183,15 +183,21 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
                     limoRequest["owner"] = user
                     limoRequest["status"] = "New"
                     limoRequest["when"] = limoRequestDatePicker.date
-                    limoRequest.saveInBackgroundWithBlock({ (succeeded, error)  in
+                    limoRequest.saveInBackgroundWithBlock { (succeeded, error)  in
                         if succeeded {
                             println("Succeed in creating a limo request")
                         } else {
                             println("Received error \(error)")
                         }
-                    })
+                    }
+                } else {
+                    displayAlertWithTitle("Incomplete Request", message: "Need User Infomation")
                 }
+            } else {
+                displayAlertWithTitle("Incomplete Request", message: "Need 'To' Location")
             }
+        } else {
+            displayAlertWithTitle("Incomplete Request", message: "Need 'From' Location")
         }
         
         
@@ -526,6 +532,16 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
             break
         }
     }
+    
+    // MARK: - Helpers
+    
+    /* Just a little method to help us display alert dialogs to the user */
+    func displayAlertWithTitle(title: String, message: String){
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        presentViewController(controller, animated: true, completion: nil)
+    }
+
     
 }
 

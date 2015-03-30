@@ -1,6 +1,7 @@
 LimoService/KeysAndSecrets.swift
 LimoService/Info.plist
 LimoService.xcodeproj/xcuserdata
+LimoService/config/global.json
 
 .DS_Store
 xcuserdata
