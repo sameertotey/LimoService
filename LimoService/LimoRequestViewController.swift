@@ -52,7 +52,10 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         if let currentUser = PFUser.currentUser() {
             println("Found current user")
             println("Current user is : \(currentUser)")
-            
+            let installation = PFInstallation.currentInstallation()
+            installation["user"] = currentUser
+            installation.saveEventually()
+
             loginOrProfileBarButtonItem.title = "Profile"
             loginOrProfileBarButtonItem.enabled = false
             UIApplication.sharedApplication().networkActivityIndicatorVisible = true
@@ -72,20 +75,13 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
                         if let limoUser = self.limoUser {
                             println("Created a new LimoUser = \(self.limoUser)")
                             limoUser.user = currentUser
-                            currentUser.saveInBackground()    // only needed to ensure the user is updated is needed
+                            currentUser.saveInBackground()    // only needed to ensure the user is updated if needed
                             limoUser.saveEventually()
                         } else {
                             println("LimoUser creation failed")
                         }
                     }
 
-                    if let objects = objects as? [PFObject] {
-                        println("Print all the LimoUser objects for the current user ---")
-                        for object in objects {
-                            println(object.objectId)
-                        }
-                        println("End LimoUser objects")
-                    }
                 } else {
                     // Log details of the failure
                     println("Error: \(error) \(error.userInfo!)")
@@ -158,6 +154,9 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
     
     @IBAction func logoutTouched(sender: UIButton) {
         PFUser.logOut()
+        let installation = PFInstallation.currentInstallation()
+        installation.removeObjectForKey("user")
+        installation.saveEventually()
         setupLoginOrProfileButton()
     }
     
@@ -185,7 +184,9 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
                     limoRequest["when"] = limoRequestDatePicker.date
                     limoRequest.saveInBackgroundWithBlock { (succeeded, error)  in
                         if succeeded {
-                            println("Succeed in creating a limo request")
+                            println("Succeed in creating a limo request : \(limoRequest)")
+                            println("Channel is : \(limoRequest.objectId)")
+                            self.subscibeToChannel(limoRequest.objectId as NSString)
                         } else {
                             println("Received error \(error)")
                         }
@@ -199,8 +200,15 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         } else {
             displayAlertWithTitle("Incomplete Request", message: "Need 'From' Location")
         }
-        
-        
+    }
+    
+    func subscibeToChannel(channelName: NSString) {
+        // When users indicate they are Giants fans, we subscribe them to that channel.
+        let currentInstallation = PFInstallation.currentInstallation()
+        let newChannel = "C\(channelName)"
+        currentInstallation.addUniqueObject(newChannel, forKey: "channels")
+        currentInstallation.saveInBackground()
+        println("Added channel \(newChannel)")
     }
     
     func login() {
