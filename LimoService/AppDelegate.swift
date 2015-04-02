@@ -49,6 +49,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        PFUser.currentUser().incrementKey("RunCount")
 //        PFUser.currentUser().saveInBackground()
         
+        // setup the default appearances here
+        let navbar = UINavigationBar.appearance()
+        navbar.barTintColor = UIColor(red: 168.0/255, green: 215.0/255, blue: 111.0/255, alpha: 1)
+        let font = UIFont(name: "Avenir", size: 18)
+        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor(), NSFontAttributeName: font!]
+        navbar.tintColor = UIColor.whiteColor()
+        
+        
+        let tabbar = UITabBar.appearance()
+        tabbar.barTintColor = UIColor(red: 168.0/255, green: 215.0/255, blue: 111.0/255, alpha: 1)
+        tabbar.tintColor = UIColor.whiteColor()
+        
         let defaultACL = PFACL();
             
         // If you would like all objects to be private by default, remove this line.

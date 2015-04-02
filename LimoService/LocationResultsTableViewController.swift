@@ -46,12 +46,6 @@ class LocationResultsTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let attributedString = attributedAddressStringAtIndexPath(indexPath)
-        let neededSize = attributedString.size()
-        return ceil(neededSize.height) + 20
-    }
-    
     
     // MARK: - Helpers
     

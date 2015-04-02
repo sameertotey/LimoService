@@ -133,6 +133,13 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
                         }
                     }
                 }
+            case "Select Previous Location":
+                if segue.destinationViewController is PreviousLocationLookupViewController {
+                    let toVC = segue.destinationViewController as PreviousLocationLookupViewController
+                    if sender is LimoUser {
+                        toVC.limoUser = sender as LimoUser
+                    }
+                }
 
             default:
                 break
@@ -446,6 +453,9 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
             style: .Default,
             handler: {(paramAction:UIAlertAction!) in
                 /* Use previous location lookup here */
+                if let limoUser = self.limoUser {
+                    self.performSegueWithIdentifier("Select Previous Location", sender: limoUser)
+                }
         })
         
         let actionCancel = UIAlertAction(title: "Cancel",
@@ -493,34 +503,45 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
         // Pull any data from the view controller which initiated the unwind segue.
         println("The locationToSave = \(locationToSave)")
         
-        if sourceViewController is LocationMapViewController {
-            let svc: LocationMapViewController = sourceViewController as LocationMapViewController
-            if locationToSave == nil {
-                switch locationSpecifier {
-                case "From":
-                    locationToSave = LimoUserLocation()
-                    locationToSave["owner"] = limoUser
-                    locationToSave["name"] = originalLocationText
-                    fromLocation = locationToSave
-                case "To":
-                    locationToSave = LimoUserLocation()
-                    locationToSave["owner"] = limoUser
-                    locationToSave["name"] = originalLocationText
-                    toLocation = locationToSave
-                default:
-                    break
+        if limoUser != nil {
+            if sourceViewController is LocationMapViewController {
+                let svc: LocationMapViewController = sourceViewController as LocationMapViewController
+                if locationToSave == nil {
+                    switch locationSpecifier {
+                    case "From":
+                        locationToSave = LimoUserLocation()
+                        locationToSave["owner"] = limoUser
+                        locationToSave["name"] = originalLocationText
+                        fromLocation = locationToSave
+                    case "To":
+                        locationToSave = LimoUserLocation()
+                        locationToSave["owner"] = limoUser
+                        locationToSave["name"] = originalLocationText
+                        toLocation = locationToSave
+                    default:
+                        break
+                    }
+                }
+                if locationToSave != nil && svc.placemark.location != nil {
+                    println("we got save location: \(svc.placemark.location)")
+                    let geoPoint = PFGeoPoint(location: svc.placemark.location)
+                    locationToSave["location"] = geoPoint
+                    if let address = svc.navigationItem.title {
+                        locationToSave["address"] = address
+                        println("The address reported is \(address)")
+                    }
+                    locationToSave.saveEventually()
+                }
+            } else if sourceViewController is PreviousLocationLookupViewController {
+                println("returned to .....")
+                let svc: PreviousLocationLookupViewController = sourceViewController as PreviousLocationLookupViewController
+                if let returnedLocation = svc.selectedLocation {
+                    locationToSave = returnedLocation
+                } else {
+                    displayAlertWithTitle("Some thing did not work", message: "Got no location from selecting previous location")
                 }
             }
-            if locationToSave != nil && svc.placemark.location != nil {
-                println("we got save location: \(svc.placemark.location)")
-                let geoPoint = PFGeoPoint(location: svc.placemark.location)
-                locationToSave["location"] = geoPoint
-                if let address = svc.navigationItem.title {
-                    locationToSave["address"] = address
-                    println("The address reported is \(address)")
-                }
-                locationToSave.saveEventually()
-            }
+            
         }
         updateLocationDisplay()
     }
@@ -531,11 +552,12 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
             if locationToSave["address"] is String {
                 fromLocationTextView.text = locationToSave["address"] as String
             }
+            fromLocationTextField.resignFirstResponder()
         case "To":
             if locationToSave["address"] is String {
                 toLocationTextView.text = locationToSave["address"] as String
             }
-
+            toLocationTextField.resignFirstResponder()
         default:
             break
         }
@@ -547,6 +569,10 @@ class LimoRequestViewController: UITableViewController , PFLogInViewControllerDe
     func displayAlertWithTitle(title: String, message: String){
         let controller = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        controller.addAction(UIAlertAction(title: "Settings", style: UIAlertActionStyle.Default) { (action) -> Void in
+            UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
+            return
+        })
         presentViewController(controller, animated: true, completion: nil)
     }
 
