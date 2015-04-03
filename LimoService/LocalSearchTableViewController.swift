@@ -198,7 +198,7 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
         
         // Do any additional setup after loading the view.
         let saveBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveLocation")
-        self.navigationItem.rightBarButtonItem = saveBarButtonItem
+        navigationItem.rightBarButtonItem = saveBarButtonItem
         
     }
     

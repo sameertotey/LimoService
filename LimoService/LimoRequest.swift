@@ -20,8 +20,11 @@ class LimoRequest: PFObject, PFSubclassing {
         return "LimoRequest"
     }
     @NSManaged var when: NSDate?
+    @NSManaged var whenString: String?
     @NSManaged var from: LimoUserLocation?
+    @NSManaged var fromString: String?
     @NSManaged var to: LimoUserLocation?
+    @NSManaged var toString: String?
     @NSManaged var owner: LimoUser?
     @NSManaged var comment: String?
     @NSManaged var status: String?

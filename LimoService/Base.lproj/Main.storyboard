@@ -210,11 +210,30 @@
                         <segue destination="g53-wN-AG4" kind="show" identifier="Search Location" id="NQT-2h-ZpT"/>
                         <segue destination="yqg-Kv-s4w" kind="show" identifier="Find Address" id="qEb-9c-d4S"/>
                         <segue destination="BfS-dI-IZM" kind="show" identifier="Select Previous Location" id="Lc2-kE-FE5"/>
+                        <segue destination="VYx-bn-wyM" kind="custom" identifier="Login" customClass="PushNoAnimationSegue" customModule="LimoService" customModuleProvider="target" id="pyE-7H-7fV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1W-mS-AvB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1907" y="734"/>
+        </scene>
+        <!--Login Manager View Controller-->
+        <scene sceneID="Jlm-rK-2DN">
+            <objects>
+                <viewController id="VYx-bn-wyM" customClass="LoginManagerViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Uts-Jb-lIp"/>
+                        <viewControllerLayoutGuide type="bottom" id="pnX-Tl-iqw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZP6-CK-T7D">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mIm-Uo-9uw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1907" y="1536"/>
         </scene>
         <!--User Profile-->
         <scene sceneID="DeG-2m-6iT">

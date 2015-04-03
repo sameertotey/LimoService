@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		050DF30B1ACCFE96003640DE /* LocationLookupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050DF30A1ACCFE96003640DE /* LocationLookupTableViewCell.swift */; };
+		050DF30E1ACEED81003640DE /* LoginManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050DF30D1ACEED81003640DE /* LoginManagerViewController.swift */; };
 		0523BD811AB632D50056CFD8 /* LimoUserSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0523BD801AB632D50056CFD8 /* LimoUserSignUpViewController.swift */; };
 		0523BD831AB75D2A0056CFD8 /* LimoUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0523BD821AB75D2A0056CFD8 /* LimoUserLocation.swift */; };
 		0523BD851AB7A43A0056CFD8 /* LocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0523BD841AB7A43A0056CFD8 /* LocationTableViewCell.swift */; };
@@ -47,6 +48,7 @@
 		056E62C31ACC8460003C6A7C /* PreviousLocationLookupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056E62C21ACC8460003C6A7C /* PreviousLocationLookupViewController.swift */; };
 		05DA9CBA1AB4CDB8004EE4DA /* LimoUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA9CB91AB4CDB8004EE4DA /* LimoUser.swift */; };
 		05DA9CC11AB61FD5004EE4DA /* LimoUserLogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */; };
+		05DE99741ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DE99731ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		050DF30A1ACCFE96003640DE /* LocationLookupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationLookupTableViewCell.swift; path = ../LocationLookupTableViewCell.swift; sourceTree = "<group>"; };
+		050DF30D1ACEED81003640DE /* LoginManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManagerViewController.swift; sourceTree = "<group>"; };
 		0523BD801AB632D50056CFD8 /* LimoUserSignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LimoUserSignUpViewController.swift; path = ../LimoUserSignUpViewController.swift; sourceTree = "<group>"; };
 		0523BD821AB75D2A0056CFD8 /* LimoUserLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUserLocation.swift; sourceTree = "<group>"; };
 		0523BD841AB7A43A0056CFD8 /* LocationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTableViewCell.swift; sourceTree = "<group>"; };
@@ -105,6 +108,7 @@
 		056E62C21ACC8460003C6A7C /* PreviousLocationLookupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviousLocationLookupViewController.swift; sourceTree = "<group>"; };
 		05DA9CB91AB4CDB8004EE4DA /* LimoUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUser.swift; sourceTree = "<group>"; };
 		05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUserLogInViewController.swift; sourceTree = "<group>"; };
+		05DE99731ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNoAnimationSegue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +149,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		050DF30C1ACEED14003640DE /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				0523BD801AB632D50056CFD8 /* LimoUserSignUpViewController.swift */,
+				050DF30D1ACEED81003640DE /* LoginManagerViewController.swift */,
+				05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */,
+				05DE99731ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
 		05649BA91AB0EFCC007566C3 = {
 			isa = PBXGroup;
 			children = (
@@ -250,8 +265,7 @@
 				0523BD8C1AB892870056CFD8 /* LocationMapViewController.swift */,
 				0523BD881AB7B0B30056CFD8 /* LocationResultsTableViewController.swift */,
 				05649C0A1AB47E31007566C3 /* LimoRequestViewController.swift */,
-				0523BD801AB632D50056CFD8 /* LimoUserSignUpViewController.swift */,
-				05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */,
+				050DF30C1ACEED14003640DE /* Login */,
 				05649C0C1AB4826E007566C3 /* UserProfileTableViewController.swift */,
 			);
 			name = ViewControllers;
@@ -381,7 +395,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				056E62C31ACC8460003C6A7C /* PreviousLocationLookupViewController.swift in Sources */,
+				050DF30E1ACEED81003640DE /* LoginManagerViewController.swift in Sources */,
 				0523BD811AB632D50056CFD8 /* LimoUserSignUpViewController.swift in Sources */,
+				05DE99741ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift in Sources */,
 				0523BD831AB75D2A0056CFD8 /* LimoUserLocation.swift in Sources */,
 				0523BD851AB7A43A0056CFD8 /* LocationTableViewCell.swift in Sources */,
 				0523BD891AB7B0B30056CFD8 /* LocationResultsTableViewController.swift in Sources */,
