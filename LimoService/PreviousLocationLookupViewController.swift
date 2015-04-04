@@ -41,7 +41,6 @@ class PreviousLocationLookupViewController: PFQueryTableViewController {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.estimatedRowHeight = 60
@@ -69,7 +68,6 @@ class PreviousLocationLookupViewController: PFQueryTableViewController {
         return obj
     }
     
-    
     override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!, object: PFObject!) -> PFTableViewCell! {
         let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell", forIndexPath: indexPath) as LocationLookupTableViewCell
         
@@ -77,7 +75,6 @@ class PreviousLocationLookupViewController: PFQueryTableViewController {
         cell.addressLabel.text = object.valueForKey("address") as? String
         return cell
     }
-    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "return the Location"){

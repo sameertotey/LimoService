@@ -20,7 +20,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLoginOrProfileButton()
+//        setupLoginOrProfileButton()
         configureDatePicker()
         configureLookUpSelector()
     }
@@ -33,13 +33,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         super.viewDidAppear(animated)
         println("View did appear")
         setupLoginOrProfileButton()
-        if PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser()) {
-            println("is linked with anon")
-            self.enableSignUpButton()
-        } else {
-            println("is NOT linked with anon")
-            self.enableLogOutButton()
-        }
         removeKeyboardDisplay()
     }
 
@@ -89,46 +82,61 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     func setupLoginOrProfileButton() {
         if let currentUser = PFUser.currentUser() {
             println("Current user is : \(currentUser)")
-            let installation = PFInstallation.currentInstallation()
-            installation["user"] = currentUser
-            installation.saveEventually()
 
-            loginOrProfileBarButtonItem.title = "Profile"
-            loginOrProfileBarButtonItem.enabled = false
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-            var query = LimoUser.query()
-            query.whereKey("user", equalTo: currentUser)
-            query.findObjectsInBackgroundWithBlock {
-                (objects: [AnyObject]!, error: NSError!) -> Void in
-                if error == nil {
-                    // The find succeeded.
-                    println("Successfully retrieved = \(objects.count) limoUser. This should be 1 or 0")
-                    // Assume the first object is the associated limoUser
-                    if let limoUser = objects.first as? LimoUser {
-                        self.limoUser = limoUser
-                    } else {
-                        println("Going to create a new LimoUser because we have 0")
-                        self.limoUser = LimoUser()
-                        if let limoUser = self.limoUser {
-                            println("Created a new LimoUser = \(self.limoUser)")
-                            limoUser.user = currentUser
-                            currentUser.saveInBackground()    // only needed to ensure the user is updated if needed
-                            limoUser.saveEventually()
-                        } else {
-                            println("LimoUser creation failed")
+            if limoUser == nil {
+                loginOrProfileBarButtonItem.title = "Profile"
+                loginOrProfileBarButtonItem.enabled = false
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+                var query = LimoUser.query()
+                query.whereKey("user", equalTo: currentUser)
+                
+                query.findObjectsInBackgroundWithBlock {
+                    (objects, error)  in
+                    if error == nil {
+                        // The find succeeded.
+                        println("Successfully retrieved = \(objects.count) limoUser. This should be 1 or 0")
+                        // Assume the first object is the associated limoUser
+                        switch objects.count {
+                        case 0:
+                            println("Going to create a new LimoUser because we have 0 \(objects)")
+                            self.limoUser = LimoUser()
+                            if let limoUser = self.limoUser {
+                                println("Created a new LimoUser = \(self.limoUser)")
+                                limoUser.user = currentUser
+                                currentUser.saveInBackground()    // only needed to ensure the user is updated if needed
+                                limoUser.saveEventually()
+                                let installation = PFInstallation.currentInstallation()
+                                installation["limouser"] = limoUser
+                                installation.saveEventually()
+                            } else {
+                                println("LimoUser creation failed")
+                            }
+
+                        case 1:
+                            if let oldUser = objects.first as? PFObject {
+                                self.limoUser = LimoUser(withoutDataWithClassName: "LimoUser", objectId:oldUser.objectId)
+                                println("limouser is \(self.limoUser)")
+                            } else {
+                                println("this is a mystery \(objects) and there it is")
+                                self.displayAlertWithTitle("LimoUser Error", message: "Failed to read the returned object")
+                            }
+
+                        default:
+                            self.displayAlertWithTitle("Got more LimoUsers", message: "There are more than 1 limoUsers")
                         }
+                    } else {
+                        // Log details of the failure
+                        println("Error: \(error) \(error.userInfo!)")
                     }
-
-                } else {
-                    // Log details of the failure
-                    println("Error: \(error) \(error.userInfo!)")
+                    UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                    self.loginOrProfileBarButtonItem.enabled = true
                 }
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                self.loginOrProfileBarButtonItem.enabled = true
+            } else {
+                println("Current limoUser is : \(limoUser)")
             }
         } else {
             println("did not find current user")
-            loginOrProfileBarButtonItem.title = "Login"
+            login()
         }
     }
     
@@ -163,13 +171,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         updateDatePickerLabel()
     }
     
-    func enableSignUpButton() {
-        signUpButton.enabled = true
-    }
-    
-    func enableLogOutButton() {
-        logoutButton.enabled = true
-    }
     
     @IBAction func signUpTouched(sender: UIButton) {
         login()
@@ -178,7 +179,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func logoutTouched(sender: UIButton) {
         PFUser.logOut()
         let installation = PFInstallation.currentInstallation()
-        installation.removeObjectForKey("user")
+        installation.removeObjectForKey("limouser")
         installation.saveEventually()
         setupLoginOrProfileButton()
     }
@@ -226,6 +227,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     }
     
     func login() {
+        limoUser = nil                                   // reset the limoUser so that it gets set after login
         performSegueWithIdentifier("Login", sender: nil)
      }
     
@@ -340,7 +342,12 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                     toVC.ownerController = self
                     println("calling login")
                 }
-                
+            case "Requests":
+                if segue.destinationViewController is RequestsTableViewController {
+                    let toVC = segue.destinationViewController as RequestsTableViewController
+                        toVC.limoUser = limoUser
+                }
+
             default:
                 break
             }

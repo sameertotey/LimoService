@@ -192,7 +192,11 @@
                                 <action selector="loginOrProfileTarget:" destination="Bk7-fr-97g" id="CpZ-iw-kNS"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="History" id="Z6k-D9-sOr"/>
+                        <barButtonItem key="rightBarButtonItem" title="History" id="Z6k-D9-sOr">
+                            <connections>
+                                <segue destination="Ktp-z7-rcB" kind="show" identifier="Requests" id="RGs-Ip-oXj"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="fromLocationLookUp" destination="3ag-Yx-S7x" id="PeT-AE-gaC"/>
@@ -680,6 +684,80 @@
                 <exit id="ZmE-pf-xoM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3449" y="1030"/>
+        </scene>
+        <!--Requests Table View Controller-->
+        <scene sceneID="l1Q-OO-TZk">
+            <objects>
+                <tableViewController storyboardIdentifier="LimoRequests" id="Ktp-z7-rcB" customClass="RequestsTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="279" sectionHeaderHeight="22" sectionFooterHeight="22" id="huu-Tf-vHC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="requestCell" rowHeight="279" id="PMa-k3-f5d" customClass="RequestsTableViewCell" customModule="LimoService" customModuleProvider="target">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PMa-k3-f5d" id="QR5-XT-19S">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmm-jl-gei">
+                                            <rect key="frame" x="8" y="240" width="584" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="When" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ynG-eu-LLU">
+                                            <rect key="frame" x="8" y="8" width="584" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9DA-of-K0O">
+                                            <rect key="frame" x="8" y="38" width="584" height="161"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FvB-As-MUa">
+                                            <rect key="frame" x="8" y="209" width="584" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Rmm-jl-gei" firstAttribute="leading" secondItem="QR5-XT-19S" secondAttribute="leadingMargin" id="5fV-ok-gWw"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Rmm-jl-gei" secondAttribute="bottom" constant="10" id="By8-0u-g1F"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="ynG-eu-LLU" secondAttribute="trailing" id="Ct8-6C-BxC"/>
+                                        <constraint firstItem="ynG-eu-LLU" firstAttribute="leading" secondItem="QR5-XT-19S" secondAttribute="leadingMargin" id="EiD-nn-yDg"/>
+                                        <constraint firstItem="9DA-of-K0O" firstAttribute="leading" secondItem="QR5-XT-19S" secondAttribute="leadingMargin" id="LIg-ez-aDN"/>
+                                        <constraint firstItem="FvB-As-MUa" firstAttribute="top" secondItem="9DA-of-K0O" secondAttribute="bottom" constant="10" id="N3G-Y7-PhW"/>
+                                        <constraint firstItem="Rmm-jl-gei" firstAttribute="top" secondItem="FvB-As-MUa" secondAttribute="bottom" constant="10" id="Ra4-kX-5yp"/>
+                                        <constraint firstItem="9DA-of-K0O" firstAttribute="top" secondItem="ynG-eu-LLU" secondAttribute="bottom" constant="10" id="VS1-HD-fw1"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="FvB-As-MUa" secondAttribute="trailing" id="VXD-15-mXw"/>
+                                        <constraint firstItem="FvB-As-MUa" firstAttribute="leading" secondItem="QR5-XT-19S" secondAttribute="leadingMargin" id="fid-C3-elK"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Rmm-jl-gei" secondAttribute="trailing" id="mKH-Kn-7FX"/>
+                                        <constraint firstItem="ynG-eu-LLU" firstAttribute="top" secondItem="QR5-XT-19S" secondAttribute="topMargin" id="mcS-lV-Qtc"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="9DA-of-K0O" secondAttribute="trailing" id="vFq-NX-bGQ"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="fromLabel" destination="FvB-As-MUa" id="nO3-hE-11X"/>
+                                    <outlet property="statusLabel" destination="9DA-of-K0O" id="1Ha-uH-wdL"/>
+                                    <outlet property="toLabel" destination="Rmm-jl-gei" id="rId-Xj-3Hp"/>
+                                    <outlet property="whenLabel" destination="ynG-eu-LLU" id="ev1-Pf-0Lh"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Ktp-z7-rcB" id="OlU-Bj-4ca"/>
+                            <outlet property="delegate" destination="Ktp-z7-rcB" id="dy4-XH-0ZM"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Lgp-lS-Sjg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3449" y="1724"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="oL0-Yv-XVo">

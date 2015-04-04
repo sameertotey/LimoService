@@ -2,11 +2,11 @@
 
 Parse.Cloud.afterSave("LimoRequest", function(request) {
   Parse.Cloud.useMasterKey();
-
+  var LimoUser = Parse.Object.extend("LimoUser")
   var installationQuery = new Parse.Query(Parse.Installation)
-  var userQuery = new Parse.Query(Parse.User)
-  userQuery.equalTo("role", "provider")
-  installationQuery.matchesQuery("user", userQuery)
+  var limoUserQuery = new Parse.Query(LimoUser)
+  limoUserQuery.equalTo("role", "provider")
+  installationQuery.matchesQuery("limouser", limoUserQuery)
   installationQuery.find({
     success: function(installations) {
       // got all the installations

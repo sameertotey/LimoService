@@ -49,6 +49,8 @@
 		05DA9CBA1AB4CDB8004EE4DA /* LimoUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA9CB91AB4CDB8004EE4DA /* LimoUser.swift */; };
 		05DA9CC11AB61FD5004EE4DA /* LimoUserLogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */; };
 		05DE99741ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DE99731ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift */; };
+		05DE99781ACF47040039F0A7 /* RequestsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DE99771ACF47040039F0A7 /* RequestsTableViewController.swift */; };
+		05DE997A1ACF48D90039F0A7 /* RequestsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DE99791ACF48D90039F0A7 /* RequestsTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +111,8 @@
 		05DA9CB91AB4CDB8004EE4DA /* LimoUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUser.swift; sourceTree = "<group>"; };
 		05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUserLogInViewController.swift; sourceTree = "<group>"; };
 		05DE99731ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNoAnimationSegue.swift; sourceTree = "<group>"; };
+		05DE99771ACF47040039F0A7 /* RequestsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestsTableViewController.swift; sourceTree = "<group>"; };
+		05DE99791ACF48D90039F0A7 /* RequestsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestsTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +156,7 @@
 		050DF30C1ACEED14003640DE /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				05649C0C1AB4826E007566C3 /* UserProfileTableViewController.swift */,
 				0523BD801AB632D50056CFD8 /* LimoUserSignUpViewController.swift */,
 				050DF30D1ACEED81003640DE /* LoginManagerViewController.swift */,
 				05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */,
@@ -259,14 +264,9 @@
 		05DA9CBC1AB4CFBD004EE4DA /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				056E62C21ACC8460003C6A7C /* PreviousLocationLookupViewController.swift */,
-				0523BD861AB7AF510056CFD8 /* LocationSearchTableViewController.swift */,
-				056E62B21AC12378003C6A7C /* LocalSearchTableViewController.swift */,
-				0523BD8C1AB892870056CFD8 /* LocationMapViewController.swift */,
-				0523BD881AB7B0B30056CFD8 /* LocationResultsTableViewController.swift */,
-				05649C0A1AB47E31007566C3 /* LimoRequestViewController.swift */,
+				05DE99751ACF46450039F0A7 /* Location */,
+				05DE99761ACF46520039F0A7 /* Requests */,
 				050DF30C1ACEED14003640DE /* Login */,
-				05649C0C1AB4826E007566C3 /* UserProfileTableViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -278,8 +278,30 @@
 				05649BC01AB0EFCC007566C3 /* LaunchScreen.xib */,
 				0523BD841AB7A43A0056CFD8 /* LocationTableViewCell.swift */,
 				050DF30A1ACCFE96003640DE /* LocationLookupTableViewCell.swift */,
+				05DE99791ACF48D90039F0A7 /* RequestsTableViewCell.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		05DE99751ACF46450039F0A7 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				056E62C21ACC8460003C6A7C /* PreviousLocationLookupViewController.swift */,
+				0523BD861AB7AF510056CFD8 /* LocationSearchTableViewController.swift */,
+				056E62B21AC12378003C6A7C /* LocalSearchTableViewController.swift */,
+				0523BD8C1AB892870056CFD8 /* LocationMapViewController.swift */,
+				0523BD881AB7B0B30056CFD8 /* LocationResultsTableViewController.swift */,
+			);
+			name = Location;
+			sourceTree = "<group>";
+		};
+		05DE99761ACF46520039F0A7 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				05DE99771ACF47040039F0A7 /* RequestsTableViewController.swift */,
+				05649C0A1AB47E31007566C3 /* LimoRequestViewController.swift */,
+			);
+			name = Requests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -396,12 +418,14 @@
 			files = (
 				056E62C31ACC8460003C6A7C /* PreviousLocationLookupViewController.swift in Sources */,
 				050DF30E1ACEED81003640DE /* LoginManagerViewController.swift in Sources */,
+				05DE99781ACF47040039F0A7 /* RequestsTableViewController.swift in Sources */,
 				0523BD811AB632D50056CFD8 /* LimoUserSignUpViewController.swift in Sources */,
 				05DE99741ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift in Sources */,
 				0523BD831AB75D2A0056CFD8 /* LimoUserLocation.swift in Sources */,
 				0523BD851AB7A43A0056CFD8 /* LocationTableViewCell.swift in Sources */,
 				0523BD891AB7B0B30056CFD8 /* LocationResultsTableViewController.swift in Sources */,
 				0523BD8D1AB892870056CFD8 /* LocationMapViewController.swift in Sources */,
+				05DE997A1ACF48D90039F0A7 /* RequestsTableViewCell.swift in Sources */,
 				050DF30B1ACCFE96003640DE /* LocationLookupTableViewCell.swift in Sources */,
 				056E62B31AC12378003C6A7C /* LocalSearchTableViewController.swift in Sources */,
 				05DA9CC11AB61FD5004EE4DA /* LimoUserLogInViewController.swift in Sources */,

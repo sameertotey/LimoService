@@ -197,8 +197,8 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
         definesPresentationContext = true
         
         // Do any additional setup after loading the view.
-        let saveBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveLocation")
-        navigationItem.rightBarButtonItem = saveBarButtonItem
+//        let saveBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveLocation")
+//        navigationItem.rightBarButtonItem = saveBarButtonItem
         
     }
     
