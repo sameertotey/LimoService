@@ -10,7 +10,7 @@ import UIKit
 
 class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     
-    var limoUser: LimoUser?
+    var currentUser: PFUser!
 
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var logoutButton: UIButton!
@@ -32,12 +32,16 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         super.viewDidAppear(animated)
         println("View did appear")
         setupLoginOrProfileButton()
-        if let limoUserRole = limoUser!["role"] as? String {
-            if limoUserRole == "provider" {
-                println("This is a a provider...")
+        if currentUser != nil {
+            if let limoUserRole = currentUser["role"] as? String {
+                if limoUserRole == "provider" {
+                    println("This is a a provider...")
+                } else {
+                    println("This is not a provider")
+                }
             }
         }
-        removeKeyboardDisplay()
+         removeKeyboardDisplay()
     }
 
     // MARK: - Configuration
@@ -66,9 +70,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             style: .Default,
             handler: {(paramAction:UIAlertAction!) in
                 /* Use previous location lookup here */
-                if let limoUser = self.limoUser {
-                    self.performSegueWithIdentifier("Select Previous Location", sender: limoUser)
-                }
+                self.performSegueWithIdentifier("Select Previous Location", sender: nil)
         })
         
         let actionCancel = UIAlertAction(title: "Cancel",
@@ -85,59 +87,10 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     
     func setupLoginOrProfileButton() {
         if let currentUser = PFUser.currentUser() {
+            self.currentUser = currentUser
             println("Current user is : \(currentUser)")
-
-            if limoUser == nil {
-                loginOrProfileBarButtonItem.title = "Profile"
-                loginOrProfileBarButtonItem.enabled = false
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-                var query = LimoUser.query()
-                query.whereKey("user", equalTo: currentUser)
-                
-                query.findObjectsInBackgroundWithBlock {
-                    (objects, error)  in
-                    if error == nil {
-                        // The find succeeded.
-                        println("Successfully retrieved = \(objects.count) limoUser. This should be 1 or 0")
-                        // Assume the first object is the associated limoUser
-                        switch objects.count {
-                        case 0:
-                            println("Going to create a new LimoUser because we have 0 \(objects)")
-                            self.limoUser = LimoUser()
-                            if let limoUser = self.limoUser {
-                                println("Created a new LimoUser = \(self.limoUser)")
-                                limoUser.user = currentUser
-                                currentUser.saveInBackground()    // only needed to ensure the user is updated if needed
-                                limoUser.saveEventually()
-                                let installation = PFInstallation.currentInstallation()
-                                installation["limouser"] = limoUser
-                                installation.saveEventually()
-                            } else {
-                                println("LimoUser creation failed")
-                            }
-
-                        case 1:
-                            if let oldUser = objects.first as? PFObject {
-                                self.limoUser = LimoUser(withoutDataWithObjectId: oldUser.objectId)
-                                self.limoUser?.fetchIfNeededInBackground()
-                                println("limouser is \(self.limoUser)")
-                            } else {
-                                self.displayAlertWithTitle("LimoUser Error", message: "Failed to read the returned object")
-                            }
-
-                        default:
-                            self.displayAlertWithTitle("Got more LimoUsers", message: "There are more than 1 limoUsers")
-                        }
-                    } else {
-                        // Log details of the failure
-                        println("Error: \(error) \(error.userInfo!)")
-                    }
-                    UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                    self.loginOrProfileBarButtonItem.enabled = true
-                }
-            } else {
-                println("Current limoUser is : \(limoUser)")
-            }
+            loginOrProfileBarButtonItem.title = "Profile"
+            self.loginOrProfileBarButtonItem.enabled = true
         } else {
             println("did not find current user")
             login()
@@ -191,7 +144,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func writeDataTouched(sender: UIButton) {
         if let from = fromLocation {
             if let to = toLocation {
-                if let user = limoUser {
+                if let user = currentUser {
                     let limoRequest = LimoRequest()
                     limoRequest["from"] = from
                     limoRequest["fromString"] = from["address"]
@@ -231,7 +184,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     }
     
     func login() {
-        limoUser = nil                                   // reset the limoUser so that it gets set after login
         performSegueWithIdentifier("Login", sender: nil)
      }
     
@@ -309,7 +261,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             case "Show Profile":
                 if segue.destinationViewController is UserProfileTableViewController {
                     let toVC = segue.destinationViewController as UserProfileTableViewController
-                    toVC.limoUser = limoUser as LimoUser!
+                    toVC.currentUser = currentUser
                 }
             case "Find Address":
                 if segue.destinationViewController is LocationSearchTableViewController {
@@ -336,13 +288,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             case "Select Previous Location":
                 if segue.destinationViewController is PreviousLocationLookupViewController {
                     let toVC = segue.destinationViewController as PreviousLocationLookupViewController
-                    if sender is LimoUser? {
-                        toVC.limoUser = sender as LimoUser
-                    } else {
-                        println("sender is \(sender)")
-                        toVC.limoUser = limoUser
-//                        displayAlertWithTitle("Sender Error", message: "The sender is not the limoUser")
-                    }
+                    toVC.currentUser = currentUser
                 }
             case "Login":
                 if segue.destinationViewController is LoginManagerViewController {
@@ -353,7 +299,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             case "Requests":
                 if segue.destinationViewController is RequestsTableViewController {
                     let toVC = segue.destinationViewController as RequestsTableViewController
-                        toVC.limoUser = limoUser
+                        toVC.currentUser = currentUser
                 }
 
             default:
@@ -369,18 +315,18 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         // Pull any data from the view controller which initiated the unwind segue.
         println("The locationToSave = \(locationToSave)")
         
-        if limoUser != nil {
+        if currentUser != nil {
             if sourceViewController is LocationMapViewController {
                 let svc: LocationMapViewController = sourceViewController as LocationMapViewController
                 if locationToSave == nil {
                     switch locationSpecifier {
                     case "From":
                         locationToSave = LimoUserLocation()
-                        locationToSave["owner"] = limoUser
+                        locationToSave["owner"] = currentUser
                         locationToSave["name"] = originalLocationText
                     case "To":
                         locationToSave = LimoUserLocation()
-                        locationToSave["owner"] = limoUser
+                        locationToSave["owner"] = currentUser
                         locationToSave["name"] = originalLocationText
                     default:
                         break

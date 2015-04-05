@@ -22,5 +22,5 @@ class LimoUserLocation: PFObject, PFSubclassing {
     @NSManaged var name: String?
     @NSManaged var location: PFGeoPoint?
     @NSManaged var address: String?
-    @NSManaged var owner: LimoUser?
+    @NSManaged var owner: PFUser?
 }

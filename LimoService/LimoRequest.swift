@@ -25,7 +25,7 @@ class LimoRequest: PFObject, PFSubclassing {
     @NSManaged var fromString: String?
     @NSManaged var to: LimoUserLocation?
     @NSManaged var toString: String?
-    @NSManaged var owner: LimoUser?
+    @NSManaged var owner: PFUser?
     @NSManaged var comment: String?
     @NSManaged var status: String?
 }

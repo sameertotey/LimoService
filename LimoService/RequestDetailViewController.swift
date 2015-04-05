@@ -9,7 +9,7 @@
 import UIKit
 
 class RequestDetailViewController: UIViewController {
-    var limoUser: LimoUser!
+    var currentUser: PFUser!
     var limoRequest: LimoRequest!
     
     @IBOutlet weak var fromLabel: UILabel!

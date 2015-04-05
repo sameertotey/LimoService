@@ -10,7 +10,7 @@ import UIKit
 
 class UserProfileTableViewController: UITableViewController, UITextFieldDelegate {
 
-    var limoUser: LimoUser!
+    var currentUser: PFUser!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,12 +23,12 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     }
 
     func displayCurrentValues() {
-        firstNameTextField.text = limoUser["firstName"] as? String
-        middleNameTextField.text = limoUser["middleName"] as? String
-        lastNameTextField.text = limoUser["lastName"] as? String
-        phoneNumberTextField.text = limoUser["phoneNumer"] as? String
-        emailTextFeild.text = limoUser["user"]?["email"] as? String
-        if let location = limoUser["homeLocation"] as? LimoUserLocation {
+        firstNameTextField.text = currentUser["firstName"] as? String
+        middleNameTextField.text = currentUser["middleName"] as? String
+        lastNameTextField.text = currentUser["lastName"] as? String
+        phoneNumberTextField.text = currentUser["phoneNumer"] as? String
+        emailTextFeild.text = currentUser["email"] as? String
+        if let location = currentUser["homeLocation"] as? LimoUserLocation {
             location.fetchIfNeededInBackgroundWithBlock{ (fetchedLocation, error) in
                 if error == nil {
                     if let locName = fetchedLocation["name"] as? String {
@@ -51,7 +51,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                 }
             }
         }
-        if let location = limoUser["preferredDestination"] as? LimoUserLocation {
+        if let location = currentUser["preferredDestination"] as? LimoUserLocation {
             println("Location is \(location)")
             location.fetchIfNeededInBackgroundWithBlock{ (fetchedLocation, error) in
                 if error == nil {
@@ -109,16 +109,15 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     func saveTextFieldToLimoUser(textField: UITextField) {
         switch textField {
         case firstNameTextField:
-            limoUser.firstName = textField.text
+            currentUser["firstName"] = textField.text
         case middleNameTextField:
-            limoUser.middleName = textField.text
+            currentUser["middleName"] = textField.text
         case lastNameTextField:
-            limoUser.lastName = textField.text
+            currentUser["lastName"] = textField.text
         case phoneNumberTextField:
-            limoUser.phoneNumer = textField.text
+            currentUser["phoneNumer"] = textField.text
         case emailTextFeild:
-            limoUser.user?.email = textField.text
-            limoUser.user?.saveEventually()
+            currentUser["email"] = textField.text
         case homeLocationTextField:
             setHomeLocation(textField.text)
         case preferredDestinationTextField:
@@ -135,14 +134,14 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         default: break
             
         }
-        if limoUser.isDirty() {
-            limoUser.saveEventually()
+        if currentUser.isDirty() {
+            currentUser.saveEventually()
         }
     }
     
     func setHomeLocation(text: String!) {
         
-        if let homeLocation = limoUser["homeLocation"] as? LimoUserLocation {
+        if let homeLocation = currentUser["homeLocation"] as? LimoUserLocation {
             homeLocation.fetchIfNeededInBackgroundWithBlock({ (location, error)in
                 if error == nil {
                     println("Found the location: \(location)")
@@ -154,15 +153,15 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             })
         } else {
             let homeLocation = LimoUserLocation()
-            homeLocation["owner"] = limoUser
+            homeLocation["owner"] = currentUser
             homeLocation["name"] = text
-            limoUser["homeLocation"] = homeLocation
+            currentUser["homeLocation"] = homeLocation
         }
     }
     
     func setpreferredDestination(text: String!) {
         
-        if let preferredDestinationLocation = limoUser["preferredDestination"] as? LimoUserLocation {
+        if let preferredDestinationLocation = currentUser["preferredDestination"] as? LimoUserLocation {
             preferredDestinationLocation.fetchIfNeededInBackgroundWithBlock({ (location, error)in
                 if error == nil {
                     println("Found the location: \(location)")
@@ -174,9 +173,9 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             })
         } else {
             let preferredDestination = LimoUserLocation()
-            preferredDestination["owner"] = limoUser
+            preferredDestination["owner"] = currentUser
             preferredDestination["name"] = text
-            limoUser["preferredDestination"] = preferredDestination
+            currentUser["preferredDestination"] = preferredDestination
         }
     }
 
@@ -185,7 +184,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     }
     
     @IBAction func homeLocationGeoCodeButtonTouchUpInside(sender: UIButton) {
-        if let locationToSave = limoUser["homeLocation"] as? LimoUserLocation {
+        if let locationToSave = currentUser["homeLocation"] as? LimoUserLocation {
             self.locationToSave = locationToSave
             println("The locationToSave = \(locationToSave)")
             performSegueWithIdentifier("ShowGeoCoding", sender: locationToSave["name"] as? String)
@@ -195,7 +194,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     }
     
     @IBAction func preferredDestinationGeoCodeButtonTouchUpInside(sender: UIButton) {
-        if let locationToSave = limoUser["preferredDestination"] as? LimoUserLocation {
+        if let locationToSave = currentUser["preferredDestination"] as? LimoUserLocation {
             self.locationToSave = locationToSave
             println("The locationToSave = \(locationToSave)")
             performSegueWithIdentifier("ShowGeoCoding", sender: locationToSave["name"] as? String)

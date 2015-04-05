@@ -10,7 +10,7 @@ import UIKit
 
 class PreviousLocationLookupViewController: PFQueryTableViewController {
     
-    var limoUser: LimoUser!
+    var currentUser: PFUser!
     var selectedLocation: LimoUserLocation?
 
     override init!(style: UITableViewStyle, className: String!) {
@@ -53,7 +53,7 @@ class PreviousLocationLookupViewController: PFQueryTableViewController {
     
     override func queryForTable() -> PFQuery! {
         let query = PFQuery(className: "LimoUserLocation")
-        query.whereKey("owner", equalTo: limoUser)            // expect limoUser to be set here
+        query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
         query.orderByDescending("createdAt")
         query.limit = 200;
 

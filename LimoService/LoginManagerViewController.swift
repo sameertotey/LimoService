@@ -36,32 +36,11 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
         logInViewController.modalTransitionStyle = .CoverVertical
         logInViewController.modalPresentationStyle = .FullScreen
         
-        presentViewController(logInViewController, animated: true) {
+        navigationController?.presentViewController(logInViewController, animated: true) {
             println("Finished with the log in view controller")
         }
 
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        println("login manager view did appear")
-    }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
     
     // MARK: - PFLoginViewControllerDelegate
     
@@ -102,7 +81,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     // Sent to the delegate when a PFUser is logged in.
     func logInViewController(logInController: PFLogInViewController!, didLogInUser user: PFUser!) {
         println("Did login the user \(user)")
-        dismissViewControllerAnimated(true, completion: nil)
+        navigationController?.dismissViewControllerAnimated(true, completion: nil)
 //        setupLoginOrProfileButton()
         navigationController?.popViewControllerAnimated(false)
     }
@@ -170,7 +149,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     // Sent to the delegate when a PFUser is signed up.
     func signUpViewController(signUpController: PFSignUpViewController!, didSignUpUser user: PFUser!) {
         println("Did sign up user")
-        dismissViewControllerAnimated(true, completion: nil)
+        navigationController?.dismissViewControllerAnimated(true, completion: nil)
 //        setupLoginOrProfileButton()
         navigationController?.popViewControllerAnimated(false)
     }

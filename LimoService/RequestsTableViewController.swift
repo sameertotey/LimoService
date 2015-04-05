@@ -10,7 +10,7 @@ import UIKit
 
 class RequestsTableViewController: PFQueryTableViewController {
 
-    var limoUser: LimoUser!
+    var currentUser: PFUser!
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -48,8 +48,8 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     override func queryForTable() -> PFQuery! {
         let query = PFQuery(className: "LimoRequest")
-        println("The limouser in request listing is \(limoUser)")
-        query.whereKey("owner", equalTo: limoUser)            // expect limoUser to be set here
+        println("The limouser in request listing is \(currentUser)")
+        query.whereKey("owner", equalTo: currentUser)            // expect current to be set here
         query.orderByDescending("createdAt")
         query.limit = 200;
         
@@ -78,7 +78,7 @@ class RequestsTableViewController: PFQueryTableViewController {
         if(segue.identifier == "Show Request Detail") {
             if segue.destinationViewController is RequestDetailViewController {
                 let toVC = segue.destinationViewController as RequestDetailViewController
-                toVC.limoUser = limoUser
+                toVC.currentUser = currentUser
                 println("sender is \(sender)")
                 if sender is UITableViewCell {
                     let index = tableView.indexPathForCell(sender as UITableViewCell)
