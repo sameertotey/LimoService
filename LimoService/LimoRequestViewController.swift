@@ -20,7 +20,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupLoginOrProfileButton()
         configureDatePicker()
         configureLookUpSelector()
     }
@@ -33,6 +32,11 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         super.viewDidAppear(animated)
         println("View did appear")
         setupLoginOrProfileButton()
+        if let limoUserRole = limoUser!["role"] as? String {
+            if limoUserRole == "provider" {
+                println("This is a a provider...")
+            }
+        }
         removeKeyboardDisplay()
     }
 
@@ -114,10 +118,10 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
 
                         case 1:
                             if let oldUser = objects.first as? PFObject {
-                                self.limoUser = LimoUser(withoutDataWithClassName: "LimoUser", objectId:oldUser.objectId)
+                                self.limoUser = LimoUser(withoutDataWithObjectId: oldUser.objectId)
+                                self.limoUser?.fetchIfNeededInBackground()
                                 println("limouser is \(self.limoUser)")
                             } else {
-                                println("this is a mystery \(objects) and there it is")
                                 self.displayAlertWithTitle("LimoUser Error", message: "Failed to read the returned object")
                             }
 
@@ -305,7 +309,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             case "Show Profile":
                 if segue.destinationViewController is UserProfileTableViewController {
                     let toVC = segue.destinationViewController as UserProfileTableViewController
-                    toVC.limoUser = limoUser
+                    toVC.limoUser = limoUser as LimoUser!
                 }
             case "Find Address":
                 if segue.destinationViewController is LocationSearchTableViewController {
@@ -332,8 +336,12 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             case "Select Previous Location":
                 if segue.destinationViewController is PreviousLocationLookupViewController {
                     let toVC = segue.destinationViewController as PreviousLocationLookupViewController
-                    if sender is LimoUser {
+                    if sender is LimoUser? {
                         toVC.limoUser = sender as LimoUser
+                    } else {
+                        println("sender is \(sender)")
+                        toVC.limoUser = limoUser
+//                        displayAlertWithTitle("Sender Error", message: "The sender is not the limoUser")
                     }
                 }
             case "Login":

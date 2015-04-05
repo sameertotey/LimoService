@@ -75,7 +75,20 @@ class RequestsTableViewController: PFQueryTableViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if(segue.identifier == "return the Location"){
+        if(segue.identifier == "Show Request Detail") {
+            if segue.destinationViewController is RequestDetailViewController {
+                let toVC = segue.destinationViewController as RequestDetailViewController
+                toVC.limoUser = limoUser
+                println("sender is \(sender)")
+                if sender is UITableViewCell {
+                    let index = tableView.indexPathForCell(sender as UITableViewCell)
+                    if let object =  objectAtIndexPath(index){
+                        toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
+                    } else {
+                        alert("did not find the right object")
+                    }
+                }
+            }
             
         }
     }
