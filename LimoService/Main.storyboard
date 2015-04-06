@@ -96,7 +96,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection id="vIc-bd-wzE">
+                            <tableViewSection footerTitle="Additional Information" id="vIc-bd-wzE">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="60" id="Dc5-2I-qHW" userLabel="Submit">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -836,7 +836,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lgp-lS-Sjg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3449" y="1724"/>
+            <point key="canvasLocation" x="1917" y="2392"/>
         </scene>
         <!--Request Detail View Controller-->
         <scene sceneID="VXr-P1-kC9">
@@ -903,7 +903,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AW3-ee-wNe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4122" y="1730"/>
+            <point key="canvasLocation" x="2686" y="2392"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="oL0-Yv-XVo">
