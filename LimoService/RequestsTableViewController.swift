@@ -11,6 +11,7 @@ import UIKit
 class RequestsTableViewController: PFQueryTableViewController {
 
     var currentUser: PFUser!
+    var userRole = ""
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -48,8 +49,13 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     override func queryForTable() -> PFQuery! {
         let query = PFQuery(className: "LimoRequest")
-        println("The limouser in request listing is \(currentUser)")
-        query.whereKey("owner", equalTo: currentUser)            // expect current to be set here
+        if userRole == "provider" {
+            println("status key")
+            query.whereKey("status", equalTo: "New")
+        } else {
+            println("user key")
+            query.whereKey("owner", equalTo: currentUser)            // expect current to be set here
+        }
         query.orderByDescending("createdAt")
         query.limit = 200;
         

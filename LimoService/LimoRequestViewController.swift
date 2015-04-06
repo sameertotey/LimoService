@@ -11,6 +11,8 @@ import UIKit
 class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     
     var currentUser: PFUser!
+    var userFetched = false
+    var userRole = ""
 
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var logoutButton: UIButton!
@@ -20,8 +22,10 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLoginOrProfileButton()
         configureDatePicker()
         configureLookUpSelector()
+        configureSteppers()
     }
     
     override func didReceiveMemoryWarning() {
@@ -33,12 +37,39 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         println("View did appear")
         setupLoginOrProfileButton()
         if currentUser != nil {
-            if let limoUserRole = currentUser["role"] as? String {
-                if limoUserRole == "provider" {
-                    println("This is a a provider...")
-                } else {
-                    println("This is not a provider")
-                }
+            if !userFetched {
+                currentUser.fetchInBackgroundWithBlock({ (user, error) in
+                    if error == nil {
+                        self.userFetched = true
+                        let installation = PFInstallation.currentInstallation()
+                        installation["user"] = self.currentUser
+                        installation.saveEventually()
+                        let limoUser = user as PFObject
+                        
+                        if let limoUserRole = limoUser["role"] as String? {
+                            self.userRole = limoUserRole
+                            if self.userRole == "provider" {
+                                println("This is a provider...")
+                                if self.navigationController?.topViewController == self {
+                                    self.performSegueWithIdentifier("Requests", sender: nil)
+                                }
+                            } else {
+                                println("This is not a provider")
+                            }
+                        }
+                    } else {
+                        println("Received error \(error)")
+                    }
+                })
+            }
+            if let role = currentUser["role"] as? String {
+                userRole = role
+            }
+            if userRole == "provider" {
+                println("This is a provider...")
+                self.performSegueWithIdentifier("Requests", sender: nil)
+            } else {
+                println("This is not a provider")
             }
         }
          removeKeyboardDisplay()
@@ -88,7 +119,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     func setupLoginOrProfileButton() {
         if let currentUser = PFUser.currentUser() {
             self.currentUser = currentUser
-            println("Current user is : \(currentUser)")
             loginOrProfileBarButtonItem.title = "Profile"
             self.loginOrProfileBarButtonItem.enabled = true
         } else {
@@ -128,20 +158,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         updateDatePickerLabel()
     }
     
-    
-    @IBAction func signUpTouched(sender: UIButton) {
-        login()
-    }
-    
-    @IBAction func logoutTouched(sender: UIButton) {
-        PFUser.logOut()
-        let installation = PFInstallation.currentInstallation()
-        installation.removeObjectForKey("limouser")
-        installation.saveEventually()
-        setupLoginOrProfileButton()
-    }
-    
-    @IBAction func writeDataTouched(sender: UIButton) {
+    @IBAction func createTheRequest(sender: UIButton) {
         if let from = fromLocation {
             if let to = toLocation {
                 if let user = currentUser {
@@ -159,6 +176,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                             println("Succeed in creating a limo request : \(limoRequest)")
                             println("Channel is : \(limoRequest.objectId)")
                             self.subscibeToChannel(limoRequest.objectId as NSString)
+                            self.resetLocationsAndDate()
+                            self.performSegueWithIdentifier("Requests", sender: nil)
                         } else {
                             println("Received error \(error)")
                         }
@@ -187,7 +206,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         performSegueWithIdentifier("Login", sender: nil)
      }
     
-    
     @IBOutlet weak var limoRequestDatePicker: UIDatePicker!
     @IBOutlet weak var limoRequestDateLabel: UILabel!
     
@@ -211,6 +229,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     var originalLocationText = ""
     var fromLocation: LimoUserLocation?
     var toLocation: LimoUserLocation?
+    var locationToSave: LimoUserLocation!
 
     @IBOutlet weak var fromLocationTextField: UITextField!
     @IBOutlet weak var toLocationTextField: UITextField!
@@ -219,7 +238,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var fromLocationLookUp: UIButton!
     @IBOutlet weak var toLocationLookUp: UIButton!
     
-    
     // MARK: UITextFieldDelegate
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -227,7 +245,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         saveTextIfNeeded(textField)
         return false
     }
-
     
     @IBAction func locationLookUpTouchUpInside(sender: UIButton) {
         switch sender {
@@ -251,8 +268,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }
         
     }
-    
-    var locationToSave: LimoUserLocation!
     
     // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -299,7 +314,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             case "Requests":
                 if segue.destinationViewController is RequestsTableViewController {
                     let toVC = segue.destinationViewController as RequestsTableViewController
-                        toVC.currentUser = currentUser
+                    toVC.currentUser = currentUser
+                    toVC.userRole = userRole
                 }
 
             default:
@@ -395,6 +411,40 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    // Num passengers
+    
+    @IBOutlet weak var numPassengersStepper: UIStepper!
+    @IBOutlet weak var numPassengersLabel: UILabel!
+    
+    @IBOutlet weak var numBagsStepper: UIStepper!
+    @IBOutlet weak var numBagsLabel: UILabel!
+    
+    func configureSteppers() {
+        numPassengersStepper.value = 1
+        numPassengersStepper.minimumValue = 0
+        numPassengersStepper.maximumValue = 10
+        numPassengersStepper.stepValue = 1
+        
+        numBagsStepper.value = 0
+        numBagsStepper.minimumValue = 0
+        numBagsStepper.maximumValue = 10
+        numBagsStepper.stepValue = 1
+        
+        numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
+        numBagsLabel.text = "\(Int(numBagsStepper.value))"
+    }
+
+    @IBAction func stepperValueChanged(sender: UIStepper) {
+        switch sender {
+        case numPassengersStepper:
+            numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
+        case numBagsStepper:
+            numBagsLabel.text = "\(Int(numBagsStepper.value))"
+        default:
+            break
+        }
+    }
+    
     // MARK: - Helpers
     
     func removeKeyboardDisplay() {
@@ -409,6 +459,18 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    func resetLocationsAndDate() {
+        locationSpecifier = ""
+        originalLocationText = ""
+        fromLocation = nil
+        toLocation = nil
+        configureDatePicker()
+        fromLocationTextField.text = ""
+        toLocationTextField.text = ""
+        fromLocationTextView.text = ""
+        toLocationTextView.text = ""
+    }
+    
     /* Just a little method to help us display alert dialogs to the user */
     func displayAlertWithTitle(title: String, message: String){
         let controller = UIAlertController(title: title, message: message, preferredStyle: .Alert)
@@ -419,7 +481,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         })
         presentViewController(controller, animated: true, completion: nil)
     }
-
     
 }
 

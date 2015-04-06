@@ -225,6 +225,16 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             }
         }
     }
+    
+    // logoff
+    @IBAction func logoffButtonTouched(sender: UIButton) {
+        PFUser.logOut()
+        let installation = PFInstallation.currentInstallation()
+        installation.removeObjectForKey("user")
+        installation.saveEventually()
+        navigationController?.popViewControllerAnimated(false)
+    }
+    
 
     // unwind from a location selection
     @IBAction func unwindToUserProfile(sender: UIStoryboardSegue)
