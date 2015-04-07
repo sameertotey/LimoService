@@ -287,17 +287,14 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                 if let firstName = userData["first_name"] {
                     self.firstNameTextField.text = firstName
                     self.currentUser["firstName"] = firstName
-                    
                 }
                 if let lastName = userData["last_name"] {
                     self.lastNameTextField.text = lastName
                     self.currentUser["lastName"] = lastName
-                    
                 }
                 if let email = userData["email"] {
                     self.emailTextFeild.text = email
                     self.currentUser["email"] = email
-                    
                 }
                 if self.currentUser.isDirty() {
                     self.currentUser.saveEventually()

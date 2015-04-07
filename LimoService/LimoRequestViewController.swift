@@ -17,9 +17,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureDatePicker()
+        resetFields()
         configureLookUpSelector()
-        configureSteppers()
     }
     
     override func didReceiveMemoryWarning() {
@@ -73,9 +72,19 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         lookUpSelectionController!.addAction(actionCancel)
     }
     
-
-    @IBAction func loginOrProfileTarget(sender: UIBarButtonItem) {
-        performSegueWithIdentifier("Show Profile", sender: nil)
+    func configureSteppers() {
+        numPassengersStepper.value = 1
+        numPassengersStepper.minimumValue = 0
+        numPassengersStepper.maximumValue = 10
+        numPassengersStepper.stepValue = 1
+        
+        numBagsStepper.value = 0
+        numBagsStepper.minimumValue = 0
+        numBagsStepper.maximumValue = 10
+        numBagsStepper.stepValue = 1
+        
+        numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
+        numBagsLabel.text = "\(Int(numBagsStepper.value))"
     }
     
     func configureDatePicker() {
@@ -99,53 +108,60 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         updateDatePickerLabel()
     }
     
+    // MARK: - Create the Request
     @IBAction func createTheRequest(sender: UIButton) {
         if let from = fromLocation {
-            if let to = toLocation {
-                if let user = currentUser {
-                    let limoRequest = LimoRequest()
-                    limoRequest["from"] = from
-                    limoRequest["fromString"] = from["address"]
+            if let user = currentUser {
+                let limoRequest = LimoRequest()
+                limoRequest["from"] = from
+                limoRequest["fromString"] = from["address"]
+                if let to = toLocation {
                     limoRequest["to"] = to
                     limoRequest["toString"] = to["address"]
-                    limoRequest["owner"] = user
-                    limoRequest["status"] = "New"
-                    limoRequest["when"] = limoRequestDatePicker.date
-                    limoRequest["whenString"] = dateFormatter.stringFromDate(limoRequestDatePicker.date)
-                    limoRequest.saveInBackgroundWithBlock { (succeeded, error)  in
-                        if succeeded {
-                            println("Succeed in creating a limo request : \(limoRequest)")
-                            println("Channel is : \(limoRequest.objectId)")
-                            self.subscibeToChannel(limoRequest.objectId as NSString)
-                            self.resetLocationsAndDate()
-                            self.performSegueWithIdentifier("Requests", sender: nil)
-                        } else {
-                            println("Received error \(error)")
-                        }
+                }
+                limoRequest["owner"] = user
+                limoRequest["status"] = "New"
+                limoRequest["when"] = limoRequestDatePicker.date
+                limoRequest["whenString"] = dateFormatter.stringFromDate(limoRequestDatePicker.date)
+                limoRequest["numPassengers"] = Int(numPassengersStepper.value)
+                limoRequest["numBags"] = Int(numBagsStepper.value)
+                limoRequest["specialRequests"] = specialCommentsTextField.text
+                limoRequest.saveInBackgroundWithBlock { (succeeded, error)  in
+                    if succeeded {
+                        println("Succeed in creating a limo request: \(limoRequest)")
+                        let controller = UIAlertController(title: "Request Created", message: "Your limo request has been saved", preferredStyle: .Alert)
+                        controller.addAction(UIAlertAction(title: "OK", style: .Default) { _ in
+                            self.resetFields()
+                            })
+
+                        controller.addAction(UIAlertAction(title: "Details", style: .Default) { _ in
+                            self.resetFields()
+                            self.performSegueWithIdentifier("Show Created Request", sender: limoRequest)
+                            })
+                        self.presentViewController(controller, animated: true, completion: nil)
+
+                        //                            self.subscibeToChannel(limoRequest.objectId as NSString)
+                    } else {
+                        println("Received error while creating the request: \(error)")
                     }
-                } else {
-                    displayAlertWithTitle("Incomplete Request", message: "Need User Infomation")
                 }
             } else {
-                displayAlertWithTitle("Incomplete Request", message: "Need 'To' Location")
+                displayAlertWithTitle("Incomplete Request", message: "Need User Infomation")
             }
-        } else {
+         } else {
             displayAlertWithTitle("Incomplete Request", message: "Need 'From' Location")
         }
     }
+//    
+//    func subscibeToChannel(channelName: NSString) {
+//        // When users indicate they are Giants fans, we subscribe them to that channel.
+//        let currentInstallation = PFInstallation.currentInstallation()
+//        let newChannel = "C\(channelName)"
+//        currentInstallation.addUniqueObject(newChannel, forKey: "channels")
+//        currentInstallation.saveInBackground()
+//        println("Added channel \(newChannel)")
+//    }
     
-    func subscibeToChannel(channelName: NSString) {
-        // When users indicate they are Giants fans, we subscribe them to that channel.
-        let currentInstallation = PFInstallation.currentInstallation()
-        let newChannel = "C\(channelName)"
-        currentInstallation.addUniqueObject(newChannel, forKey: "channels")
-        currentInstallation.saveInBackground()
-        println("Added channel \(newChannel)")
-    }
-    
-    func login() {
-        performSegueWithIdentifier("Login", sender: nil)
-     }
     
     @IBOutlet weak var limoRequestDatePicker: UIDatePicker!
     @IBOutlet weak var limoRequestDateLabel: UILabel!
@@ -178,14 +194,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var toLocationTextView: UITextView!
     @IBOutlet weak var fromLocationLookUp: UIButton!
     @IBOutlet weak var toLocationLookUp: UIButton!
-    
-    // MARK: UITextFieldDelegate
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        saveTextIfNeeded(textField)
-        return false
-    }
     
     @IBAction func locationLookUpTouchUpInside(sender: UIButton) {
         switch sender {
@@ -251,6 +259,16 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                     let toVC = segue.destinationViewController as RequestsTableViewController
                     toVC.currentUser = currentUser
                     toVC.userRole = userRole
+                }
+            case "Show Created Request":
+                if segue.destinationViewController is RequestDetailViewController {
+                    let toVC = segue.destinationViewController as RequestDetailViewController
+                    toVC.currentUser = currentUser
+                    if sender is LimoRequest {
+                        toVC.limoRequest = sender as LimoRequest
+                    } else {
+                        displayAlertWithTitle("Oops there was a problem", message: "The sender is not a request")
+                    }
                 }
 
             default:
@@ -329,6 +347,14 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    // MARK: UITextFieldDelegate
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        saveTextIfNeeded(textField)
+        return false
+    }
+
     func saveTextIfNeeded(textField: UITextField) {
         switch textField {
         case toLocationTextField:
@@ -346,28 +372,15 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    // Num passengers
+    // additonal fields
     
+    @IBOutlet weak var specialCommentsTextField: UITextField!
     @IBOutlet weak var numPassengersStepper: UIStepper!
     @IBOutlet weak var numPassengersLabel: UILabel!
     
     @IBOutlet weak var numBagsStepper: UIStepper!
     @IBOutlet weak var numBagsLabel: UILabel!
     
-    func configureSteppers() {
-        numPassengersStepper.value = 1
-        numPassengersStepper.minimumValue = 0
-        numPassengersStepper.maximumValue = 10
-        numPassengersStepper.stepValue = 1
-        
-        numBagsStepper.value = 0
-        numBagsStepper.minimumValue = 0
-        numBagsStepper.maximumValue = 10
-        numBagsStepper.stepValue = 1
-        
-        numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
-        numBagsLabel.text = "\(Int(numBagsStepper.value))"
-    }
 
     @IBAction func stepperValueChanged(sender: UIStepper) {
         switch sender {
@@ -394,12 +407,14 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    func resetLocationsAndDate() {
+    func resetFields() {
+        configureDatePicker()
+        configureSteppers()
+        configureDatePicker()
         locationSpecifier = ""
         originalLocationText = ""
         fromLocation = nil
         toLocation = nil
-        configureDatePicker()
         fromLocationTextField.text = ""
         toLocationTextField.text = ""
         fromLocationTextView.text = ""
