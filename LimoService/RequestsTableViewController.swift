@@ -41,6 +41,14 @@ class RequestsTableViewController: PFQueryTableViewController {
         self.tableView.estimatedRowHeight = 60
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        if userRole == "provider" {
+            let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Bordered, target: self, action: "showProfile")
+            self.navigationItem.leftBarButtonItem = profileBarButtonItem
+        }
+    }
+    
+    func showProfile() {
+        performSegueWithIdentifier("Show Provider Profile", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -49,12 +57,13 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     override func queryForTable() -> PFQuery! {
         let query = PFQuery(className: "LimoRequest")
+        // provider gets to see all New requests, other users see only their own requests
         if userRole == "provider" {
             println("status key")
             query.whereKey("status", equalTo: "New")
         } else {
             println("user key")
-            query.whereKey("owner", equalTo: currentUser)            // expect current to be set here
+            query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
         }
         query.orderByDescending("createdAt")
         query.limit = 200;

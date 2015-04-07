@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pzI-Ao-gjz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="E9G-si-8WL">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -237,10 +237,10 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Limo Service" id="DjL-hY-fJx">
-                        <barButtonItem key="backBarButtonItem" title="order" id="UVj-fJ-LR4"/>
-                        <barButtonItem key="leftBarButtonItem" title="Login" id="pGQ-sL-HMJ">
+                        <barButtonItem key="backBarButtonItem" title="New" id="UVj-fJ-LR4"/>
+                        <barButtonItem key="leftBarButtonItem" title="Profile" id="pGQ-sL-HMJ">
                             <connections>
-                                <action selector="loginOrProfileTarget:" destination="Bk7-fr-97g" id="CpZ-iw-kNS"/>
+                                <segue destination="0aT-SJ-FBw" kind="show" identifier="Show Profile" id="H4I-M0-CC3"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="History" id="Z6k-D9-sOr">
@@ -255,7 +255,6 @@
                         <outlet property="fromLocationTextView" destination="rM9-Tv-mZa" id="IaW-Xy-j0O"/>
                         <outlet property="limoRequestDateLabel" destination="anm-he-urQ" id="9dU-6y-YuQ"/>
                         <outlet property="limoRequestDatePicker" destination="Rlc-X0-aRv" id="qfb-Uo-pG1"/>
-                        <outlet property="loginOrProfileBarButtonItem" destination="pGQ-sL-HMJ" id="MRg-nY-veC"/>
                         <outlet property="numBagsLabel" destination="Mja-tj-8sN" id="j6C-Jv-vcs"/>
                         <outlet property="numBagsStepper" destination="bU4-Mv-2Sz" id="QxF-GN-Tbw"/>
                         <outlet property="numPassengersLabel" destination="zaT-cO-7Ux" id="2Bo-cu-6jT"/>
@@ -263,16 +262,14 @@
                         <outlet property="toLocationLookUp" destination="hIa-fw-XA8" id="Xta-Td-eQk"/>
                         <outlet property="toLocationTextField" destination="eho-rg-wBe" id="7TE-Wx-JLx"/>
                         <outlet property="toLocationTextView" destination="hlV-DN-c4o" id="QKf-kq-T74"/>
-                        <segue destination="0aT-SJ-FBw" kind="show" identifier="Show Profile" id="Eji-Pe-pcy"/>
                         <segue destination="g53-wN-AG4" kind="show" identifier="Search Location" id="NQT-2h-ZpT"/>
                         <segue destination="yqg-Kv-s4w" kind="show" identifier="Find Address" id="qEb-9c-d4S"/>
                         <segue destination="BfS-dI-IZM" kind="show" identifier="Select Previous Location" id="Lc2-kE-FE5"/>
-                        <segue destination="VYx-bn-wyM" kind="custom" identifier="Login" customClass="PushNoAnimationSegue" customModule="LimoService" customModuleProvider="target" id="pyE-7H-7fV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1W-mS-AvB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1907" y="734"/>
+            <point key="canvasLocation" x="1646" y="735"/>
         </scene>
         <!--Login Manager View Controller-->
         <scene sceneID="Jlm-rK-2DN">
@@ -285,12 +282,30 @@
                     <view key="view" contentMode="scaleToFill" id="ZP6-CK-T7D">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to the GO LimoService" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zGE-HF-DAs">
+                                <rect key="frame" x="175" y="289" width="250" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="pnX-Tl-iqw" firstAttribute="top" secondItem="zGE-HF-DAs" secondAttribute="bottom" constant="290" id="4gN-Iw-pPZ"/>
+                            <constraint firstItem="zGE-HF-DAs" firstAttribute="centerX" secondItem="ZP6-CK-T7D" secondAttribute="centerX" id="CST-fw-4hT"/>
+                            <constraint firstItem="zGE-HF-DAs" firstAttribute="top" secondItem="Uts-Jb-lIp" secondAttribute="bottom" constant="225" id="FjE-ja-Yhs"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="DSI-Op-4wa"/>
+                    <connections>
+                        <segue destination="Bk7-fr-97g" kind="custom" identifier="Make a Request" customClass="PushNoAnimationSegue" customModule="LimoService" customModuleProvider="target" id="LPg-dC-n6r"/>
+                        <segue destination="Ktp-z7-rcB" kind="custom" identifier="Show Requests" customClass="PushNoAnimationSegue" customModule="LimoService" customModuleProvider="target" id="zKw-ll-T6a"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mIm-Uo-9uw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1907" y="1536"/>
+            <point key="canvasLocation" x="1383" y="1502"/>
         </scene>
         <!--User Profile-->
         <scene sceneID="DeG-2m-6iT">
@@ -458,6 +473,72 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Facebook Integration" id="vb2-9o-sZk" userLabel="facebook">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="60" id="UFU-AB-TUA" userLabel="Facebook">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UFU-AB-TUA" id="Cu2-rK-Lwu">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6He-qo-8Sz">
+                                                    <rect key="frame" x="224.5" y="8" width="151" height="43"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                                                    <inset key="contentEdgeInsets" minX="44" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Connect" backgroundImage="facebook-small-pressed">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="disabled" backgroundImage="facebook-small"/>
+                                                    <state key="selected" title="Login" backgroundImage="facebook-small-pressed"/>
+                                                    <state key="highlighted" backgroundImage="facebook-small-pressed">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="facebookButtonTouched:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="ikS-8f-Uko"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="6He-qo-8Sz" secondAttribute="centerX" id="1ss-Sc-w4i"/>
+                                                <constraint firstAttribute="centerY" secondItem="6He-qo-8Sz" secondAttribute="centerY" id="7tA-43-BzM"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Twitter Integration" id="YIu-eZ-0WY" userLabel="twitter">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="60" id="YAB-dA-oal" userLabel="Twitter">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YAB-dA-oal" id="5Bt-mg-lu5">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VPJ-On-b9H">
+                                                    <rect key="frame" x="242" y="18.5" width="115" height="22"/>
+                                                    <color key="backgroundColor" red="0.1705643503" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                                                    <inset key="contentEdgeInsets" minX="44" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Connect">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="selected" title="Login"/>
+                                                    <state key="highlighted" backgroundImage="sign-in-with-twitter-gray">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="twitterButtonTouched:" destination="0aT-SJ-FBw" eventType="touchUpInside" id="cNY-pc-Prf"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="VPJ-On-b9H" secondAttribute="centerY" id="RBO-vs-lrY"/>
+                                                <constraint firstAttribute="centerX" secondItem="VPJ-On-b9H" secondAttribute="centerX" id="uR6-ey-3tn"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection headerTitle="Home Location " id="e3C-pl-4hz" userLabel="Home Location">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="130" id="BVO-nv-2PE" userLabel="Location">
@@ -579,6 +660,7 @@
                     </tableView>
                     <connections>
                         <outlet property="emailTextFeild" destination="pkU-xk-pLI" id="Ha8-LJ-0Vb"/>
+                        <outlet property="facebookButton" destination="6He-qo-8Sz" id="1WW-9y-At0"/>
                         <outlet property="firstNameTextField" destination="RpI-re-bP9" id="LaG-Kb-pwc"/>
                         <outlet property="homeLocationTextField" destination="ELV-bV-BfR" id="dNp-7J-1WX"/>
                         <outlet property="homeLocationTextView" destination="Fww-EN-iXE" id="PZM-n0-wAv"/>
@@ -587,12 +669,13 @@
                         <outlet property="phoneNumberTextField" destination="3Nv-hL-okf" id="xp2-Am-nIv"/>
                         <outlet property="preferredDestinationTextField" destination="na9-s8-fsE" id="bZ6-3S-0Kb"/>
                         <outlet property="preferredDestinationTextView" destination="JlF-vz-Vzq" id="jH4-KY-nms"/>
+                        <outlet property="twitterButton" destination="VPJ-On-b9H" id="J2A-v3-2TQ"/>
                         <segue destination="yqg-Kv-s4w" kind="show" identifier="ShowGeoCoding" id="0NA-1d-nRj"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qEv-pg-GXA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2717" y="290"/>
+            <point key="canvasLocation" x="2566" y="720"/>
         </scene>
         <!--Local Search Table View Controller-->
         <scene sceneID="sWi-0S-cMe">
@@ -624,7 +707,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nQh-ql-JLw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2686" y="1040"/>
+            <point key="canvasLocation" x="3365" y="788"/>
         </scene>
         <!--Previous Location Lookup View Controller-->
         <scene sceneID="MoJ-gn-bNi">
@@ -695,7 +778,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dck-xA-fWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="uRx-G7-82O" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2686" y="1724"/>
+            <point key="canvasLocation" x="3365" y="1492"/>
         </scene>
         <!--Location Search Table View Controller-->
         <scene sceneID="pMo-D6-o0a">
@@ -727,7 +810,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SBp-zR-vxg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3449" y="290"/>
+            <point key="canvasLocation" x="3365" y="106"/>
         </scene>
         <!--Location Map View Controller-->
         <scene sceneID="Z2h-6M-YyP">
@@ -761,7 +844,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6UK-yR-KXm" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ZmE-pf-xoM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3449" y="1030"/>
+            <point key="canvasLocation" x="4137" y="638"/>
         </scene>
         <!--Requests Table View Controller-->
         <scene sceneID="l1Q-OO-TZk">
@@ -833,10 +916,13 @@
                             <outlet property="delegate" destination="Ktp-z7-rcB" id="dy4-XH-0ZM"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <segue destination="0aT-SJ-FBw" kind="show" identifier="Show Provider Profile" id="41a-Bq-1cT"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lgp-lS-Sjg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1917" y="2392"/>
+            <point key="canvasLocation" x="2599" y="1528"/>
         </scene>
         <!--Request Detail View Controller-->
         <scene sceneID="VXr-P1-kC9">
@@ -903,32 +989,37 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AW3-ee-wNe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2686" y="2392"/>
+            <point key="canvasLocation" x="3424" y="2260"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="oL0-Yv-XVo">
+        <scene sceneID="JkS-oM-afZ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pzI-Ao-gjz" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="E9G-si-8WL" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gIE-YF-x1b">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hQl-36-DSV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Bk7-fr-97g" kind="relationship" relationship="rootViewController" id="s8O-Gd-pP9"/>
+                        <segue destination="VYx-bn-wyM" kind="relationship" relationship="rootViewController" id="ZMB-wD-tRd"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Jks-UI-nY6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rHH-wX-d1r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1073" y="734"/>
+            <point key="canvasLocation" x="731" y="1514"/>
         </scene>
     </scenes>
     <resources>
         <image name="earth" width="32" height="32"/>
+        <image name="facebook-small" width="151" height="43"/>
+        <image name="facebook-small-pressed" width="151" height="43"/>
         <image name="magnifier" width="32" height="32"/>
+        <image name="sign-in-with-twitter-gray" width="158" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="zKw-ll-T6a"/>
         <segue reference="qEb-9c-d4S"/>
+        <segue reference="41a-Bq-1cT"/>
     </inferredMetricsTieBreakers>
 </document>

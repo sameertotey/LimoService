@@ -10,13 +10,43 @@ import UIKit
 
 class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
 
-    var ownerController: LimoRequestViewController?
+    var currentUser: PFUser! {
+        didSet {
+            println("Current User = \(currentUser) oldValue = \(oldValue)")
+            if currentUser != nil {
+                userFetched = false
+                userRole = ""
+                fetchTheUser()
+            }
+        }
+    }
+    var userFetched = false
+    var userRole = ""
     
+    private struct UIStoryboardConstants {
+        static let showRequests = "Show Requests"
+        static let makeRequest = "Make a Request"
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationItem.hidesBackButton = true
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        route()
+    }
+    
+    func route() {
+        if let currentUser = PFUser.currentUser() {
+            self.currentUser = currentUser
+        } else {
+            println("did not find current user")
+            login()
+        }
+    }
+    
+    func login() {
         // Create the log in view controller
         var logInViewController = LimoUserLogInViewController()
         logInViewController.delegate = self // Set ourselves as the delegate
@@ -39,8 +69,59 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
         navigationController?.presentViewController(logInViewController, animated: true) {
             println("Finished with the log in view controller")
         }
-
     }
+    
+    func fetchTheUser() {
+        currentUser.fetchInBackgroundWithBlock{ (user, error) in
+            if error == nil {
+                self.userFetched = true
+                let installation = PFInstallation.currentInstallation()
+                installation["user"] = user
+                installation.saveEventually()
+                
+                if let limoUserRole = user["role"] as String? {
+                    self.userRole = limoUserRole
+                    if self.userRole == "provider" {
+                        println("This is a provider...")
+                        self.performSegueWithIdentifier(UIStoryboardConstants.showRequests, sender: nil)
+                    } else {
+                        println("This is not a provider")
+                        self.performSegueWithIdentifier(UIStoryboardConstants.makeRequest, sender: nil)
+                    }
+                } else {
+                    println("There is no role")
+                    self.performSegueWithIdentifier(UIStoryboardConstants.makeRequest, sender: nil)
+                }
+            } else {
+                println("Received error while fetching user: \(error) moving on to login")
+                self.login()
+//                self.performSegueWithIdentifier(UIStoryboardConstants.showRequests, sender: nil)
+            }
+        }
+    }
+    
+    // MARK: - Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+             case "Make a Request":
+                if segue.destinationViewController is LimoRequestViewController {
+                    let toVC = segue.destinationViewController as LimoRequestViewController
+                    toVC.currentUser = currentUser
+                }
+            case "Show Requests":
+                if segue.destinationViewController is RequestsTableViewController {
+                    let toVC = segue.destinationViewController as RequestsTableViewController
+                    toVC.currentUser = currentUser
+                    toVC.userRole = userRole
+                }
+                
+            default:
+                break
+            }
+        }
+    }
+
     
     // MARK: - PFLoginViewControllerDelegate
     
@@ -83,7 +164,8 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
         println("Did login the user \(user)")
         navigationController?.dismissViewControllerAnimated(true, completion: nil)
 //        setupLoginOrProfileButton()
-        navigationController?.popViewControllerAnimated(false)
+//        navigationController?.popViewControllerAnimated(false)
+        currentUser = user
     }
     
     
@@ -98,7 +180,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
         println("Cancelled the login")
         println("self is \(self)")
 //        setupLoginOrProfileButton()
-        navigationController?.popViewControllerAnimated(false)
+//        navigationController?.popViewControllerAnimated(false)
     }
     
     
@@ -151,7 +233,8 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
         println("Did sign up user")
         navigationController?.dismissViewControllerAnimated(true, completion: nil)
 //        setupLoginOrProfileButton()
-        navigationController?.popViewControllerAnimated(false)
+//        navigationController?.popViewControllerAnimated(false)
+        currentUser = user
     }
     
     // Sent to the delegate when the sign up attempt fails.
@@ -163,7 +246,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     func signUpViewControllerDidCancelSignUp(signUpController: PFSignUpViewController!) {
         println("User dismissed the signUpViewController")
 //        setupLoginOrProfileButton()
-        navigationController?.popViewControllerAnimated(false)
+//        navigationController?.popViewControllerAnimated(false)
     }
 
 

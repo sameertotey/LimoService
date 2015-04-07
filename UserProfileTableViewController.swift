@@ -19,6 +19,8 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        // using the rootview controller's currentUser instead of setting it in the prepare for segue
+        currentUser = (navigationController?.viewControllers[0] as LoginManagerViewController).currentUser
         displayCurrentValues()
     }
 
@@ -28,6 +30,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         lastNameTextField.text = currentUser["lastName"] as? String
         phoneNumberTextField.text = currentUser["phoneNumer"] as? String
         emailTextFeild.text = currentUser["email"] as? String
+        setupFacebookButton()
         if let location = currentUser["homeLocation"] as? LimoUserLocation {
             location.fetchIfNeededInBackgroundWithBlock{ (fetchedLocation, error) in
                 if error == nil {
@@ -232,9 +235,110 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         let installation = PFInstallation.currentInstallation()
         installation.removeObjectForKey("user")
         installation.saveEventually()
-        navigationController?.popViewControllerAnimated(false)
+        navigationController?.popToRootViewControllerAnimated(false)
     }
     
+    // facebook
+    @IBOutlet weak var facebookButton: UIButton!
+    
+    func setupFacebookButton() {
+        // Check if user is cached and linked to Facebook, if so, set title to unLink
+        if let user = PFUser.currentUser() {
+            if PFFacebookUtils.isLinkedWithUser(user) {
+                println("connected with facebook")
+                facebookButton.setTitle("Refresh", forState: .Normal)
+            } else {
+                println("not connected with facebook")
+                facebookButton.setTitle("Link", forState: .Normal)
+            }
+        }
+    }
+    
+    @IBAction func facebookButtonTouched(sender: UIButton) {
+        if let titleText = sender.titleForState(.Normal) {
+            if titleText == "Refresh" {
+                println("going to refresh the facebook info")
+                retrieveFaceboolInfo()
+            } else {
+                PFFacebookUtils.linkUser(PFUser.currentUser(), permissions: ["public_profile", "email"], block: { (succeeded, error) in
+                    if succeeded {
+                        self.retrieveFaceboolInfo()
+                        self.facebookButton.setTitle("Refresh", forState: .Normal)
+                    } else {
+                        println("Failed to link User with Facebook. Received error \(error)")
+                    }
+                })
+            }
+        }
+    }
+
+    // get information from Facebook and update the user record
+    func retrieveFaceboolInfo() {
+        // Send request to Facebook
+        let request = FBRequest.requestForMe()
+        request.startWithCompletionHandler({ (connection, result, error) -> Void in
+            if error != nil {
+                println("Failed to retrieve information from Facebook. Received error \(error)")
+            } else {
+                var userData = result as [NSString: NSString]
+                if let facebookID = userData["id"] {
+                    
+                }
+                if let firstName = userData["first_name"] {
+                    self.firstNameTextField.text = firstName
+                    self.currentUser["firstName"] = firstName
+                    
+                }
+                if let lastName = userData["last_name"] {
+                    self.lastNameTextField.text = lastName
+                    self.currentUser["lastName"] = lastName
+                    
+                }
+                if let email = userData["email"] {
+                    self.emailTextFeild.text = email
+                    self.currentUser["email"] = email
+                    
+                }
+                if self.currentUser.isDirty() {
+                    self.currentUser.saveEventually()
+                }
+            }
+            
+        })
+
+    }
+    
+    // twitter
+    @IBOutlet weak var twitterButton: UIButton!
+    
+    func setupTwitterButton() {
+        // Check if user is cached and linked to Facebook, if so, set title to unLink
+        if let user = PFUser.currentUser() {
+            if PFTwitterUtils.isLinkedWithUser(user) {
+                println("connected with twitter")
+                twitterButton.setTitle("Refresh", forState: .Normal)
+            } else {
+                println("not connected with twitter")
+                twitterButton.setTitle("Link", forState: .Normal)
+            }
+        }
+    }
+    
+    @IBAction func twitterButtonTouched(sender: UIButton) {
+        if let titleText = sender.titleForState(.Normal) {
+            if titleText == "Refresh" {
+                println("going to refresh the twitter info")
+            } else {
+                PFTwitterUtils.linkUser(PFUser.currentUser(), block: { (succeeded, error) in
+                    if succeeded {
+                        self.twitterButton.setTitle("Refresh", forState: .Normal)
+                    } else {
+                        println("Failed to link User with Twitter. Received error \(error)")
+                    }
+                })
+            }
+        }
+    }
 
     // unwind from a location selection
     @IBAction func unwindToUserProfile(sender: UIStoryboardSegue)

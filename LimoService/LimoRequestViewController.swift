@@ -13,16 +13,10 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     var currentUser: PFUser!
     var userFetched = false
     var userRole = ""
-
-    @IBOutlet weak var signUpButton: UIButton!
-    @IBOutlet weak var logoutButton: UIButton!
-    
-    @IBOutlet weak var loginOrProfileBarButtonItem: UIBarButtonItem!
-    
+        
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLoginOrProfileButton()
         configureDatePicker()
         configureLookUpSelector()
         configureSteppers()
@@ -35,44 +29,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         println("View did appear")
-        setupLoginOrProfileButton()
-        if currentUser != nil {
-            if !userFetched {
-                currentUser.fetchInBackgroundWithBlock({ (user, error) in
-                    if error == nil {
-                        self.userFetched = true
-                        let installation = PFInstallation.currentInstallation()
-                        installation["user"] = self.currentUser
-                        installation.saveEventually()
-                        let limoUser = user as PFObject
-                        
-                        if let limoUserRole = limoUser["role"] as String? {
-                            self.userRole = limoUserRole
-                            if self.userRole == "provider" {
-                                println("This is a provider...")
-                                if self.navigationController?.topViewController == self {
-                                    self.performSegueWithIdentifier("Requests", sender: nil)
-                                }
-                            } else {
-                                println("This is not a provider")
-                            }
-                        }
-                    } else {
-                        println("Received error \(error)")
-                    }
-                })
-            }
-            if let role = currentUser["role"] as? String {
-                userRole = role
-            }
-            if userRole == "provider" {
-                println("This is a provider...")
-                self.performSegueWithIdentifier("Requests", sender: nil)
-            } else {
-                println("This is not a provider")
-            }
-        }
-         removeKeyboardDisplay()
+        removeKeyboardDisplay()
     }
 
     // MARK: - Configuration
@@ -116,43 +73,27 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         lookUpSelectionController!.addAction(actionCancel)
     }
     
-    func setupLoginOrProfileButton() {
-        if let currentUser = PFUser.currentUser() {
-            self.currentUser = currentUser
-            loginOrProfileBarButtonItem.title = "Profile"
-            self.loginOrProfileBarButtonItem.enabled = true
-        } else {
-            println("did not find current user")
-            login()
-        }
-    }
-    
+
     @IBAction func loginOrProfileTarget(sender: UIBarButtonItem) {
-        if sender.title == "Login" {
-            login()
-        } else {
-            performSegueWithIdentifier("Show Profile", sender: nil)
-        }
+        performSegueWithIdentifier("Show Profile", sender: nil)
     }
     
     func configureDatePicker() {
         limoRequestDatePicker.datePickerMode = .DateAndTime
         
         // Set min/max date for the date picker.
-        // As an example we will limit the date between now and 7 days from now.
+        // As an example we will limit the date between now and 31 days from now.
         let now = NSDate()
         limoRequestDatePicker.minimumDate = now
         
         let currentCalendar = NSCalendar.currentCalendar()
         
         let dateComponents = NSDateComponents()
-        dateComponents.day = 7
+        dateComponents.day = 31
         
         let sevenDaysFromNow = currentCalendar.dateByAddingComponents(dateComponents, toDate: now, options: nil)
         limoRequestDatePicker.maximumDate = sevenDaysFromNow
-        
         limoRequestDatePicker.minuteInterval = 2
-        
         limoRequestDatePicker.addTarget(self, action: "updateDatePickerLabel", forControlEvents: .ValueChanged)
         
         updateDatePickerLabel()
@@ -305,13 +246,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                     let toVC = segue.destinationViewController as PreviousLocationLookupViewController
                     toVC.currentUser = currentUser
                 }
-            case "Login":
-                if segue.destinationViewController is LoginManagerViewController {
-                    let toVC = segue.destinationViewController as LoginManagerViewController
-                    toVC.ownerController = self
-                    println("calling login")
-                }
-            case "Requests":
+             case "Requests":
                 if segue.destinationViewController is RequestsTableViewController {
                     let toVC = segue.destinationViewController as RequestsTableViewController
                     toVC.currentUser = currentUser
