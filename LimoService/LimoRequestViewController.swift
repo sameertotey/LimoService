@@ -13,7 +13,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     var currentUser: PFUser!
     var userFetched = false
     var userRole = ""
-        
+
+    
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,17 +92,17 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         limoRequestDatePicker.datePickerMode = .DateAndTime
         
         // Set min/max date for the date picker.
-        // As an example we will limit the date between now and 31 days from now.
+        // As an example we will limit the date between now and 15 days from now.
         let now = NSDate()
         limoRequestDatePicker.minimumDate = now
         
         let currentCalendar = NSCalendar.currentCalendar()
         
         let dateComponents = NSDateComponents()
-        dateComponents.day = 31
+        dateComponents.day = 15
         
-        let sevenDaysFromNow = currentCalendar.dateByAddingComponents(dateComponents, toDate: now, options: nil)
-        limoRequestDatePicker.maximumDate = sevenDaysFromNow
+        let fifteenDaysFromNow = currentCalendar.dateByAddingComponents(dateComponents, toDate: now, options: nil)
+        limoRequestDatePicker.maximumDate = fifteenDaysFromNow
         limoRequestDatePicker.minuteInterval = 2
         limoRequestDatePicker.addTarget(self, action: "updateDatePickerLabel", forControlEvents: .ValueChanged)
         
@@ -114,10 +115,12 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             if let user = currentUser {
                 let limoRequest = LimoRequest()
                 limoRequest["from"] = from
-                limoRequest["fromString"] = from["address"]
+                limoRequest["fromAddress"] = from["address"]
+                limoRequest["fromName"] = from["name"]
                 if let to = toLocation {
                     limoRequest["to"] = to
-                    limoRequest["toString"] = to["address"]
+                    limoRequest["toAddress"] = to["address"]
+                    limoRequest["toName"] = to["name"]
                 }
                 limoRequest["owner"] = user
                 limoRequest["status"] = "New"
@@ -169,10 +172,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     /// A date formatter to format the `date` property of `datePicker`.
     lazy var dateFormatter: NSDateFormatter = {
         let dateFormatter = NSDateFormatter()
-        
         dateFormatter.dateStyle = .MediumStyle
         dateFormatter.timeStyle = .ShortStyle
-        
         return dateFormatter
         }()
     
@@ -181,7 +182,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     }
 
     var lookUpSelectionController:UIAlertController?
-   
     var locationSpecifier = ""
     var originalLocationText = ""
     var fromLocation: LimoUserLocation?
@@ -261,9 +261,10 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                     toVC.userRole = userRole
                 }
             case "Show Created Request":
-                if segue.destinationViewController is RequestDetailViewController {
-                    let toVC = segue.destinationViewController as RequestDetailViewController
+                if segue.destinationViewController is RequestDetailTableViewController {
+                    let toVC = segue.destinationViewController as RequestDetailTableViewController
                     toVC.currentUser = currentUser
+                    toVC.userRole = userRole
                     if sender is LimoRequest {
                         toVC.limoRequest = sender as LimoRequest
                     } else {
@@ -403,7 +404,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         case "To":
             toLocationTextField.resignFirstResponder()
         default:
-            break
+            // This is the only other textfield, so hide the keyboard just in case
+            specialCommentsTextField.resignFirstResponder()
         }
     }
     

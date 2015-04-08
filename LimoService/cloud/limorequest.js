@@ -23,14 +23,14 @@ Parse.Cloud.afterSave("LimoRequest", function(request) {
   var status = request.object.get("status")
   var whenString = request.object.get("whenString")
   var when = request.object.get("when")
-  var fromString = request.object.get("fromString")
-  var toString = request.object.get("toString")
+  var fromAddress = request.object.get("fromAddress")
+  var toAddress = request.object.get("toAddress")
 
 
   console.log("Status is " + status)
   console.log("When is " + when)
   console.log("When String is " + whenString)
-  console.log("From  is " + fromString)
+  console.log("From  is " + fromAddress)
 
   var channel = "C" + request.object.id
   console.log (channel)
@@ -38,7 +38,7 @@ Parse.Cloud.afterSave("LimoRequest", function(request) {
      Parse.Push.send({
       where: installationQuery,
       data: {
-      alert:  " From: " + fromString  + " At: " + whenString + " To: " + toString
+      alert:  " From: " + fromAddress  + " At: " + whenString + " To: " + toAddress
       }
     }, {
       success: function() {

@@ -10,14 +10,26 @@ import UIKit
 
 class RequestsTableViewCell: PFTableViewCell {
 
-    @IBOutlet weak var fromLabel: UILabel!
-    @IBOutlet weak var toLabel: UILabel!
+    @IBOutlet weak var fromTextField: UITextField!
+    @IBOutlet weak var toTextField: UITextField!
     @IBOutlet weak var whenLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        let fromLabel = UILabel(frame: CGRectZero)
+        fromLabel.text = "From: "
+        fromLabel.sizeToFit()
+        fromTextField.leftView = fromLabel
+        fromTextField.leftViewMode = .Always
+        
+        let toLabel = UILabel(frame: CGRectZero)
+        toLabel.text = "To: "
+        toLabel.sizeToFit()
+        toTextField.leftView = toLabel
+        toTextField.leftViewMode = .Always
+
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

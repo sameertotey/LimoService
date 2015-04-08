@@ -38,12 +38,14 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.estimatedRowHeight = 60
-        self.tableView.rowHeight = UITableViewAutomaticDimension
-        self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        tableView.estimatedRowHeight = 60
+        tableView.rowHeight = UITableViewAutomaticDimension
+        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Bordered, target: self, action: "showProfile")
+
         if userRole == "provider" {
-            let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Bordered, target: self, action: "showProfile")
             self.navigationItem.leftBarButtonItem = profileBarButtonItem
+        } else {
+            self.navigationItem.rightBarButtonItem = profileBarButtonItem
         }
     }
     
@@ -82,8 +84,8 @@ class RequestsTableViewController: PFQueryTableViewController {
     override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!, object: PFObject!) -> PFTableViewCell! {
         let cell = tableView.dequeueReusableCellWithIdentifier("requestCell", forIndexPath: indexPath) as RequestsTableViewCell
         
-        cell.fromLabel.text = object.valueForKey("fromString") as? String
-        cell.toLabel.text = object.valueForKey("toString") as? String
+        cell.fromTextField.text = object.valueForKey("fromName") as? String
+        cell.toTextField.text = object.valueForKey("toName") as? String
         cell.whenLabel.text = object.valueForKey("whenString") as? String
         cell.statusLabel.text = object.valueForKey("status") as? String
         return cell
@@ -91,9 +93,10 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "Show Request Detail") {
-            if segue.destinationViewController is RequestDetailViewController {
-                let toVC = segue.destinationViewController as RequestDetailViewController
+            if segue.destinationViewController is RequestDetailTableViewController {
+                let toVC = segue.destinationViewController as RequestDetailTableViewController
                 toVC.currentUser = currentUser
+                toVC.userRole = userRole
                 println("sender is \(sender)")
                 if sender is UITableViewCell {
                     let index = tableView.indexPathForCell(sender as UITableViewCell)
