@@ -65,7 +65,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         // If you would like all objects to be private by default, remove this line.
         defaultACL.setPublicReadAccess(true)
-            
+        defaultACL.setPublicWriteAccess(true)
+
         PFACL.setDefaultACL(defaultACL, withAccessForCurrentUser:true)
             
         if application.applicationState != UIApplicationState.Background {
@@ -159,13 +160,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /////////////////////////////////////////////////////////
     // Uncomment this method if you want to use Push Notifications with Background App Refresh
     /////////////////////////////////////////////////////////
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        if application.applicationState == UIApplicationState.Inactive {
-            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-        }
-        println("Received this message ......\(userInfo)")
-        completionHandler(.NoData)
-    }
+//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+//        if application.applicationState == UIApplicationState.Inactive {
+//            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+//        }
+//        println("Received this message ......\(userInfo)")
+//        completionHandler(.NoData)
+//    }
     
     //--------------------------------------
     // MARK: Facebook SDK Integration

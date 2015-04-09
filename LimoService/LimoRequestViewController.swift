@@ -134,12 +134,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                         println("Succeed in creating a limo request: \(limoRequest)")
                         let controller = UIAlertController(title: "Request Created", message: "Your limo request has been saved", preferredStyle: .Alert)
                         controller.addAction(UIAlertAction(title: "OK", style: .Default) { _ in
-                            self.resetFields()
-                            })
-
-                        controller.addAction(UIAlertAction(title: "Details", style: .Default) { _ in
-                            self.resetFields()
                             self.performSegueWithIdentifier("Show Created Request", sender: limoRequest)
+                            self.resetFields()
                             })
                         self.presentViewController(controller, animated: true, completion: nil)
 

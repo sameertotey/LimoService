@@ -12,6 +12,9 @@ class RequestDetailTableViewController: LimoRequestViewController {
     
     var limoRequest: LimoRequest!
 
+    @IBOutlet weak var actionButton: UIButton!
+    var action = ""
+    
       // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +67,24 @@ class RequestDetailTableViewController: LimoRequestViewController {
         numBagsStepper.enabled = false
         limoRequestDatePicker.enabled = false
         limoRequestDatePicker.hidden = true
+        
+        if let status = limoRequest["status"] as? String {
+            switch (status, userRole) {
+            case ("New", "provider"):
+                actionButton.setTitle("Accept this Request", forState: .Normal)
+                action = "Accept"
+            case ("New", _ ):
+                actionButton.setTitle("Cancel this Request", forState: .Normal)
+                action = "Cancel"
+            case ("Accepted", "provider"):
+                actionButton.setTitle("Close this Request", forState: .Normal)
+                action = "Close"
+
+            default:
+                break
+            }
+
+        }
     }
     
     func setupEditingFields() {
@@ -76,9 +97,32 @@ class RequestDetailTableViewController: LimoRequestViewController {
         limoRequestDatePicker.hidden = false
     }
     
-    @IBAction func statusButtonTouchUpInside(sender: UIButton) {
+    @IBAction func actionButtonTouchUpInside(sender: UIButton) {
         println("now take the action that changes the status of the request")
-        
+        switch action {
+        case "Accept":
+            limoRequest["status"] = "Accepted"
+            println("current user is \(currentUser)")
+            if let user = currentUser {
+                limoRequest["assignedTo"] = user
+            }
+        case "Cancel":
+            limoRequest["status"] = "Cancelled"
+        case "Close":
+            limoRequest["status"] = "Closed"
+        default:
+            break
+        }
+        if limoRequest.isDirty() {
+            println("will save the limo request record")
+            limoRequest.saveInBackgroundWithBlock({ (succeeded, error) -> Void in
+                if succeeded {
+                    println("succeeded in saving")
+                } else {
+                    println("error while saving the limorequest is \(error)")
+                }
+            })
+        }
     }
     
     override func setEditing(editing: Bool, animated: Bool) {
