@@ -16,7 +16,7 @@ class LimoUserLocation: PFObject, PFSubclassing {
         }
     }
     
-    class func parseClassName() -> String! {
+    class func parseClassName() -> String {
         return "LimoUserLocation"
     }
     @NSManaged var name: String?

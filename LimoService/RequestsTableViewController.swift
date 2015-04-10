@@ -40,7 +40,7 @@ class RequestsTableViewController: PFQueryTableViewController {
         super.viewDidLoad()
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
-        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Bordered, target: self, action: "showProfile")
+        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Plain, target: self, action: "showProfile")
 
         if userRole == "provider" {
             self.navigationItem.leftBarButtonItem = profileBarButtonItem
@@ -57,32 +57,41 @@ class RequestsTableViewController: PFQueryTableViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func queryForTable() -> PFQuery! {
+    override func queryForTable() -> PFQuery {
         let query = PFQuery(className: "LimoRequest")
-        // provider gets to see all New requests, other users see only their own requests
+        
+        // provider gets to see all New requests and requests assignedTo, other users see only their own requests
         if userRole == "provider" {
             println("status key")
             query.whereKey("status", equalTo: "New")
+            let assignedToQuery = PFQuery(className: "LimoRequest")
+            assignedToQuery.whereKey("assignedTo", equalTo: currentUser)
+            let newQuery = PFQuery.orQueryWithSubqueries([assignedToQuery, query])
+            newQuery.orderByDescending("createdAt")
+            newQuery.limit = 200;
+            return newQuery
         } else {
             println("user key")
             query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
+            query.orderByDescending("createdAt")
+            query.limit = 200;
+            return query
         }
-        query.orderByDescending("createdAt")
-        query.limit = 200;
         
-        return query
     }
     
-    override func objectAtIndexPath(indexPath: NSIndexPath!) -> PFObject! {
+    override func objectAtIndexPath(indexPath: NSIndexPath!) -> PFObject? {
         var obj : PFObject? = nil
-        if(indexPath.row < self.objects.count){
-            obj = self.objects[indexPath.row] as? PFObject
+        if let allObjects = self.objects {
+            if indexPath.row < allObjects.count {
+                obj = allObjects[indexPath.row] as? PFObject
+            }
         }
         return obj
     }
     
-    override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!, object: PFObject!) -> PFTableViewCell! {
-        let cell = tableView.dequeueReusableCellWithIdentifier("requestCell", forIndexPath: indexPath) as RequestsTableViewCell
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath, object: PFObject!) -> PFTableViewCell? {
+        let cell = tableView.dequeueReusableCellWithIdentifier("requestCell", forIndexPath: indexPath) as! RequestsTableViewCell
         
         cell.fromTextField.text = object.valueForKey("fromName") as? String
         cell.toTextField.text = object.valueForKey("toName") as? String
@@ -94,12 +103,12 @@ class RequestsTableViewController: PFQueryTableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "Show Request Detail") {
             if segue.destinationViewController is RequestDetailTableViewController {
-                let toVC = segue.destinationViewController as RequestDetailTableViewController
+                let toVC = segue.destinationViewController as! RequestDetailTableViewController
                 toVC.currentUser = currentUser
                 toVC.userRole = userRole
                 println("sender is \(sender)")
                 if sender is UITableViewCell {
-                    let index = tableView.indexPathForCell(sender as UITableViewCell)
+                    let index = tableView.indexPathForCell(sender as! UITableViewCell)
                     if let object =  objectAtIndexPath(index){
                         toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
                     } else {

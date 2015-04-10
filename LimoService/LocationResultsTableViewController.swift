@@ -39,7 +39,7 @@ class LocationResultsTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("locationCell", forIndexPath: indexPath) as LocationTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("locationCell", forIndexPath: indexPath) as! LocationTableViewCell
         
         cell.addressLabel!.attributedText = attributedAddressStringAtIndexPath(indexPath)
         cell.accessoryType = .DisclosureIndicator
@@ -62,11 +62,11 @@ class LocationResultsTableViewController: UITableViewController {
         let bodyFont = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
         let descriptor = bodyFont.fontDescriptor()
         let boldDescriptor = descriptor.fontDescriptorWithSymbolicTraits(.TraitBold)
-        let highlightFont = UIFont(descriptor: boldDescriptor, size: bodyFont.pointSize)
+        let highlightFont = UIFont(descriptor: boldDescriptor!, size: bodyFont.pointSize)
         
         var attributes = [NSFontAttributeName: bodyFont]
         
-        var attribString = NSMutableAttributedString(string: string, attributes: attributes)
+        var attribString = NSMutableAttributedString(string: string as String, attributes: attributes)
         // show search terms in bold
         
         if !searchText.isEmpty {

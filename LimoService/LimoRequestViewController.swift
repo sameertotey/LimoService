@@ -113,7 +113,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func createTheRequest(sender: UIButton) {
         if let from = fromLocation {
             if let user = currentUser {
-                let limoRequest = LimoRequest()
+                let limoRequest = LimoRequest(className: LimoRequest.parseClassName())
                 limoRequest["from"] = from
                 limoRequest["fromAddress"] = from["address"]
                 limoRequest["fromName"] = from["name"]
@@ -220,12 +220,12 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             switch identifier {
             case "Show Profile":
                 if segue.destinationViewController is UserProfileTableViewController {
-                    let toVC = segue.destinationViewController as UserProfileTableViewController
+                    let toVC = segue.destinationViewController as! UserProfileTableViewController
                     toVC.currentUser = currentUser
                 }
             case "Find Address":
                 if segue.destinationViewController is LocationSearchTableViewController {
-                    let toVC = segue.destinationViewController as LocationSearchTableViewController
+                    let toVC = segue.destinationViewController as! LocationSearchTableViewController
                     if sender != nil {
                         let text = sender as? String
                         println("Sender String = \(text)")
@@ -236,7 +236,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                 }
             case "Search Location":
                 if segue.destinationViewController is LocalSearchTableViewController {
-                    let toVC = segue.destinationViewController as LocalSearchTableViewController
+                    let toVC = segue.destinationViewController as! LocalSearchTableViewController
                     if sender != nil {
                         let text = sender as? String
                         println("Sender String = \(text)")
@@ -247,22 +247,22 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                 }
             case "Select Previous Location":
                 if segue.destinationViewController is PreviousLocationLookupViewController {
-                    let toVC = segue.destinationViewController as PreviousLocationLookupViewController
+                    let toVC = segue.destinationViewController as! PreviousLocationLookupViewController
                     toVC.currentUser = currentUser
                 }
              case "Requests":
                 if segue.destinationViewController is RequestsTableViewController {
-                    let toVC = segue.destinationViewController as RequestsTableViewController
+                    let toVC = segue.destinationViewController as! RequestsTableViewController
                     toVC.currentUser = currentUser
                     toVC.userRole = userRole
                 }
             case "Show Created Request":
                 if segue.destinationViewController is RequestDetailTableViewController {
-                    let toVC = segue.destinationViewController as RequestDetailTableViewController
+                    let toVC = segue.destinationViewController as! RequestDetailTableViewController
                     toVC.currentUser = currentUser
                     toVC.userRole = userRole
                     if sender is LimoRequest {
-                        toVC.limoRequest = sender as LimoRequest
+                        toVC.limoRequest = sender as! LimoRequest
                     } else {
                         displayAlertWithTitle("Oops there was a problem", message: "The sender is not a request")
                     }
@@ -283,7 +283,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         
         if currentUser != nil {
             if sourceViewController is LocationMapViewController {
-                let svc: LocationMapViewController = sourceViewController as LocationMapViewController
+                let svc: LocationMapViewController = sourceViewController as! LocationMapViewController
                 if locationToSave == nil {
                     switch locationSpecifier {
                     case "From":
@@ -310,11 +310,11 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                 }
             } else if sourceViewController is PreviousLocationLookupViewController {
                 println("returned to .....")
-                let svc: PreviousLocationLookupViewController = sourceViewController as PreviousLocationLookupViewController
+                let svc: PreviousLocationLookupViewController = sourceViewController as! PreviousLocationLookupViewController
                 if let returnedLocation = svc.selectedLocation {
                     locationToSave = returnedLocation
                 } else {
-                    displayAlertWithTitle("Some thing did not work", message: "Got no location from selecting previous location")
+                    println("Received no location from the previous locations")
                 }
             }
             updateLocationDisplay()
@@ -322,27 +322,29 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     }
 
     func updateLocationDisplay() {
-        switch locationSpecifier {
-        case "From":
-            if locationToSave["address"] is String {
-                fromLocationTextView.text = locationToSave["address"] as String
+        if let locationToSave = locationToSave {
+            switch locationSpecifier {
+            case "From":
+                if locationToSave["address"] is String {
+                    fromLocationTextView.text = locationToSave["address"] as! String
+                }
+                if locationToSave["name"] is String {
+                    fromLocationTextField.text = locationToSave["name"] as! String
+                }
+                fromLocation = locationToSave
+            case "To":
+                if locationToSave["address"] is String {
+                    toLocationTextView.text = locationToSave["address"] as! String
+                }
+                if locationToSave["name"] is String {
+                    toLocationTextField.text = locationToSave["name"] as! String
+                }
+                toLocation = locationToSave
+            default:
+                break
             }
-            if locationToSave["name"] is String {
-                fromLocationTextField.text = locationToSave["name"] as String
-            }
-            fromLocation = locationToSave
-        case "To":
-            if locationToSave["address"] is String {
-                toLocationTextView.text = locationToSave["address"] as String
-            }
-            if locationToSave["name"] is String {
-                toLocationTextField.text = locationToSave["name"] as String
-            }
-            toLocation = locationToSave
-        default:
-            break
         }
-    }
+     }
     
     // MARK: UITextFieldDelegate
     

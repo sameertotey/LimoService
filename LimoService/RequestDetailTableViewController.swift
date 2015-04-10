@@ -117,9 +117,12 @@ class RequestDetailTableViewController: LimoRequestViewController {
             println("will save the limo request record")
             limoRequest.saveInBackgroundWithBlock({ (succeeded, error) -> Void in
                 if succeeded {
+                    self.setupDisplayFields()
                     println("succeeded in saving")
+                    self.displayAlertWithTitle("Request Updated", message: "Your changes were successfully saved")
                 } else {
                     println("error while saving the limorequest is \(error)")
+                    self.displayAlertWithTitle("Request Update Error", message: "Your changes were not saved")
                 }
             })
         }

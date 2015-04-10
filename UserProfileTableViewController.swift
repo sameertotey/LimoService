@@ -20,7 +20,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         // using the rootview controller's currentUser instead of setting it in the prepare for segue
-        currentUser = (navigationController?.viewControllers[0] as LoginManagerViewController).currentUser
+        currentUser = (navigationController?.viewControllers[0] as! LoginManagerViewController).currentUser
         displayCurrentValues()
     }
 
@@ -34,14 +34,14 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         if let location = currentUser["homeLocation"] as? LimoUserLocation {
             location.fetchIfNeededInBackgroundWithBlock{ (fetchedLocation, error) in
                 if error == nil {
-                    if let locName = fetchedLocation["name"] as? String {
+                    if let fetchedLocation = fetchedLocation, locName = fetchedLocation["name"] as? String {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.homeLocationTextField.text = locName
                         }
                     } else {
                         println("Empty name for homeLocation")
                     }
-                    if let locAddress = fetchedLocation["address"] as? String {
+                    if let fetchedLocation = fetchedLocation,locAddress = fetchedLocation["address"] as? String {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.homeLocationTextView.text = locAddress
                         }
@@ -59,14 +59,14 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             location.fetchIfNeededInBackgroundWithBlock{ (fetchedLocation, error) in
                 if error == nil {
                     println("Found the location \(fetchedLocation)")
-                    if let locName = fetchedLocation["name"] as? String {
+                    if let fetchedLocation = fetchedLocation, locName = fetchedLocation["name"] as? String {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.preferredDestinationTextField.text = locName
                         }
                     } else {
                         println("Empty name")
                     }
-                    if let locAddress = fetchedLocation["address"] as? String {
+                    if let fetchedLocation = fetchedLocation, locAddress = fetchedLocation["address"] as? String {
                         dispatch_async(dispatch_get_main_queue()) {
                             self.preferredDestinationTextView.text = locAddress
                         }
@@ -147,9 +147,12 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         if let homeLocation = currentUser["homeLocation"] as? LimoUserLocation {
             homeLocation.fetchIfNeededInBackgroundWithBlock({ (location, error)in
                 if error == nil {
-                    println("Found the location: \(location)")
-                    location["name"] = text
-                    location.saveEventually()
+                    if let location = location {
+                        println("Found the location: \(location)")
+                        location["name"] = text
+                        location.saveEventually()
+                    }
+
                 } else {
                     println("Got error \(error)")
                 }
@@ -167,9 +170,11 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         if let preferredDestinationLocation = currentUser["preferredDestination"] as? LimoUserLocation {
             preferredDestinationLocation.fetchIfNeededInBackgroundWithBlock({ (location, error)in
                 if error == nil {
-                    println("Found the location: \(location)")
-                    location["name"] = text
-                    location.saveEventually()
+                    if let location = location {
+                        println("Found the location: \(location)")
+                        location["name"] = text
+                        location.saveEventually()
+                    }
                 } else {
                     println("Got error \(error)")
                 }
@@ -214,7 +219,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             switch identifier {
             case "ShowGeoCoding":
                 if segue.destinationViewController is LocationSearchTableViewController {
-                    let toVC = segue.destinationViewController as LocationSearchTableViewController
+                    let toVC = segue.destinationViewController as! LocationSearchTableViewController
                     if sender != nil {
                         let text = sender as? String
                         println("Sender String = \(text)")
@@ -260,7 +265,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
                 println("going to refresh the facebook info")
                 retrieveFaceboolInfo()
             } else {
-                PFFacebookUtils.linkUser(PFUser.currentUser(), permissions: ["public_profile", "email"], block: { (succeeded, error) in
+                PFFacebookUtils.linkUserInBackground(PFUser.currentUser()!, withReadPermissions: ["public_profile", "email"], block: { (succeeded, error) in
                     if succeeded {
                         self.retrieveFaceboolInfo()
                         self.facebookButton.setTitle("Refresh", forState: .Normal)
@@ -275,25 +280,26 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
     // get information from Facebook and update the user record
     func retrieveFaceboolInfo() {
         // Send request to Facebook
-        let request = FBRequest.requestForMe()
+        
+        let request = FBSDKGraphRequest(graphPath: "me", parameters: nil)
         request.startWithCompletionHandler({ (connection, result, error) -> Void in
             if error != nil {
                 println("Failed to retrieve information from Facebook. Received error \(error)")
             } else {
-                var userData = result as [NSString: NSString]
+                var userData = result as! [NSString: NSString]
                 if let facebookID = userData["id"] {
                     
                 }
                 if let firstName = userData["first_name"] {
-                    self.firstNameTextField.text = firstName
+                    self.firstNameTextField.text = firstName as String
                     self.currentUser["firstName"] = firstName
                 }
                 if let lastName = userData["last_name"] {
-                    self.lastNameTextField.text = lastName
+                    self.lastNameTextField.text = lastName as String
                     self.currentUser["lastName"] = lastName
                 }
                 if let email = userData["email"] {
-                    self.emailTextFeild.text = email
+                    self.emailTextFeild.text = email as String
                     self.currentUser["email"] = email
                 }
                 if self.currentUser.isDirty() {
@@ -326,7 +332,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
             if titleText == "Refresh" {
                 println("going to refresh the twitter info")
             } else {
-                PFTwitterUtils.linkUser(PFUser.currentUser(), block: { (succeeded, error) in
+                PFTwitterUtils.linkUser(PFUser.currentUser()!, block: { (succeeded, error) in
                     if succeeded {
                         self.twitterButton.setTitle("Refresh", forState: .Normal)
                     } else {
@@ -345,7 +351,7 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         println("The locationToSave = \(locationToSave)")
 
         if sourceViewController is LocationMapViewController {
-            let svc: LocationMapViewController = sourceViewController as LocationMapViewController
+            let svc: LocationMapViewController = sourceViewController as! LocationMapViewController
             if locationToSave != nil && svc.placemark.location != nil {
                 println("we got save location: \(svc.placemark.location)")
                 let geoPoint = PFGeoPoint(location: svc.placemark.location)

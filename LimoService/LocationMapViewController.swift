@@ -49,7 +49,7 @@ class LocationMapViewController: UIViewController {
         
         // set zoom to fit placemark
 //        var circularRegion = CLCircularRegion()
-        let circularRegion = placemark.region as CLCircularRegion  // can we downcast it safely?
+        let circularRegion = placemark.region as! CLCircularRegion  // can we downcast it safely?
         
         let distance = circularRegion.radius * 10.0
         println("distance is \(distance)")
@@ -75,7 +75,7 @@ class LocationMapViewController: UIViewController {
     class func forPlacemark(placemark: CLPlacemark) -> LocationMapViewController {
         let storyboard = UIStoryboard(name: StoryboardConstants.storyboardName, bundle: nil)
         
-        let viewController = storyboard.instantiateViewControllerWithIdentifier(StoryboardConstants.viewControllerIdentifier) as LocationMapViewController
+        let viewController = storyboard.instantiateViewControllerWithIdentifier(StoryboardConstants.viewControllerIdentifier) as! LocationMapViewController
         
         viewController.placemark = placemark
         

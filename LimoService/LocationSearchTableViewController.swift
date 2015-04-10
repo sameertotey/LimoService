@@ -105,10 +105,10 @@ class LocationSearchTableViewController: UIViewController, UISearchBarDelegate, 
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         geoCoder?.geocodeAddressString(searchString) { placemarks, error in
             if error == nil {
-                self.searchResults = placemarks as [CLPlacemark]
+                self.searchResults = placemarks as! [CLPlacemark]
                 // Hand over the filtered results to our search results table.
                 println("received \(placemarks.count) results")
-                println(placemarks as [CLPlacemark])
+                println(placemarks as! [CLPlacemark])
                 self.mapView.removeAnnotations(self.mapView.annotations)
                 // We need to change this to create custom annotations, so that we can provide more information
                 var pins = [CLLocation]()
@@ -119,8 +119,8 @@ class LocationSearchTableViewController: UIViewController, UISearchBarDelegate, 
                 }
                 self.mapView.addAnnotations(pins)
                 self.mapView.showAnnotations(self.mapView.annotations, animated: false)
-                let resultsController = self.searchController.searchResultsController as LocationResultsTableViewController
-                resultsController.possibleMatches = placemarks as [CLPlacemark]
+                let resultsController = self.searchController.searchResultsController as! LocationResultsTableViewController
+                resultsController.possibleMatches = placemarks as! [CLPlacemark]
                 resultsController.searchText = self.searchText
                 resultsController.tableView.reloadData()
 
@@ -167,7 +167,7 @@ class LocationSearchTableViewController: UIViewController, UISearchBarDelegate, 
         // cancel previous in flight geocoding
         geoCoder?.cancelGeocode()
         
-        if countElements(strippedString) >= 3 {
+        if count(strippedString) >= 3 {
             // add minimal delay to search to avoid searching for something outdated
             cancelDelayed("geocode")
             delayed(0.1, name: "geocode") {
@@ -190,11 +190,11 @@ class LocationSearchTableViewController: UIViewController, UISearchBarDelegate, 
         let bodyFont = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
         let descriptor = bodyFont.fontDescriptor()
         let boldDescriptor = descriptor.fontDescriptorWithSymbolicTraits(.TraitBold)
-        let highlightFont = UIFont(descriptor: boldDescriptor, size: bodyFont.pointSize)
+        let highlightFont = UIFont(descriptor: boldDescriptor!, size: bodyFont.pointSize)
         
         var attributes = [NSFontAttributeName: bodyFont]
         
-        var attribString = NSMutableAttributedString(string: string, attributes: attributes)
+        var attribString = NSMutableAttributedString(string: string as String, attributes: attributes)
         // show search terms in bold
 
         if !searchText.isEmpty {

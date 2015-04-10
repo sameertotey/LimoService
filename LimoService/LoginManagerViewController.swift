@@ -79,7 +79,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
                 installation["user"] = user
                 installation.saveEventually()
                 
-                if let limoUserRole = user["role"] as String? {
+                if let user = user, limoUserRole = user["role"] as? String {
                     self.userRole = limoUserRole
                     if self.userRole == "provider" {
                         println("This is a provider...")
@@ -106,12 +106,12 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
             switch identifier {
              case "Make a Request":
                 if segue.destinationViewController is LimoRequestViewController {
-                    let toVC = segue.destinationViewController as LimoRequestViewController
+                    let toVC = segue.destinationViewController as! LimoRequestViewController
                     toVC.currentUser = currentUser
                 }
             case "Show Requests":
                 if segue.destinationViewController is RequestsTableViewController {
-                    let toVC = segue.destinationViewController as RequestsTableViewController
+                    let toVC = segue.destinationViewController as! RequestsTableViewController
                     toVC.currentUser = currentUser
                     toVC.userRole = userRole
                 }
@@ -127,14 +127,10 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     
     // Sent to the delegate to determine whether the log in request should be submitted to the server.
     
-    func logInViewController(logInController: PFLogInViewController!, shouldBeginLogInWithUsername username: String!, password: String!) -> Bool {
+    func logInViewController(logInController: PFLogInViewController, shouldBeginLogInWithUsername username: String, password: String) -> Bool {
         // Check if both fields are completed
-        if let username = username {
-            if let password = password {
-                if !username.isEmpty && !password.isEmpty {
-                    return true // Begin login process
-                }
-            }
+        if !username.isEmpty && !password.isEmpty {
+            return true // Begin login process
         }
         // Create the AlertController
         let alertController: UIAlertController = UIAlertController(title: "Missing Information", message: "Make sure you fill out both username and password information!", preferredStyle: .Alert)
@@ -160,7 +156,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     
     // Sent to the delegate when a PFUser is logged in.
-    func logInViewController(logInController: PFLogInViewController!, didLogInUser user: PFUser!) {
+    func logInViewController(logInController: PFLogInViewController, didLogInUser user: PFUser) {
         println("Did login the user \(user)")
         navigationController?.dismissViewControllerAnimated(true, completion: nil)
 //        setupLoginOrProfileButton()
@@ -170,13 +166,13 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     
     
     // Sent to the delegate when the log in attempt fails.
-    func logInViewController(logInController: PFLogInViewController!, didFailToLogInWithError error: NSError!) {
+    func logInViewController(logInController: PFLogInViewController, didFailToLogInWithError error: NSError?) {
         println("Error while failing to log in: \(error)")
     }
     
     
     // Sent to the delegate when the log in screen is dismissed.
-    func logInViewControllerDidCancelLogIn(logInController: PFLogInViewController!) {
+    func logInViewControllerDidCancelLogIn(logInController: PFLogInViewController) {
         println("Cancelled the login")
         println("self is \(self)")
 //        setupLoginOrProfileButton()
@@ -187,7 +183,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     // MARK: - PFSignUpViewControllerDelegate
     
     // Sent to the delegate to determine whether the sign up request should be submitted to the server.
-    func signUpViewController(signUpController: PFSignUpViewController!, shouldBeginSignUp info: [NSObject : AnyObject]!) -> Bool {
+    func signUpViewController(signUpController: PFSignUpViewController, shouldBeginSignUp info: [NSObject : AnyObject]) -> Bool {
         var informationComplete = true
         // loop through all of the submitted data
         for (key, value) in info {
@@ -229,7 +225,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     
     // Sent to the delegate when a PFUser is signed up.
-    func signUpViewController(signUpController: PFSignUpViewController!, didSignUpUser user: PFUser!) {
+    func signUpViewController(signUpController: PFSignUpViewController, didSignUpUser user: PFUser) {
         println("Did sign up user")
         navigationController?.dismissViewControllerAnimated(true, completion: nil)
 //        setupLoginOrProfileButton()
@@ -238,12 +234,12 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     
     // Sent to the delegate when the sign up attempt fails.
-    func signUpViewController(signUpController: PFSignUpViewController!, didFailToSignUpWithError error: NSError!) {
+    func signUpViewController(signUpController: PFSignUpViewController, didFailToSignUpWithError error: NSError?) {
         println("Failed to sign up")
     }
     
     // Sent to the delegate when the sign up screen is dismissed.
-    func signUpViewControllerDidCancelSignUp(signUpController: PFSignUpViewController!) {
+    func signUpViewControllerDidCancelSignUp(signUpController: PFSignUpViewController) {
         println("User dismissed the signUpViewController")
 //        setupLoginOrProfileButton()
 //        navigationController?.popViewControllerAnimated(false)

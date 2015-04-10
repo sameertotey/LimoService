@@ -64,7 +64,7 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
     func performLocalSearch(searchString: NSString) {
         if userLocation != nil {
             let request = MKLocalSearchRequest()
-            request.naturalLanguageQuery = searchString
+            request.naturalLanguageQuery = searchString as String
             let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
             request.region = MKCoordinateRegion( center: userLocation.coordinate, span: span)
             localSearch = MKLocalSearch(request: request)
@@ -74,7 +74,7 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 if error == nil {
                     var placemarks = [CLPlacemark]()
-                    for item in response.mapItems as [MKMapItem]{
+                    for item in response.mapItems as! [MKMapItem]{
                         
                         println("Item name = \(item.name)")
                         println("Item phone number = \(item.phoneNumber)")
@@ -86,10 +86,10 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
                     // this seems to work here, but we need to get custom annotations so that we can provide more information
                     self.mapView.addAnnotations(placemarks)
                     self.mapView.showAnnotations(self.mapView.annotations, animated: false)
-                    self.searchResults = response.mapItems as [MKMapItem]
+                    self.searchResults = response.mapItems as! [MKMapItem]
                     // Hand over the filtered results to our search results table.
                     println("received \(placemarks.count) results")
-                    let resultsController = self.searchController.searchResultsController as LocationResultsTableViewController
+                    let resultsController = self.searchController.searchResultsController as! LocationResultsTableViewController
                     resultsController.possibleMatches = placemarks
                     resultsController.searchText = self.searchText
                     resultsController.tableView.reloadData()
@@ -287,7 +287,7 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
         // cancel previous in flight search
         localSearch?.cancel()
         
-        if countElements(strippedString) >= 3 {
+        if count(strippedString) >= 3 {
             // add minimal delay to search to avoid searching for something outdated
             cancelDelayed("search")
             delayed(0.1, name: "search") {

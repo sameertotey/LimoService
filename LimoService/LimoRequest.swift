@@ -16,7 +16,7 @@ class LimoRequest: PFObject, PFSubclassing {
         }
     }
     
-    class func parseClassName() -> String! {
+    class func parseClassName() -> String {
         return "LimoRequest"
     }
     @NSManaged var when: NSDate?

@@ -13,7 +13,7 @@ class PreviousLocationLookupViewController: PFQueryTableViewController {
     var currentUser: PFUser!
     var selectedLocation: LimoUserLocation?
 
-    override init!(style: UITableViewStyle, className: String!) {
+    override init(style: UITableViewStyle, className: String!) {
         super.init(style: style, className: className)
     }
     
@@ -51,25 +51,33 @@ class PreviousLocationLookupViewController: PFQueryTableViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func queryForTable() -> PFQuery! {
-        let query = PFQuery(className: "LimoUserLocation")
-        query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
-        query.orderByDescending("createdAt")
-        query.limit = 200;
-
-        return query
+    override func queryForTable() -> PFQuery {
+        if let query = LimoUserLocation.query() {
+            query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
+            query.orderByDescending("createdAt")
+            query.limit = 200;
+            return query
+        } else {
+            let query = PFQuery(className: "LimoUserLocation")
+            query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
+            query.orderByDescending("createdAt")
+            query.limit = 200;
+            return query
+        }
     }
     
-    override func objectAtIndexPath(indexPath: NSIndexPath!) -> PFObject! {
+    override func objectAtIndexPath(indexPath: NSIndexPath!) -> PFObject? {
         var obj : PFObject? = nil
-        if(indexPath.row < self.objects.count){
-            obj = self.objects[indexPath.row] as? PFObject
+        if let allObjects = self.objects {
+            if indexPath.row < allObjects.count {
+                obj = allObjects[indexPath.row] as? PFObject
+            }
         }
         return obj
     }
-    
-    override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!, object: PFObject!) -> PFTableViewCell! {
-        let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell", forIndexPath: indexPath) as LocationLookupTableViewCell
+
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath, object: PFObject!) -> PFTableViewCell? {
+        let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell", forIndexPath: indexPath) as! LocationLookupTableViewCell
         
         cell.nameLabel.text = object.valueForKey("name") as? String
         cell.addressLabel.text = object.valueForKey("address") as? String
@@ -85,8 +93,15 @@ class PreviousLocationLookupViewController: PFQueryTableViewController {
     // MARK: - TableViewDelegate
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        selectedLocation = objectAtIndexPath(indexPath) as? LimoUserLocation
-        performSegueWithIdentifier("Return Selection", sender: nil)
+        if let selectedObject = objectAtIndexPath(indexPath) {
+            if selectedObject is LimoUserLocation {
+                selectedLocation = (selectedObject as! LimoUserLocation)
+                performSegueWithIdentifier("Return Selection", sender: nil)
+            } else {
+                println("The type of the object \(selectedObject) is not LimoUserLocation it is ..")
+            }
+        }
+       
     }
     
 }
