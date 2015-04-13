@@ -58,26 +58,28 @@ class RequestsTableViewController: PFQueryTableViewController {
     }
     
     override func queryForTable() -> PFQuery {
-        let query = PFQuery(className: "LimoRequest")
-        
-        // provider gets to see all New requests and requests assignedTo, other users see only their own requests
-        if userRole == "provider" {
-            println("status key")
-            query.whereKey("status", equalTo: "New")
-            let assignedToQuery = PFQuery(className: "LimoRequest")
-            assignedToQuery.whereKey("assignedTo", equalTo: currentUser)
-            let newQuery = PFQuery.orQueryWithSubqueries([assignedToQuery, query])
-            newQuery.orderByDescending("createdAt")
-            newQuery.limit = 200;
-            return newQuery
+//        let query = PFQuery(className: "LimoRequest")
+        if let query = LimoRequest.query() {
+            // provider gets to see all New requests and requests assignedTo, other users see only their own requests
+            if userRole == "provider" {
+                println("status key")
+                query.whereKey("status", equalTo: "New")
+                let assignedToQuery = PFQuery(className: "LimoRequest")
+                assignedToQuery.whereKey("assignedTo", equalTo: currentUser)
+                let newQuery = PFQuery.orQueryWithSubqueries([assignedToQuery, query])
+                newQuery.orderByDescending("createdAt")
+                newQuery.limit = 200;
+                return newQuery
+            } else {
+                println("user key")
+                query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
+                query.orderByDescending("createdAt")
+                query.limit = 200;
+                return query
+            }
         } else {
-            println("user key")
-            query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
-            query.orderByDescending("createdAt")
-            query.limit = 200;
-            return query
+            return  PFQuery(className: "LimoRequest")    // need this because of optional unwrapping
         }
-        
     }
     
     override func objectAtIndexPath(indexPath: NSIndexPath!) -> PFObject? {
@@ -96,8 +98,22 @@ class RequestsTableViewController: PFQueryTableViewController {
         cell.fromTextField.text = object.valueForKey("fromName") as? String
         cell.toTextField.text = object.valueForKey("toName") as? String
         cell.whenLabel.text = object.valueForKey("whenString") as? String
-        cell.statusLabel.text = object.valueForKey("status") as? String
-        return cell
+        if let status = object.valueForKey("status") as? String {
+            switch status {
+            case "New":
+                cell.backgroundColor = UIColor(red: 204.0/255, green: 255.0/255, blue: 102.0/255, alpha: 1.0)
+            case "Accepted":
+                cell.backgroundColor = UIColor(red: 41.0/255, green: 248.0/255, blue: 255.0/255, alpha: 1.0)
+            case "Closed":
+                cell.backgroundColor = UIColor(red: 200.0/255, green: 172.0/255, blue: 172.0/255, alpha: 1.0)
+            case "Cancelled":
+                cell.backgroundColor = UIColor(red: 255.0/255, green: 107.0/255, blue: 102.0/255, alpha: 1.0)
+            default:
+                cell.backgroundColor = UIColor.whiteColor()
+            }
+
+        }
+         return cell
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -116,7 +132,6 @@ class RequestsTableViewController: PFQueryTableViewController {
                     }
                 }
             }
-            
         }
     }
     

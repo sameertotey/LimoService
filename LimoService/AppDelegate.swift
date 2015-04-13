@@ -43,8 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // we have to create dummy lauchOptions object if application receives nil because of the signature of the initialize method Facebook utils
         if let launchOptions = launchOptions {
             PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
+            println("did receive launch options: \(launchOptions)")
         } else {
             let launchOptions = [NSObject: AnyObject]()
+            // did not receive any launch options sending empty options to PFFacebookUtils
             PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
         }
 //        PFFacebookUtils.initializeFacebook()
@@ -60,15 +62,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // setup the default appearances here
         let navbar = UINavigationBar.appearance()
-        navbar.barTintColor = UIColor(red: 168.0/255, green: 215.0/255, blue: 111.0/255, alpha: 1)
-        let font = UIFont(name: "Avenir", size: 18)
-        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor(), NSFontAttributeName: font!]
-        navbar.tintColor = UIColor.whiteColor()
+        navbar.barTintColor = UIColor.yellowColor()
+        let font = UIFont(name: "Avenir", size: 20)
+        navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.blackColor(), NSFontAttributeName: font!]
+        navbar.tintColor = UIColor.blueColor()
         
         
         let tabbar = UITabBar.appearance()
-        tabbar.barTintColor = UIColor(red: 168.0/255, green: 215.0/255, blue: 111.0/255, alpha: 1)
-        tabbar.tintColor = UIColor.whiteColor()
+        tabbar.barTintColor = UIColor(red: 100.0/255, green: 100.0/255, blue: 100.0/255, alpha: 1)
+        tabbar.tintColor = UIColor.blueColor()
         
         let defaultACL = PFACL();
             
@@ -135,8 +137,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //--------------------------------------
     // MARK: Push Notifications
     //--------------------------------------
-    
-    
         
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         let installation = PFInstallation.currentInstallation()
@@ -159,14 +159,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             println("application:didFailToRegisterForRemoteNotificationsWithError: %@", error)
         }
     }
-        
+    
+    struct PushNotifications {
+        static let Notification = "LimoService Push Notification"
+        static let Key = "LimoService Push Notification Key"
+    }
+    
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        println("User info in didReceiveNotification = \(userInfo)")
+        // post a notification when a GPX file arrives
+        let center = NSNotificationCenter.defaultCenter()
+        let notification = NSNotification(name: PushNotifications.Notification, object: self, userInfo: [PushNotifications.Key:userInfo])
+        center.postNotification(notification)
+
+        
+        
         PFPush.handlePush(userInfo)
+        
         
         if application.applicationState == UIApplicationState.Inactive {
             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }
     }
+    
+    
         
     /////////////////////////////////////////////////////////
     // Uncomment this method if you want to use Push Notifications with Background App Refresh

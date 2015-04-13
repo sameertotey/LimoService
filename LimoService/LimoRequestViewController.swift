@@ -62,7 +62,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         })
         
         let actionCancel = UIAlertAction(title: "Cancel",
-            style: .Destructive,
+            style: .Cancel,
             handler: {(paramAction:UIAlertAction!) in
                 /* Do nothing here */
         })
@@ -162,8 +162,52 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
 //    }
     
     
+    @IBOutlet weak var whenContentView: UIView!
     @IBOutlet weak var limoRequestDatePicker: UIDatePicker!
-    @IBOutlet weak var limoRequestDateLabel: UILabel!
+    @IBOutlet weak var limoRequestDateButton: UIButton!
+    var whenViewExpanded = false {
+        didSet {
+            println("The date label is now \(whenViewExpanded)")
+            whenContentView.layoutIfNeeded()
+            whenContentView.setTranslatesAutoresizingMaskIntoConstraints(false)
+            whenContentView.removeConstraints(whenContentView.constraints())
+            if whenViewExpanded {
+                UIView.animateWithDuration(1.0) {
+                    self.hideDatePicker(false)
+                }
+            } else {
+                UIView.animateWithDuration(1.0) {
+                    self.hideDatePicker(true)
+                }
+            }
+        }
+    }
+    
+    func hideDatePicker(setting: Bool) {
+        var viewsDict = Dictionary <String, UIView>()
+        viewsDict["dateButton"] = self.limoRequestDateButton
+        viewsDict["datePicker"] = self.limoRequestDatePicker
+        limoRequestDatePicker.alpha = setting ? 0.0 : 1.0
+        limoRequestDatePicker.hidden = setting
+
+        
+        whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[dateButton]-|", options: nil, metrics: nil, views: viewsDict))
+        
+        whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[datePicker]-|", options: nil, metrics: nil, views: viewsDict))
+        if setting {
+            whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[dateButton]-|", options: nil, metrics: nil, views: viewsDict))
+
+        } else {
+            whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[dateButton]-[datePicker]-|", options: nil, metrics: nil, views: viewsDict))
+        }
+        
+        println("finished with datepicker layout")
+//        whenContentView.layoutIfNeeded()
+//        tableView.beginUpdates()
+//
+//        tableView.endUpdates()
+    }
+    
     
     /// A date formatter to format the `date` property of `datePicker`.
     lazy var dateFormatter: NSDateFormatter = {
@@ -174,9 +218,15 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }()
     
     func updateDatePickerLabel() {
-        limoRequestDateLabel.text = dateFormatter.stringFromDate(limoRequestDatePicker.date)
+        limoRequestDateButton.setTitle(dateFormatter.stringFromDate(limoRequestDatePicker.date), forState: .Normal)
     }
 
+    @IBAction func dateLabelTouched(sender: UIButton) {
+        println("the date label was touched")
+
+        whenViewExpanded = !whenViewExpanded
+    }
+    
     var lookUpSelectionController:UIAlertController?
     var locationSpecifier = ""
     var originalLocationText = ""
@@ -392,7 +442,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    // MARK: - Helpers
+    // MARK:- Helpers
     
     func removeKeyboardDisplay() {
         // This has to be called from ViewDidAppear because it does not work from unwind segue
@@ -430,6 +480,17 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             return
         })
         presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    // MARK: - TableView delegate
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        println("Did select row at \(indexPath)")
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        println("Height for row asked")
+        return 212.0
     }
     
 }

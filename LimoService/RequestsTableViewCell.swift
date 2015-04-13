@@ -13,7 +13,6 @@ class RequestsTableViewCell: PFTableViewCell {
     @IBOutlet weak var fromTextField: UITextField!
     @IBOutlet weak var toTextField: UITextField!
     @IBOutlet weak var whenLabel: UILabel!
-    @IBOutlet weak var statusLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -69,7 +69,8 @@ Parse.Cloud.afterSave("LimoRequest", function(request) {
     Parse.Push.send({
       where: installationQuery,
       data: {
-        alert:  " From: " + fromAddress  + " At: " + whenString + " To: " + toAddress
+        alert:  " From: " + fromAddress  + " At: " + whenString + " To: " + toAddress,
+        limoreq: request.object.id
         }
       }, {
         success: function() {
@@ -82,7 +83,7 @@ Parse.Cloud.afterSave("LimoRequest", function(request) {
     })
 
  } else {
-  console.log("updating an existing request")
+    console.log("updating an existing request")
     var installationQuery = new Parse.Query(Parse.Installation);
     var userQuery = new Parse.Query(Parse.User);
     var owner = new Parse.User();
@@ -117,7 +118,8 @@ Parse.Cloud.afterSave("LimoRequest", function(request) {
        Parse.Push.send({
         where: installationQuery,
         data: {
-        alert:  " Request has been Accepted! "
+        alert:  " Request has been Accepted! by " + assignedTo.id,
+        limoreq: request.object.id
         }
       }, {
         success: function() {
