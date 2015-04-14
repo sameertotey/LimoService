@@ -33,40 +33,39 @@ class RequestDetailTableViewController: LimoRequestViewController {
  
     func setupDisplayFields() {
         println("setup display fields")
-        removeKeyboardDisplay()
         if let from = limoRequest["from"] as? PFObject {
             fromLocation = from as? LimoUserLocation
-            fromLocationTextField.text = limoRequest["fromName"] as? String
-            fromLocationTextView.text = limoRequest["fromAddress"] as? String
+//            fromLocationTextField.text = limoRequest["fromName"] as? String
+//            fromLocationTextView.text = limoRequest["fromAddress"] as? String
         }
         if let to = limoRequest["to"] as? PFObject {
             toLocation = to as? LimoUserLocation
-            toLocationTextField.text = limoRequest["fromName"] as? String
-            toLocationTextView.text = limoRequest["fromAddress"] as? String
+//            toLocationTextField.text = limoRequest["fromName"] as? String
+//            toLocationTextView.text = limoRequest["fromAddress"] as? String
         }
-        if let when = limoRequest["when"] as? NSDate {
-            println("setting date to \(when)")
-            limoRequestDatePicker.minimumDate = when
-            limoRequestDatePicker.setDate(when, animated: false)
-            updateDatePickerLabel()
-        }
+//        if let when = limoRequest["when"] as? NSDate {
+//            println("setting date to \(when)")
+//            limoRequestDatePicker.minimumDate = when
+//            limoRequestDatePicker.setDate(when, animated: false)
+//            updateDatePickerLabel()
+//        }
         
-        if let numPassengers = limoRequest["numPassengers"] as? NSNumber {
-            numPassengersStepper.value = numPassengers.doubleValue
-            numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
-        }
-        if let numBags = limoRequest["numBags"] as? NSNumber {
-            numBagsStepper.value = numBags.doubleValue
-            numBagsLabel.text = "\(Int(numBagsStepper.value))"
-        }
-        
-        specialCommentsTextField.text = limoRequest["specialRequests"] as? String
-        fromLocationLookUp.hidden = true
-        toLocationLookUp.hidden = true
-        numPassengersStepper.enabled = false
-        numBagsStepper.enabled = false
-        limoRequestDatePicker.enabled = false
-        limoRequestDatePicker.hidden = true
+//        if let numPassengers = limoRequest["numPassengers"] as? NSNumber {
+//            numPassengersStepper.value = numPassengers.doubleValue
+//            numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
+//        }
+//        if let numBags = limoRequest["numBags"] as? NSNumber {
+//            numBagsStepper.value = numBags.doubleValue
+//            numBagsLabel.text = "\(Int(numBagsStepper.value))"
+//        }
+//        
+//        specialCommentsTextField.text = limoRequest["specialRequests"] as? String
+//        fromLocationLookUp.hidden = true
+//        toLocationLookUp.hidden = true
+//        numPassengersStepper.enabled = false
+//        numBagsStepper.enabled = false
+//        limoRequestDatePicker.enabled = false
+//        limoRequestDatePicker.hidden = true
         
         if let status = limoRequest["status"] as? String {
             switch (status, userRole) {
@@ -89,12 +88,12 @@ class RequestDetailTableViewController: LimoRequestViewController {
     
     func setupEditingFields() {
         println("ready to edit fields")
-        fromLocationLookUp.hidden = false
-        toLocationLookUp.hidden = false
-        numPassengersStepper.enabled = true
-        numBagsStepper.enabled = true
-        limoRequestDatePicker.enabled = true
-        limoRequestDatePicker.hidden = false
+//        fromLocationLookUp.hidden = false
+//        toLocationLookUp.hidden = false
+//        numPassengersStepper.enabled = true
+//        numBagsStepper.enabled = true
+//        limoRequestDatePicker.enabled = true
+//        limoRequestDatePicker.hidden = false
     }
     
     @IBAction func actionButtonTouchUpInside(sender: UIButton) {

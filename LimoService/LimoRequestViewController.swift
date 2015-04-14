@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
+class LimoRequestViewController: UITableViewController, LocationCellDelegate, TextFieldCellDelegate, NumStepperCellDelegate, ButtonCellDelegate, DateSelectionDelegate {
     
     var currentUser: PFUser!
     var userFetched = false
@@ -18,7 +18,8 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        resetFields()
+        tableView.estimatedRowHeight = 60
+        tableView.rowHeight = UITableViewAutomaticDimension
         configureLookUpSelector()
     }
     
@@ -26,12 +27,7 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        println("View did appear")
-        removeKeyboardDisplay()
-    }
-
+    
     // MARK: - Configuration
     func configureLookUpSelector() {
         lookUpSelectionController = UIAlertController(
@@ -73,42 +69,6 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
         lookUpSelectionController!.addAction(actionCancel)
     }
     
-    func configureSteppers() {
-        numPassengersStepper.value = 1
-        numPassengersStepper.minimumValue = 0
-        numPassengersStepper.maximumValue = 10
-        numPassengersStepper.stepValue = 1
-        
-        numBagsStepper.value = 0
-        numBagsStepper.minimumValue = 0
-        numBagsStepper.maximumValue = 10
-        numBagsStepper.stepValue = 1
-        
-        numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
-        numBagsLabel.text = "\(Int(numBagsStepper.value))"
-    }
-    
-    func configureDatePicker() {
-        limoRequestDatePicker.datePickerMode = .DateAndTime
-        
-        // Set min/max date for the date picker.
-        // As an example we will limit the date between now and 15 days from now.
-        let now = NSDate()
-        limoRequestDatePicker.minimumDate = now
-        
-        let currentCalendar = NSCalendar.currentCalendar()
-        
-        let dateComponents = NSDateComponents()
-        dateComponents.day = 15
-        
-        let fifteenDaysFromNow = currentCalendar.dateByAddingComponents(dateComponents, toDate: now, options: nil)
-        limoRequestDatePicker.maximumDate = fifteenDaysFromNow
-        limoRequestDatePicker.minuteInterval = 2
-        limoRequestDatePicker.addTarget(self, action: "updateDatePickerLabel", forControlEvents: .ValueChanged)
-        
-        updateDatePickerLabel()
-    }
-    
     // MARK: - Create the Request
     @IBAction func createTheRequest(sender: UIButton) {
         if let from = fromLocation {
@@ -124,11 +84,13 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
                 }
                 limoRequest["owner"] = user
                 limoRequest["status"] = "New"
-                limoRequest["when"] = limoRequestDatePicker.date
-                limoRequest["whenString"] = dateFormatter.stringFromDate(limoRequestDatePicker.date)
-                limoRequest["numPassengers"] = Int(numPassengersStepper.value)
-                limoRequest["numBags"] = Int(numBagsStepper.value)
-                limoRequest["specialRequests"] = specialCommentsTextField.text
+                if let dateCell = dateCell {
+                    limoRequest["when"] = dateCell.date
+                    limoRequest["whenString"] = dateCell.dateString
+                }
+                limoRequest["numPassengers"] = numPassengers
+                limoRequest["numBags"] = numBags
+                limoRequest["specialRequests"] = specialComments
                 limoRequest.saveInBackgroundWithBlock { (succeeded, error)  in
                     if succeeded {
                         println("Succeed in creating a limo request: \(limoRequest)")
@@ -151,118 +113,17 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
             displayAlertWithTitle("Incomplete Request", message: "Need 'From' Location")
         }
     }
-//    
-//    func subscibeToChannel(channelName: NSString) {
-//        // When users indicate they are Giants fans, we subscribe them to that channel.
-//        let currentInstallation = PFInstallation.currentInstallation()
-//        let newChannel = "C\(channelName)"
-//        currentInstallation.addUniqueObject(newChannel, forKey: "channels")
-//        currentInstallation.saveInBackground()
-//        println("Added channel \(newChannel)")
-//    }
     
-    
-    @IBOutlet weak var whenContentView: UIView!
-    @IBOutlet weak var limoRequestDatePicker: UIDatePicker!
-    @IBOutlet weak var limoRequestDateButton: UIButton!
-    var whenViewExpanded = false {
-        didSet {
-            println("The date label is now \(whenViewExpanded)")
-            whenContentView.layoutIfNeeded()
-            whenContentView.setTranslatesAutoresizingMaskIntoConstraints(false)
-            whenContentView.removeConstraints(whenContentView.constraints())
-            if whenViewExpanded {
-                UIView.animateWithDuration(1.0) {
-                    self.hideDatePicker(false)
-                }
-            } else {
-                UIView.animateWithDuration(1.0) {
-                    self.hideDatePicker(true)
-                }
-            }
-        }
-    }
-    
-    func hideDatePicker(setting: Bool) {
-        var viewsDict = Dictionary <String, UIView>()
-        viewsDict["dateButton"] = self.limoRequestDateButton
-        viewsDict["datePicker"] = self.limoRequestDatePicker
-        limoRequestDatePicker.alpha = setting ? 0.0 : 1.0
-        limoRequestDatePicker.hidden = setting
-
-        
-        whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[dateButton]-|", options: nil, metrics: nil, views: viewsDict))
-        
-        whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[datePicker]-|", options: nil, metrics: nil, views: viewsDict))
-        if setting {
-            whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[dateButton]-|", options: nil, metrics: nil, views: viewsDict))
-
-        } else {
-            whenContentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[dateButton]-[datePicker]-|", options: nil, metrics: nil, views: viewsDict))
-        }
-        
-        println("finished with datepicker layout")
-//        whenContentView.layoutIfNeeded()
-//        tableView.beginUpdates()
-//
-//        tableView.endUpdates()
-    }
-    
-    
-    /// A date formatter to format the `date` property of `datePicker`.
-    lazy var dateFormatter: NSDateFormatter = {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = .MediumStyle
-        dateFormatter.timeStyle = .ShortStyle
-        return dateFormatter
-        }()
-    
-    func updateDatePickerLabel() {
-        limoRequestDateButton.setTitle(dateFormatter.stringFromDate(limoRequestDatePicker.date), forState: .Normal)
-    }
-
-    @IBAction func dateLabelTouched(sender: UIButton) {
-        println("the date label was touched")
-
-        whenViewExpanded = !whenViewExpanded
-    }
-    
+     
     var lookUpSelectionController:UIAlertController?
     var locationSpecifier = ""
     var originalLocationText = ""
     var fromLocation: LimoUserLocation?
     var toLocation: LimoUserLocation?
     var locationToSave: LimoUserLocation!
+    var locationCell: LocationSelectionTableViewCell?
+    var dateCell: DateSelectionTableViewCell?
 
-    @IBOutlet weak var fromLocationTextField: UITextField!
-    @IBOutlet weak var toLocationTextField: UITextField!
-    @IBOutlet weak var fromLocationTextView: UITextView!
-    @IBOutlet weak var toLocationTextView: UITextView!
-    @IBOutlet weak var fromLocationLookUp: UIButton!
-    @IBOutlet weak var toLocationLookUp: UIButton!
-    
-    @IBAction func locationLookUpTouchUpInside(sender: UIButton) {
-        switch sender {
-        case fromLocationLookUp:
-            locationSpecifier = "From"
-            originalLocationText = fromLocationTextField.text
-            locationToSave = fromLocation
-            presentViewController(lookUpSelectionController!, animated: true) {
-                println("finished presenting the lookup selector")
-            }
-        case toLocationLookUp:
-            locationSpecifier = "To"
-            originalLocationText = toLocationTextField.text
-            locationToSave = toLocation
-            presentViewController(lookUpSelectionController!, animated: true) {
-                println("finished presenting the lookup selector")
-            }
-
-        default:
-            break
-        }
-        
-    }
     
     // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -373,102 +234,54 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
 
     func updateLocationDisplay() {
         if let locationToSave = locationToSave {
+            locationCell?.locationAddress = locationToSave["address"] as? String
+            // to enable cell height change, we use begin and end Updates around the assignment
+            tableView.beginUpdates()
+            locationCell?.locationName = locationToSave["name"] as? String
+            tableView.endUpdates()
             switch locationSpecifier {
             case "From":
-                if locationToSave["address"] is String {
-                    fromLocationTextView.text = locationToSave["address"] as! String
-                }
-                if locationToSave["name"] is String {
-                    fromLocationTextField.text = locationToSave["name"] as! String
-                }
                 fromLocation = locationToSave
             case "To":
-                if locationToSave["address"] is String {
-                    toLocationTextView.text = locationToSave["address"] as! String
-                }
-                if locationToSave["name"] is String {
-                    toLocationTextField.text = locationToSave["name"] as! String
-                }
                 toLocation = locationToSave
             default:
                 break
             }
         }
      }
-    
-    // MARK: UITextFieldDelegate
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        saveTextIfNeeded(textField)
-        return false
-    }
-
-    func saveTextIfNeeded(textField: UITextField) {
-        switch textField {
-        case toLocationTextField:
-            if toLocation != nil {
-                toLocation!["name"] = textField.text
-                toLocation!.saveEventually()
-            }
-        case fromLocationTextField:
-            if fromLocation != nil {
-                fromLocation!["name"] = textField.text
-                fromLocation!.saveEventually()
-            }
-        default:
-            break
-        }
-    }
+   
+//    func saveTextIfNeeded(textField: UITextField) {
+//        switch textField {
+//        case toLocationTextField:
+//            if toLocation != nil {
+//                toLocation!["name"] = textField.text
+//                toLocation!.saveEventually()
+//            }
+//        case fromLocationTextField:
+//            if fromLocation != nil {
+//                fromLocation!["name"] = textField.text
+//                fromLocation!.saveEventually()
+//            }
+//        default:
+//            break
+//        }
+//    }
     
     // additonal fields
     
-    @IBOutlet weak var specialCommentsTextField: UITextField!
-    @IBOutlet weak var numPassengersStepper: UIStepper!
-    @IBOutlet weak var numPassengersLabel: UILabel!
+    var specialComments = ""
+    var numBags = 0
+    var numPassengers = 1
     
-    @IBOutlet weak var numBagsStepper: UIStepper!
-    @IBOutlet weak var numBagsLabel: UILabel!
-    
-
-    @IBAction func stepperValueChanged(sender: UIStepper) {
-        switch sender {
-        case numPassengersStepper:
-            numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
-        case numBagsStepper:
-            numBagsLabel.text = "\(Int(numBagsStepper.value))"
-        default:
-            break
-        }
-    }
     
     // MARK:- Helpers
     
-    func removeKeyboardDisplay() {
-        // This has to be called from ViewDidAppear because it does not work from unwind segue
-        switch locationSpecifier {
-        case "From":
-            fromLocationTextField.resignFirstResponder()
-        case "To":
-            toLocationTextField.resignFirstResponder()
-        default:
-            // This is the only other textfield, so hide the keyboard just in case
-            specialCommentsTextField.resignFirstResponder()
-        }
-    }
-    
     func resetFields() {
-        configureDatePicker()
-        configureSteppers()
-        configureDatePicker()
         locationSpecifier = ""
         originalLocationText = ""
         fromLocation = nil
         toLocation = nil
-        fromLocationTextField.text = ""
-        toLocationTextField.text = ""
-        fromLocationTextView.text = ""
-        toLocationTextView.text = ""
+        locationCell = nil
     }
     
     /* Just a little method to help us display alert dialogs to the user */
@@ -484,14 +297,161 @@ class LimoRequestViewController: UITableViewController, UITextFieldDelegate {
     
     // MARK: - TableView delegate
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        println("Did select row at \(indexPath)")
+    
+    
+    // MARK: - Table view data source
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 7
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        println("Height for row asked")
-        return 212.0
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // All sections only have 1 row each
+        return 1
     }
+    
+    struct Constants {
+        static let LocationIdentifier = "Location"
+        static let DateIdentifier = "Date"
+        static let ButtonIdentifier = "Button"
+        static let NumberStepperIdentifier = "Stepper Number"
+        static let TextFieldIdentifier = "Text Field"
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell: UITableViewCell?
+        switch indexPath.section {
+        case 0, 3:
+            cell = tableView.dequeueReusableCellWithIdentifier(Constants.LocationIdentifier, forIndexPath: indexPath) as! LocationSelectionTableViewCell
+            if let locationCell = cell as? LocationSelectionTableViewCell {
+                locationCell.delegate = self
+             }
+        case 1:
+            cell = tableView.dequeueReusableCellWithIdentifier(Constants.DateIdentifier, forIndexPath: indexPath) as! DateSelectionTableViewCell
+            if let dateCell = cell as? DateSelectionTableViewCell {
+                dateCell.configureDatePicker()
+                dateCell.delegate = self
+                self.dateCell = dateCell
+                dateCell.viewExpanded = false
+            }
+        case 2:
+            cell = tableView.dequeueReusableCellWithIdentifier(Constants.ButtonIdentifier, forIndexPath: indexPath) as! ButtonCellTableViewCell
+            if let buttonCell = cell as? ButtonCellTableViewCell {
+                buttonCell.delegate = self
+            }
+        case 4, 5:
+            cell = tableView.dequeueReusableCellWithIdentifier(Constants.NumberStepperIdentifier, forIndexPath: indexPath) as! NumStepperCellTableViewCell
+            if let stepperCell = cell as? NumStepperCellTableViewCell {
+                stepperCell.configureSteppers(1, minimum: 0, maximum: 10, step: 1)
+                stepperCell.delegate = self
+            }
+        case 6:
+            cell = tableView.dequeueReusableCellWithIdentifier(Constants.TextFieldIdentifier, forIndexPath: indexPath) as! TextFieldCellTableViewCell
+            (cell as? TextFieldCellTableViewCell)?.delegate = self
+        default:
+            break
+        }
+    
+        // Configure the cell...
+    
+        return cell!
+    }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30.0
+    }
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0: return "Pickup Location"
+        case 1: return "When"
+        case 2: return " "
+        case 3: return "To"
+        case 4: return "Num Passengers"
+        case 5: return "Num Bags"
+        case 6: return "Specail Request"
+        default: return "Title for \(section)"
+        }
+    }
+    
+    // MARK: - LocationCell delegate
+    
+    func lookupTouched(sender: LocationSelectionTableViewCell) {
+        //
+        if let indexPath = tableView.indexPathForCell(sender as UITableViewCell) {
+            locationCell = sender
+            originalLocationText = sender.locationNameTextField.text
+            
+            switch indexPath.section {
+            case 0:
+                locationSpecifier = "From"
+                locationToSave = fromLocation
+                presentViewController(lookUpSelectionController!, animated: true) {
+                    println("finished presenting the lookup selector")
+                }
+                
+            case 3:
+                println("To location touched")
+                locationSpecifier = "To"
+                locationToSave = toLocation
+                presentViewController(lookUpSelectionController!, animated: true) {
+                    println("finished presenting the lookup selector")
+                }
+                
+            default:
+                println("Unexpected index for location cell")
+            }
+        }
+    }
+    
+    func locationTextFieldUpdated(sender: LocationSelectionTableViewCell) {
+        //
+        
+    }
+    
+    // MARK: - TextFieldCell delegate
+    func textFieldUpdated(sender: TextFieldCellTableViewCell) {
+        //
+        
+    }
+    
+    // MARK: - NumSteppersCell delegate
+    
+    func stepperValueUpdated(sender: NumStepperCellTableViewCell) {
+        if let value = sender.value, indexPath = tableView.indexPathForCell(sender as UITableViewCell) {
+            switch indexPath.section {
+            case 4:
+                numPassengers = value
+            case 5:
+                numBags = value
+            default:
+                println("Unexpected index for stepper cell")
+            }
+        }
+    }
+    
+    // MARK: - ButtonCell delegate
+    
+    func buttonTouched(sender: ButtonCellTableViewCell) {
+        //
+    }
+    
+    // MARK: - DateSelection delegate
+    
+    func dateUpdated(sender: DateSelectionTableViewCell) {
+        //
+    }
+    
+    func dateButtonToggled(sender: DateSelectionTableViewCell)  {
+        // to enable cell height change, we use begin and end Updates around the assignment
+        println("delegate of the toggle date button")
+        
+        tableView.beginUpdates()
+        sender.viewExpanded = !sender.viewExpanded
+        tableView.endUpdates()
+
+    }
+    
     
 }
 

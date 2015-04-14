@@ -16,6 +16,12 @@
 		0523BD891AB7B0B30056CFD8 /* LocationResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0523BD881AB7B0B30056CFD8 /* LocationResultsTableViewController.swift */; };
 		0523BD8B1AB7C44C0056CFD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0523BD8A1AB7C44C0056CFD8 /* MapKit.framework */; };
 		0523BD8D1AB892870056CFD8 /* LocationMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0523BD8C1AB892870056CFD8 /* LocationMapViewController.swift */; };
+		054284001ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054283FF1ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift */; };
+		054284021ADC98D400EC0D23 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284011ADC98D400EC0D23 /* Protocols.swift */; };
+		054284041ADC9C0D00EC0D23 /* DateSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284031ADC9C0C00EC0D23 /* DateSelectionTableViewCell.swift */; };
+		054284061ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284051ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift */; };
+		054284081ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284071ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift */; };
+		0542840A1ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284091ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift */; };
 		05649BB81AB0EFCC007566C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05649BB71AB0EFCC007566C3 /* AppDelegate.swift */; };
 		05649BBF1AB0EFCC007566C3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05649BBE1AB0EFCC007566C3 /* Images.xcassets */; };
 		05649BC21AB0EFCC007566C3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05649BC01AB0EFCC007566C3 /* LaunchScreen.xib */; };
@@ -76,6 +82,12 @@
 		0523BD881AB7B0B30056CFD8 /* LocationResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationResultsTableViewController.swift; sourceTree = "<group>"; };
 		0523BD8A1AB7C44C0056CFD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0523BD8C1AB892870056CFD8 /* LocationMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationMapViewController.swift; sourceTree = "<group>"; };
+		054283FF1ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationSelectionTableViewCell.swift; sourceTree = "<group>"; };
+		054284011ADC98D400EC0D23 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		054284031ADC9C0C00EC0D23 /* DateSelectionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateSelectionTableViewCell.swift; sourceTree = "<group>"; };
+		054284051ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumStepperCellTableViewCell.swift; sourceTree = "<group>"; };
+		054284071ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCellTableViewCell.swift; sourceTree = "<group>"; };
+		054284091ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCellTableViewCell.swift; sourceTree = "<group>"; };
 		05649BB21AB0EFCC007566C3 /* LimoService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LimoService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05649BB61AB0EFCC007566C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05649BB71AB0EFCC007566C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -209,6 +221,7 @@
 		05649BB51AB0EFCC007566C3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				054284011ADC98D400EC0D23 /* Protocols.swift */,
 				05649BB71AB0EFCC007566C3 /* AppDelegate.swift */,
 				05649BE31AB0F665007566C3 /* LimoService-Bridging-Header.h */,
 				05649BB61AB0EFCC007566C3 /* Info.plist */,
@@ -288,6 +301,11 @@
 				05649BC01AB0EFCC007566C3 /* LaunchScreen.xib */,
 				05BC51F61AD19C7900506461 /* Main.storyboard */,
 				0523BD841AB7A43A0056CFD8 /* LocationTableViewCell.swift */,
+				054283FF1ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift */,
+				054284031ADC9C0C00EC0D23 /* DateSelectionTableViewCell.swift */,
+				054284091ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift */,
+				054284071ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift */,
+				054284051ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift */,
 				050DF30A1ACCFE96003640DE /* LocationLookupTableViewCell.swift */,
 				05DE99791ACF48D90039F0A7 /* RequestsTableViewCell.swift */,
 			);
@@ -428,9 +446,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0542840A1ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift in Sources */,
 				056E62C31ACC8460003C6A7C /* PreviousLocationLookupViewController.swift in Sources */,
 				050DF30E1ACEED81003640DE /* LoginManagerViewController.swift in Sources */,
 				05DE99781ACF47040039F0A7 /* RequestsTableViewController.swift in Sources */,
+				054284021ADC98D400EC0D23 /* Protocols.swift in Sources */,
+				054284001ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift in Sources */,
 				0523BD811AB632D50056CFD8 /* LimoUserSignUpViewController.swift in Sources */,
 				05DE99741ACF0EDD0039F0A7 /* PushNoAnimationSegue.swift in Sources */,
 				0523BD831AB75D2A0056CFD8 /* LimoUserLocation.swift in Sources */,
@@ -439,6 +460,9 @@
 				0523BD8D1AB892870056CFD8 /* LocationMapViewController.swift in Sources */,
 				05DE997A1ACF48D90039F0A7 /* RequestsTableViewCell.swift in Sources */,
 				050DF30B1ACCFE96003640DE /* LocationLookupTableViewCell.swift in Sources */,
+				054284081ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift in Sources */,
+				054284041ADC9C0D00EC0D23 /* DateSelectionTableViewCell.swift in Sources */,
+				054284061ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift in Sources */,
 				056E62B31AC12378003C6A7C /* LocalSearchTableViewController.swift in Sources */,
 				05BC51F91AD48D0A00506461 /* RequestDetailTableViewController.swift in Sources */,
 				05DA9CC11AB61FD5004EE4DA /* LimoUserLogInViewController.swift in Sources */,
