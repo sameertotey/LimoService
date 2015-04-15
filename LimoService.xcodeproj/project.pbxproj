@@ -55,6 +55,7 @@
 		05722C121AD73A010067B256 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05722C111AD73A010067B256 /* FBSDKCoreKit.framework */; };
 		05722C141AD740230067B256 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05722C131AD740230067B256 /* FacebookSDK.framework */; };
 		05722C161AD7408B0067B256 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05722C151AD7408B0067B256 /* FBSDKLoginKit.framework */; };
+		0587FBE81ADED8E9002F52B4 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0587FBE71ADED8E9002F52B4 /* ActionButton.swift */; };
 		05BC51F71AD19C7900506461 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05BC51F61AD19C7900506461 /* Main.storyboard */; };
 		05BC51F91AD48D0A00506461 /* RequestDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BC51F81AD48D0A00506461 /* RequestDetailTableViewController.swift */; };
 		05DA9CC11AB61FD5004EE4DA /* LimoUserLogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */; };
@@ -127,6 +128,7 @@
 		05722C111AD73A010067B256 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		05722C131AD740230067B256 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		05722C151AD7408B0067B256 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		0587FBE71ADED8E9002F52B4 /* ActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		05BC51F61AD19C7900506461 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		05BC51F81AD48D0A00506461 /* RequestDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestDetailTableViewController.swift; sourceTree = "<group>"; };
 		05DA9CC01AB61FD5004EE4DA /* LimoUserLogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimoUserLogInViewController.swift; sourceTree = "<group>"; };
@@ -303,6 +305,7 @@
 				05649BC01AB0EFCC007566C3 /* LaunchScreen.xib */,
 				05BC51F61AD19C7900506461 /* Main.storyboard */,
 				0542840B1ADDA63500EC0D23 /* StatusIndicatiorView.swift */,
+				0587FBE71ADED8E9002F52B4 /* ActionButton.swift */,
 				0523BD841AB7A43A0056CFD8 /* LocationTableViewCell.swift */,
 				054283FF1ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift */,
 				054284031ADC9C0C00EC0D23 /* DateSelectionTableViewCell.swift */,
@@ -476,6 +479,7 @@
 				05649C0D1AB4826E007566C3 /* UserProfileTableViewController.swift in Sources */,
 				05649BB81AB0EFCC007566C3 /* AppDelegate.swift in Sources */,
 				05649C0B1AB47E31007566C3 /* LimoRequestViewController.swift in Sources */,
+				0587FBE81ADED8E9002F52B4 /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

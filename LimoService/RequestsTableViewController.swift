@@ -20,7 +20,6 @@ class RequestsTableViewController: PFQueryTableViewController {
         self.textKey = "fromString"
         self.pullToRefreshEnabled = true
         self.objectsPerPage = 20
-        
     }
     
     private func alert(message : String) {

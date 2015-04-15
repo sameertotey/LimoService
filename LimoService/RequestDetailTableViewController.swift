@@ -14,17 +14,28 @@ class RequestDetailTableViewController: LimoRequestViewController {
 
     var actionButton: UIButton!
     var action = ""
+    var enabled: Bool = false {
+        didSet {
+            whenCell.enabled = enabled
+            fromCell.enabled = enabled
+            toCell.enabled = enabled
+            numPassengersCell.enabled = enabled
+            numBagsCell.enabled = enabled
+            specialCommentsCell.enabled = enabled
+        }
+    }
     
       // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = editButtonItem()
         navigationItem.leftBarButtonItem = nil
+        editing = false
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        editing = false
+        navigationItem.rightBarButtonItem = nil
     }
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -45,7 +56,6 @@ class RequestDetailTableViewController: LimoRequestViewController {
             toCell.locationAddress = limoRequest["toAddress"] as? String
         }
         if let when = limoRequest["when"] as? NSDate {
-            println("setting date to \(when)")
             whenCell.date = when
         }
         if let numPassengers = limoRequest["numPassengers"] as? NSNumber {
@@ -57,15 +67,7 @@ class RequestDetailTableViewController: LimoRequestViewController {
         if let specialComment = limoRequest["specialRequests"] as? String {
             specialCommentsCell.textString = specialComment
         }
-        
         actionButton = actionButtonCell.button
-
-//        fromLocationLookUp.hidden = true
-//        toLocationLookUp.hidden = true
-//        numPassengersStepper.enabled = false
-//        numBagsStepper.enabled = false
-//        limoRequestDatePicker.enabled = false
-//        limoRequestDatePicker.hidden = true
         
         if let status = limoRequest["status"] as? String {
             switch (status, userRole) {
@@ -80,52 +82,22 @@ class RequestDetailTableViewController: LimoRequestViewController {
                 action = "Close"
             default:
                 actionButton.setTitle("Action Not Avail. Yet", forState: .Normal)
-                action = "Close"
+                action = "None"
             }
         }
+        enabled = false
         tableView.endUpdates()
-
     }
     
     func setupEditingFields() {
         println("ready to edit fields")
+        enabled = true
 //        fromLocationLookUp.hidden = false
 //        toLocationLookUp.hidden = false
 //        numPassengersStepper.enabled = true
 //        numBagsStepper.enabled = true
 //        limoRequestDatePicker.enabled = true
 //        limoRequestDatePicker.hidden = false
-    }
-    
-    @IBAction func actionButtonTouchUpInside(sender: UIButton) {
-        println("now take the action that changes the status of the request")
-        switch action {
-        case "Accept":
-            limoRequest["status"] = "Accepted"
-            println("current user is \(currentUser)")
-            if let user = currentUser {
-                limoRequest["assignedTo"] = user
-            }
-        case "Cancel":
-            limoRequest["status"] = "Cancelled"
-        case "Close":
-            limoRequest["status"] = "Closed"
-        default:
-            break
-        }
-        if limoRequest.isDirty() {
-            println("will save the limo request record")
-            limoRequest.saveInBackgroundWithBlock({ (succeeded, error) -> Void in
-                if succeeded {
-                    self.setupDisplayFields()
-                    println("succeeded in saving")
-//                    self.displayAlertWithTitle("Request Updated", message: "Your changes were successfully saved")
-                } else {
-                    println("error while saving the limorequest is \(error)")
-                    self.displayAlertWithTitle("Request Update Error", message: "Your changes were not saved")
-                }
-            })
-        }
     }
     
     override func setEditing(editing: Bool, animated: Bool) {
@@ -145,6 +117,37 @@ class RequestDetailTableViewController: LimoRequestViewController {
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         return editing
+    }
+
+    // MARK: - ButtonCell delegate
+    
+    override func buttonTouched(sender: ButtonCellTableViewCell) {
+        //
+        switch action {
+        case "Accept":
+            limoRequest["status"] = "Accepted"
+            println("current user is \(currentUser)")
+            if let user = currentUser {
+                limoRequest["assignedTo"] = user
+            }
+        case "Cancel":
+            limoRequest["status"] = "Cancelled"
+        case "Close":
+            limoRequest["status"] = "Closed"
+        default:
+            break
+        }
+
+        if limoRequest.isDirty() {
+            limoRequest.saveInBackgroundWithBlock({ (succeeded, error) -> Void in
+                if succeeded {
+                    self.setupDisplayFields()
+                } else {
+                    println("error while saving the limorequest is \(error)")
+                    self.displayAlertWithTitle("Request Update Error", message: "Your changes were not saved")
+                }
+            })
+        }
     }
 
 }

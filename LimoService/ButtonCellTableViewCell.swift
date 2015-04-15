@@ -10,16 +10,21 @@ import UIKit
 
 class ButtonCellTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var button: ActionButton!
     
     var delegate: ButtonCellDelegate?
     
     var title: String? {
         didSet {
-            button.setTitle(title, forState: .Normal)
+            button.normalTitle = title
         }
     }
-    
+    var enabled: Bool = true {
+        didSet {
+            button.enabled = enabled
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -33,7 +38,7 @@ class ButtonCellTableViewCell: UITableViewCell {
     
     // MARK: - Actions
     
-    @IBAction func buttonTouchedInside(sender: UIButton) {
+    @IBAction func buttonTouchedInside(sender: ActionButton) {
         delegate?.buttonTouched(self)
     }
 

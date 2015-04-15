@@ -31,6 +31,13 @@ class DateSelectionTableViewCell: UITableViewCell {
     
     var dateString: String?
     
+    var enabled: Bool = true {
+        didSet {
+            dateButton.enabled = enabled
+            datePicker.enabled = enabled
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

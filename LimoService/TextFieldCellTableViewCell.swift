@@ -21,6 +21,12 @@ class TextFieldCellTableViewCell: UITableViewCell, UITextFieldDelegate {
         }
     }
 
+    var enabled: Bool = true {
+        didSet {
+            textField.enabled = enabled
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

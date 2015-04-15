@@ -30,13 +30,16 @@ class StatusIndicatiorView: UIView {
         }
     }
     
-    @IBInspectable var cornerRadius: CGFloat = 0 {
+    @IBInspectable var cornerRadius: CGFloat = 3.0 {
         didSet {
             layer.cornerRadius = cornerRadius
         }
     }
-
+    
+    @IBInspectable var preferredWidth: CGFloat = 6
+    @IBInspectable var preferredHeight: CGFloat = 100
+    
     override func intrinsicContentSize() -> CGSize {
-        return CGSizeMake(8, 100)
+        return CGSizeMake(preferredWidth, preferredHeight)
     }
 }

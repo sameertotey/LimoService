@@ -30,6 +30,7 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         tableView.rowHeight = UITableViewAutomaticDimension
         configureLookUpSelector()
         configureCells()
+        configureToolbar()
     }
     
     override func didReceiveMemoryWarning() {
@@ -77,6 +78,15 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         lookUpSelectionController!.addAction(actionCancel)
     }
     
+    func configureToolbar() {
+        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Plain, target: self, action: "showProfile")
+        setToolbarItems([profileBarButtonItem], animated: false)
+    }
+    
+    func showProfile() {
+        performSegueWithIdentifier("Show Profile", sender: nil)
+    }
+    
     struct Constants {
         static let Location1Identifier = "Location 1"
         static let Location2Identifier = "Location 2"
@@ -106,7 +116,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         numBagsCell.delegate = self
         specialCommentsCell = tableView.dequeueReusableCellWithIdentifier(Constants.TextFieldIdentifier) as! TextFieldCellTableViewCell
         specialCommentsCell.delegate = self
-        println("Cells have been configured")
     }
     
     // MARK: - Create the Request
@@ -124,10 +133,8 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
                 }
                 limoRequest["owner"] = user
                 limoRequest["status"] = "New"
-                if let dateCell = dateCell {
-                    limoRequest["when"] = dateCell.date
-                    limoRequest["whenString"] = dateCell.dateString
-                }
+                limoRequest["when"] = whenCell.date
+                limoRequest["whenString"] = whenCell.dateString
                 limoRequest["numPassengers"] = numPassengers
                 limoRequest["numBags"] = numBags
                 limoRequest["specialRequests"] = specialComments
@@ -160,9 +167,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     var fromLocation: LimoUserLocation?
     var toLocation: LimoUserLocation?
     var locationToSave: LimoUserLocation!
-    var locationCell: LocationSelectionTableViewCell?
-    var dateCell: DateSelectionTableViewCell?
-
     
     // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -254,7 +258,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
                     locationToSave["location"] = geoPoint
                     if let address = svc.navigationItem.title {
                         locationToSave["address"] = address
-                        println("The address reported is \(address)")
                     }
                     locationToSave.saveEventually()
                 }
@@ -273,19 +276,22 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
 
     func updateLocationDisplay() {
         if let locationToSave = locationToSave {
-            locationCell?.locationAddress = locationToSave["address"] as? String
             // to enable cell height change, we use begin and end Updates around the assignment
             tableView.beginUpdates()
-            locationCell?.locationName = locationToSave["name"] as? String
-            tableView.endUpdates()
+
             switch locationSpecifier {
             case "From":
                 fromLocation = locationToSave
+                fromCell.locationAddress = locationToSave["address"] as? String
+                fromCell.locationName = locationToSave["name"] as? String
             case "To":
                 toLocation = locationToSave
+                toCell.locationAddress = locationToSave["address"] as? String
+                toCell.locationName = locationToSave["name"] as? String
             default:
                 break
             }
+            tableView.endUpdates()
         }
      }
    
@@ -304,7 +310,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         originalLocationText = ""
         fromLocation = nil
         toLocation = nil
-        locationCell = nil
     }
     
     /* Just a little method to help us display alert dialogs to the user */
@@ -372,7 +377,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     func lookupTouched(sender: LocationSelectionTableViewCell) {
         //
         if let indexPath = tableView.indexPathForCell(sender as UITableViewCell) {
-            locationCell = sender
             originalLocationText = sender.locationNameTextField.text
             
             switch indexPath.section {
@@ -384,7 +388,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
                 }
                 
             case 3:
-                println("To location touched")
                 locationSpecifier = "To"
                 locationToSave = toLocation
                 presentViewController(lookUpSelectionController!, animated: true) {
@@ -400,17 +403,16 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     func locationTextFieldUpdated(sender: LocationSelectionTableViewCell) {
         //
         if let indexPath = tableView.indexPathForCell(sender as UITableViewCell) {
-            locationCell = sender
             
             switch indexPath.section {
             case 0:
                 if fromLocation != nil {
-                    fromLocation!["name"] = locationCell?.locationName
+                    fromLocation!["name"] = fromCell.locationName
                     fromLocation!.saveEventually()
                 }
              case 3:
                 if toLocation != nil {
-                    toLocation!["name"] = locationCell?.locationName
+                    toLocation!["name"] = toCell.locationName
                     toLocation!.saveEventually()
                 }
             default:
@@ -423,7 +425,7 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     // MARK: - TextFieldCell delegate
     func textFieldUpdated(sender: TextFieldCellTableViewCell) {
         //
-        if let text = sender.textString {
+        if let text = sender.textField.text {
             specialComments = text
         }
     }

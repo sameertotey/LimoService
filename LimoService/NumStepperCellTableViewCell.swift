@@ -24,6 +24,12 @@ class NumStepperCellTableViewCell: UITableViewCell {
         }
     }
     
+    var enabled: Bool = true {
+        didSet {
+            stepper.enabled = enabled
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -53,6 +59,7 @@ class NumStepperCellTableViewCell: UITableViewCell {
     @IBAction func stepperValueChangd(sender: UIStepper) {
 //        upDateLabel()
         value = Int(sender.value)
+        delegate?.stepperValueUpdated(self)
     }
     
 }

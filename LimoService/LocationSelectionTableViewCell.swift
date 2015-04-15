@@ -29,6 +29,15 @@ class LocationSelectionTableViewCell: UITableViewCell, UITextFieldDelegate {
         }
     }
     
+    var enabled: Bool = true {
+        didSet {
+            locationNameTextField.enabled = enabled
+//            locationAddressLabel.enabled = enabled
+            locationLookupButton.enabled = enabled
+            locationLookupButton.hidden = !enabled
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
