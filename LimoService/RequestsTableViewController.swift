@@ -101,13 +101,20 @@ class RequestsTableViewController: PFQueryTableViewController {
         if let status = object.valueForKey("status") as? String {
             switch status {
             case "New":
-                cell.backgroundColor = UIColor(red: 204.0/255, green: 255.0/255, blue: 102.0/255, alpha: 1.0)
+//                cell.statusIndicatorView.backgroundColor = UIColor(red: 204.0/255, green: 255.0/255, blue: 102.0/255, alpha: 1.0)
+                cell.statusIndicatorView.backgroundColor = UIColor.greenColor()
             case "Accepted":
-                cell.backgroundColor = UIColor(red: 41.0/255, green: 248.0/255, blue: 255.0/255, alpha: 1.0)
+//                cell.statusIndicatorView.backgroundColor = UIColor(red: 41.0/255, green: 248.0/255, blue: 255.0/255, alpha: 1.0)
+                cell.statusIndicatorView.backgroundColor = UIColor.yellowColor()
+
             case "Closed":
-                cell.backgroundColor = UIColor(red: 200.0/255, green: 172.0/255, blue: 172.0/255, alpha: 1.0)
+//                cell.statusIndicatorView.backgroundColor = UIColor(red: 200.0/255, green: 172.0/255, blue: 172.0/255, alpha: 1.0)
+                cell.statusIndicatorView.backgroundColor = UIColor.grayColor()
+
             case "Cancelled":
-                cell.backgroundColor = UIColor(red: 255.0/255, green: 107.0/255, blue: 102.0/255, alpha: 1.0)
+//                cell.statusIndicatorView.backgroundColor = UIColor(red: 255.0/255, green: 107.0/255, blue: 102.0/255, alpha: 1.0)
+                cell.statusIndicatorView.backgroundColor = UIColor.redColor()
+
             default:
                 cell.backgroundColor = UIColor.whiteColor()
             }

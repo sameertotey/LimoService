@@ -17,7 +17,9 @@ class LocationSelectionTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     var locationName: String? {
         didSet {
-            locationNameTextField.text = locationName
+            if locationName != locationNameTextField.text {
+                locationNameTextField.text = locationName
+            }
         }
     }
     
@@ -50,6 +52,7 @@ class LocationSelectionTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        locationName = textField.text
         delegate?.locationTextFieldUpdated(self)
         return false
     }

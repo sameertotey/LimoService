@@ -22,6 +22,7 @@
 		054284061ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284051ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift */; };
 		054284081ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284071ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift */; };
 		0542840A1ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054284091ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift */; };
+		0542840C1ADDA63500EC0D23 /* StatusIndicatiorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0542840B1ADDA63500EC0D23 /* StatusIndicatiorView.swift */; };
 		05649BB81AB0EFCC007566C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05649BB71AB0EFCC007566C3 /* AppDelegate.swift */; };
 		05649BBF1AB0EFCC007566C3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05649BBE1AB0EFCC007566C3 /* Images.xcassets */; };
 		05649BC21AB0EFCC007566C3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05649BC01AB0EFCC007566C3 /* LaunchScreen.xib */; };
@@ -88,6 +89,7 @@
 		054284051ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumStepperCellTableViewCell.swift; sourceTree = "<group>"; };
 		054284071ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCellTableViewCell.swift; sourceTree = "<group>"; };
 		054284091ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCellTableViewCell.swift; sourceTree = "<group>"; };
+		0542840B1ADDA63500EC0D23 /* StatusIndicatiorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusIndicatiorView.swift; sourceTree = "<group>"; };
 		05649BB21AB0EFCC007566C3 /* LimoService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LimoService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05649BB61AB0EFCC007566C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05649BB71AB0EFCC007566C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 			children = (
 				05649BC01AB0EFCC007566C3 /* LaunchScreen.xib */,
 				05BC51F61AD19C7900506461 /* Main.storyboard */,
+				0542840B1ADDA63500EC0D23 /* StatusIndicatiorView.swift */,
 				0523BD841AB7A43A0056CFD8 /* LocationTableViewCell.swift */,
 				054283FF1ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift */,
 				054284031ADC9C0C00EC0D23 /* DateSelectionTableViewCell.swift */,
@@ -461,6 +464,7 @@
 				05DE997A1ACF48D90039F0A7 /* RequestsTableViewCell.swift in Sources */,
 				050DF30B1ACCFE96003640DE /* LocationLookupTableViewCell.swift in Sources */,
 				054284081ADCA2B300EC0D23 /* ButtonCellTableViewCell.swift in Sources */,
+				0542840C1ADDA63500EC0D23 /* StatusIndicatiorView.swift in Sources */,
 				054284041ADC9C0D00EC0D23 /* DateSelectionTableViewCell.swift in Sources */,
 				054284061ADC9FD300EC0D23 /* NumStepperCellTableViewCell.swift in Sources */,
 				056E62B31AC12378003C6A7C /* LocalSearchTableViewController.swift in Sources */,

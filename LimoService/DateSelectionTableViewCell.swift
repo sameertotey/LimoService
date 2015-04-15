@@ -13,16 +13,18 @@ class DateSelectionTableViewCell: UITableViewCell {
     @IBOutlet weak var dateButton: UIButton!
     @IBOutlet weak var datePicker: UIDatePicker!
     
-    var savedDatePicker: UIDatePicker?
-    var savedDateButton: UIButton?
+    var savedDatePicker: UIDatePicker!
+    var savedDateButton: UIButton!
     
     var delegate: DateSelectionDelegate?
     
     var date: NSDate? {
         didSet {
-            if date != nil{
+            if date != nil {
+                datePicker.minimumDate = date!.earlierDate(NSDate())
                 datePicker.date = date!
                 dateString = dateFormatter.stringFromDate(date!)
+                updateDatePickerLabel()
             }
         }
     }
@@ -36,12 +38,6 @@ class DateSelectionTableViewCell: UITableViewCell {
         savedDateButton = dateButton
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
     func configureDatePicker() {
         datePicker.datePickerMode = .DateAndTime
         
@@ -60,7 +56,6 @@ class DateSelectionTableViewCell: UITableViewCell {
         datePicker.maximumDate = fifteenDaysFromNow
         datePicker.minuteInterval = 2
         datePicker.addTarget(self, action: "updateDatePickerLabel", forControlEvents: .ValueChanged)
-        
         updateDatePickerLabel()
     }
 
@@ -77,7 +72,7 @@ class DateSelectionTableViewCell: UITableViewCell {
         dateButton.setTitle(dateFormatter.stringFromDate(datePicker.date), forState: .Normal)
     }
     
-    var viewExpanded = false {
+    var viewExpanded = true {
         didSet {
             self.hideDatePicker(!viewExpanded)
         }
@@ -85,25 +80,23 @@ class DateSelectionTableViewCell: UITableViewCell {
     
     func hideDatePicker(setting: Bool) {
         var viewsDict = Dictionary <String, UIView>()
-        viewsDict["dateButton"] = savedDateButton
-        viewsDict["datePicker"] = savedDatePicker
+        viewsDict["dateButton"] = dateButton
+        viewsDict["datePicker"] = datePicker
         contentView.subviews.map({ $0.removeFromSuperview() })
-        contentView.addSubview(savedDateButton!)
+        contentView.addSubview(dateButton)
         contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[dateButton]-|", options: nil, metrics: nil, views: viewsDict))
         if setting {
             contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[dateButton]-|", options: nil, metrics: nil, views: viewsDict))
         } else {
-            contentView.addSubview(savedDatePicker!)
+            contentView.addSubview(datePicker)
             contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[datePicker]-|", options: nil, metrics: nil, views: viewsDict))
             contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[dateButton]-[datePicker]-|", options: nil, metrics: nil, views: viewsDict))
         }
-        
     }
     
     // MARK: - Actions
     
     @IBAction func buttonTouched(sender: UIButton) {
-        println("date button touched")
         delegate?.dateButtonToggled(self)
     }
 

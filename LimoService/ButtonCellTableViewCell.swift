@@ -14,6 +14,12 @@ class ButtonCellTableViewCell: UITableViewCell {
     
     var delegate: ButtonCellDelegate?
     
+    var title: String? {
+        didSet {
+            button.setTitle(title, forState: .Normal)
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -28,7 +34,7 @@ class ButtonCellTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func buttonTouchedInside(sender: UIButton) {
-        
+        delegate?.buttonTouched(self)
     }
 
 }

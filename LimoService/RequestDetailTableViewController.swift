@@ -12,7 +12,7 @@ class RequestDetailTableViewController: LimoRequestViewController {
     
     var limoRequest: LimoRequest!
 
-    @IBOutlet weak var actionButton: UIButton!
+    var actionButton: UIButton!
     var action = ""
     
       // MARK: - View Controller lifecycle
@@ -20,11 +20,11 @@ class RequestDetailTableViewController: LimoRequestViewController {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = editButtonItem()
         navigationItem.leftBarButtonItem = nil
-        editing = false
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        editing = false
     }
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -33,33 +33,33 @@ class RequestDetailTableViewController: LimoRequestViewController {
  
     func setupDisplayFields() {
         println("setup display fields")
+        tableView.beginUpdates()
         if let from = limoRequest["from"] as? PFObject {
             fromLocation = from as? LimoUserLocation
-//            fromLocationTextField.text = limoRequest["fromName"] as? String
-//            fromLocationTextView.text = limoRequest["fromAddress"] as? String
+            fromCell.locationName = limoRequest["fromName"] as? String
+            fromCell.locationAddress = limoRequest["fromAddress"] as? String
         }
         if let to = limoRequest["to"] as? PFObject {
             toLocation = to as? LimoUserLocation
-//            toLocationTextField.text = limoRequest["fromName"] as? String
-//            toLocationTextView.text = limoRequest["fromAddress"] as? String
+            toCell.locationName = limoRequest["toName"] as? String
+            toCell.locationAddress = limoRequest["toAddress"] as? String
         }
-//        if let when = limoRequest["when"] as? NSDate {
-//            println("setting date to \(when)")
-//            limoRequestDatePicker.minimumDate = when
-//            limoRequestDatePicker.setDate(when, animated: false)
-//            updateDatePickerLabel()
-//        }
+        if let when = limoRequest["when"] as? NSDate {
+            println("setting date to \(when)")
+            whenCell.date = when
+        }
+        if let numPassengers = limoRequest["numPassengers"] as? NSNumber {
+            numPassengersCell.value = numPassengers.integerValue
+        }
+        if let numBags = limoRequest["numBags"] as? NSNumber {
+            numBagsCell.value = numBags.integerValue
+        }
+        if let specialComment = limoRequest["specialRequests"] as? String {
+            specialCommentsCell.textString = specialComment
+        }
         
-//        if let numPassengers = limoRequest["numPassengers"] as? NSNumber {
-//            numPassengersStepper.value = numPassengers.doubleValue
-//            numPassengersLabel.text = "\(Int(numPassengersStepper.value))"
-//        }
-//        if let numBags = limoRequest["numBags"] as? NSNumber {
-//            numBagsStepper.value = numBags.doubleValue
-//            numBagsLabel.text = "\(Int(numBagsStepper.value))"
-//        }
-//        
-//        specialCommentsTextField.text = limoRequest["specialRequests"] as? String
+        actionButton = actionButtonCell.button
+
 //        fromLocationLookUp.hidden = true
 //        toLocationLookUp.hidden = true
 //        numPassengersStepper.enabled = false
@@ -78,12 +78,13 @@ class RequestDetailTableViewController: LimoRequestViewController {
             case ("Accepted", "provider"):
                 actionButton.setTitle("Close this Request", forState: .Normal)
                 action = "Close"
-
             default:
-                break
+                actionButton.setTitle("Action Not Avail. Yet", forState: .Normal)
+                action = "Close"
             }
-
         }
+        tableView.endUpdates()
+
     }
     
     func setupEditingFields() {
@@ -118,7 +119,7 @@ class RequestDetailTableViewController: LimoRequestViewController {
                 if succeeded {
                     self.setupDisplayFields()
                     println("succeeded in saving")
-                    self.displayAlertWithTitle("Request Updated", message: "Your changes were successfully saved")
+//                    self.displayAlertWithTitle("Request Updated", message: "Your changes were successfully saved")
                 } else {
                     println("error while saving the limorequest is \(error)")
                     self.displayAlertWithTitle("Request Update Error", message: "Your changes were not saved")

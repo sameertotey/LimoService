@@ -14,6 +14,14 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     var userFetched = false
     var userRole = ""
 
+    var whenCell: DateSelectionTableViewCell!
+    var fromCell: LocationSelectionTableViewCell!
+    var toCell: LocationSelectionTableViewCell!
+    var numPassengersCell: NumStepperCellTableViewCell!
+    var numBagsCell: NumStepperCellTableViewCell!
+    var specialCommentsCell: TextFieldCellTableViewCell!
+    var actionButtonCell: ButtonCellTableViewCell!
+    
     
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
@@ -21,12 +29,12 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
         configureLookUpSelector()
+        configureCells()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
     
     // MARK: - Configuration
     func configureLookUpSelector() {
@@ -69,8 +77,40 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         lookUpSelectionController!.addAction(actionCancel)
     }
     
+    struct Constants {
+        static let Location1Identifier = "Location 1"
+        static let Location2Identifier = "Location 2"
+        static let DateIdentifier = "Date"
+        static let ButtonIdentifier = "Button"
+        static let NumberStepper1Identifier = "Stepper Number 1"
+        static let NumberStepper2Identifier = "Stepper Number 2"
+        static let TextFieldIdentifier = "Text Field"
+    }
+
+    func configureCells() {
+        fromCell = tableView.dequeueReusableCellWithIdentifier(Constants.Location1Identifier) as! LocationSelectionTableViewCell
+        fromCell.delegate = self
+        toCell = tableView.dequeueReusableCellWithIdentifier(Constants.Location2Identifier) as! LocationSelectionTableViewCell
+        toCell.delegate = self
+        whenCell = tableView.dequeueReusableCellWithIdentifier(Constants.DateIdentifier) as! DateSelectionTableViewCell
+        whenCell.delegate = self
+        whenCell.configureDatePicker()
+        whenCell.viewExpanded = false
+        actionButtonCell = tableView.dequeueReusableCellWithIdentifier(Constants.ButtonIdentifier) as! ButtonCellTableViewCell
+        actionButtonCell.delegate = self
+        numPassengersCell = tableView.dequeueReusableCellWithIdentifier(Constants.NumberStepper1Identifier) as! NumStepperCellTableViewCell
+        numPassengersCell.configureSteppers(Double(numPassengers), minimum: 0, maximum: 10, step: 1)
+        numPassengersCell.delegate = self
+        numBagsCell = tableView.dequeueReusableCellWithIdentifier(Constants.NumberStepper2Identifier) as! NumStepperCellTableViewCell
+        numBagsCell.configureSteppers(Double(numBags), minimum: 0, maximum: 10, step: 1)
+        numBagsCell.delegate = self
+        specialCommentsCell = tableView.dequeueReusableCellWithIdentifier(Constants.TextFieldIdentifier) as! TextFieldCellTableViewCell
+        specialCommentsCell.delegate = self
+        println("Cells have been configured")
+    }
+    
     // MARK: - Create the Request
-    @IBAction func createTheRequest(sender: UIButton) {
+    func createTheRequest() {
         if let from = fromLocation {
             if let user = currentUser {
                 let limoRequest = LimoRequest(className: LimoRequest.parseClassName())
@@ -114,7 +154,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         }
     }
     
-     
     var lookUpSelectionController:UIAlertController?
     var locationSpecifier = ""
     var originalLocationText = ""
@@ -250,22 +289,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         }
      }
    
-//    func saveTextIfNeeded(textField: UITextField) {
-//        switch textField {
-//        case toLocationTextField:
-//            if toLocation != nil {
-//                toLocation!["name"] = textField.text
-//                toLocation!.saveEventually()
-//            }
-//        case fromLocationTextField:
-//            if fromLocation != nil {
-//                fromLocation!["name"] = textField.text
-//                fromLocation!.saveEventually()
-//            }
-//        default:
-//            break
-//        }
-//    }
     
     // additonal fields
     
@@ -297,7 +320,14 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     
     // MARK: - TableView delegate
     
+//    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 20.0
+//    }
     
+//    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        let size = whenCell.sizeThatFits(CGSizeMake(tableView.bounds.width, 300.0))
+//        return size.height
+//    }
     
     // MARK: - Table view data source
     
@@ -310,55 +340,18 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         return 1
     }
     
-    struct Constants {
-        static let LocationIdentifier = "Location"
-        static let DateIdentifier = "Date"
-        static let ButtonIdentifier = "Button"
-        static let NumberStepperIdentifier = "Stepper Number"
-        static let TextFieldIdentifier = "Text Field"
-    }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell?
         switch indexPath.section {
-        case 0, 3:
-            cell = tableView.dequeueReusableCellWithIdentifier(Constants.LocationIdentifier, forIndexPath: indexPath) as! LocationSelectionTableViewCell
-            if let locationCell = cell as? LocationSelectionTableViewCell {
-                locationCell.delegate = self
-             }
-        case 1:
-            cell = tableView.dequeueReusableCellWithIdentifier(Constants.DateIdentifier, forIndexPath: indexPath) as! DateSelectionTableViewCell
-            if let dateCell = cell as? DateSelectionTableViewCell {
-                dateCell.configureDatePicker()
-                dateCell.delegate = self
-                self.dateCell = dateCell
-                dateCell.viewExpanded = false
-            }
-        case 2:
-            cell = tableView.dequeueReusableCellWithIdentifier(Constants.ButtonIdentifier, forIndexPath: indexPath) as! ButtonCellTableViewCell
-            if let buttonCell = cell as? ButtonCellTableViewCell {
-                buttonCell.delegate = self
-            }
-        case 4, 5:
-            cell = tableView.dequeueReusableCellWithIdentifier(Constants.NumberStepperIdentifier, forIndexPath: indexPath) as! NumStepperCellTableViewCell
-            if let stepperCell = cell as? NumStepperCellTableViewCell {
-                stepperCell.configureSteppers(1, minimum: 0, maximum: 10, step: 1)
-                stepperCell.delegate = self
-            }
-        case 6:
-            cell = tableView.dequeueReusableCellWithIdentifier(Constants.TextFieldIdentifier, forIndexPath: indexPath) as! TextFieldCellTableViewCell
-            (cell as? TextFieldCellTableViewCell)?.delegate = self
-        default:
-            break
+        case 0: return fromCell
+        case 1: return whenCell
+        case 2: return actionButtonCell
+        case 3: return toCell
+        case 4: return numPassengersCell
+        case 5: return numBagsCell
+        case 6: return specialCommentsCell
+        default: return UITableViewCell()
         }
-    
-        // Configure the cell...
-    
-        return cell!
-    }
-    
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30.0
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -406,13 +399,33 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     
     func locationTextFieldUpdated(sender: LocationSelectionTableViewCell) {
         //
-        
+        if let indexPath = tableView.indexPathForCell(sender as UITableViewCell) {
+            locationCell = sender
+            
+            switch indexPath.section {
+            case 0:
+                if fromLocation != nil {
+                    fromLocation!["name"] = locationCell?.locationName
+                    fromLocation!.saveEventually()
+                }
+             case 3:
+                if toLocation != nil {
+                    toLocation!["name"] = locationCell?.locationName
+                    toLocation!.saveEventually()
+                }
+            default:
+                println("Unexpected index for location cell")
+            }
+        }
+
     }
     
     // MARK: - TextFieldCell delegate
     func textFieldUpdated(sender: TextFieldCellTableViewCell) {
         //
-        
+        if let text = sender.textString {
+            specialComments = text
+        }
     }
     
     // MARK: - NumSteppersCell delegate
@@ -434,12 +447,13 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     
     func buttonTouched(sender: ButtonCellTableViewCell) {
         //
+        createTheRequest()
     }
     
     // MARK: - DateSelection delegate
     
     func dateUpdated(sender: DateSelectionTableViewCell) {
-        //
+        // do nothing for now
     }
     
     func dateButtonToggled(sender: DateSelectionTableViewCell)  {
@@ -449,9 +463,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         tableView.beginUpdates()
         sender.viewExpanded = !sender.viewExpanded
         tableView.endUpdates()
-
     }
-    
-    
 }
 
