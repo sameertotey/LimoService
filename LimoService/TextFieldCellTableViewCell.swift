@@ -13,7 +13,7 @@ class TextFieldCellTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     @IBOutlet weak var textField: UITextField!
     
-    var delegate: TextFieldCellDelegate?
+    weak var delegate: TextFieldCellDelegate?
     
     var textString: String? {
         didSet {

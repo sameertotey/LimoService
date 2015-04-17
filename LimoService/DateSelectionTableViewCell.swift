@@ -16,7 +16,7 @@ class DateSelectionTableViewCell: UITableViewCell {
     var savedDatePicker: UIDatePicker!
     var savedDateButton: UIButton!
     
-    var delegate: DateSelectionDelegate?
+    weak var delegate: DateSelectionDelegate?
     
     var date: NSDate? {
         didSet {

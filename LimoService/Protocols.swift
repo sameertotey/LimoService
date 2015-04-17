@@ -8,24 +8,24 @@
 
 import Foundation
 
-protocol LocationCellDelegate {
+protocol LocationCellDelegate: class {
     func lookupTouched(sender: LocationSelectionTableViewCell) -> Void
     func locationTextFieldUpdated(sender: LocationSelectionTableViewCell) -> Void
 }
 
-protocol TextFieldCellDelegate {
+protocol TextFieldCellDelegate: class {
     func textFieldUpdated(sender: TextFieldCellTableViewCell) -> Void
 }
 
-protocol NumStepperCellDelegate {
+protocol NumStepperCellDelegate: class {
     func stepperValueUpdated(sender: NumStepperCellTableViewCell) -> Void
 }
 
-protocol ButtonCellDelegate {
+protocol ButtonCellDelegate: class {
     func buttonTouched(sender: ButtonCellTableViewCell) -> Void
 }
 
-protocol DateSelectionDelegate {
+protocol DateSelectionDelegate: class {
     func dateUpdated(sender: DateSelectionTableViewCell) -> Void
     func dateButtonToggled(sender: DateSelectionTableViewCell) -> Void
 }

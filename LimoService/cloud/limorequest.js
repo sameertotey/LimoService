@@ -1,5 +1,3 @@
-
-
 Parse.Cloud.afterSave("LimoRequest", function(request) {
   Parse.Cloud.useMasterKey();
 

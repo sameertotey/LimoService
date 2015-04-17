@@ -13,7 +13,7 @@ class NumStepperCellTableViewCell: UITableViewCell {
     @IBOutlet weak var stepper: UIStepper!
     @IBOutlet weak var label: UILabel!
     
-    var delegate: NumStepperCellDelegate?
+    weak var delegate: NumStepperCellDelegate?
     
     var value: Int? {
         didSet {

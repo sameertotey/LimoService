@@ -12,6 +12,10 @@ import Parse
 import ParseUI
 import ParseCrashReporting
 
+struct PushNotifications {
+    static let Notification = "LimoService Push Notification"
+    static let Key = "LimoService Push Notification Key"
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -160,11 +164,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    struct PushNotifications {
-        static let Notification = "LimoService Push Notification"
-        static let Key = "LimoService Push Notification Key"
-    }
-    
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         println("User info in didReceiveNotification = \(userInfo)")
         // post a notification when a GPX file arrives
@@ -172,10 +171,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let notification = NSNotification(name: PushNotifications.Notification, object: self, userInfo: [PushNotifications.Key:userInfo])
         center.postNotification(notification)
 
-        
-        
         PFPush.handlePush(userInfo)
-        
         
         if application.applicationState == UIApplicationState.Inactive {
             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
@@ -187,13 +183,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /////////////////////////////////////////////////////////
     // Uncomment this method if you want to use Push Notifications with Background App Refresh
     /////////////////////////////////////////////////////////
-//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-//        if application.applicationState == UIApplicationState.Inactive {
-//            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-//        }
-//        println("Received this message ......\(userInfo)")
-//        completionHandler(.NoData)
-//    }
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        if application.applicationState == UIApplicationState.Inactive {
+            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+        }
+        println("Received this message ......\(userInfo)")
+        
+        
+        if let limoreqId: String = userInfo["limoreq"] as? String {
+            let limoRequest = LimoRequest(withoutDataWithObjectId: limoreqId)
+            limoRequest.fetchIfNeededInBackgroundWithBlock { (object, error) in
+                if error != nil {
+                    completionHandler(UIBackgroundFetchResult.Failed)
+                } else if PFUser.currentUser() != nil {
+                    completionHandler(UIBackgroundFetchResult.NewData)
+                    if let numbags = object?["numBags"] as? NSNumber {
+                        println("numBags = \(numbags)")
+                    }
+                    // post a notification after pinning this request record
+                    limoRequest.pinInBackgroundWithBlock() { (succeeded, error) in
+                        if succeeded {
+//                            let alert = 
+                            let center = NSNotificationCenter.defaultCenter()
+                            let notification = NSNotification(name: PushNotifications.Notification, object: self, userInfo: userInfo)
+                            center.postNotification(notification)
+                        }
+                    }
+                    if let numbags = object?["numBags"] as? NSNumber {
+                        println("numBags = \(numbags)")
+                    }
+                } else {
+                    completionHandler(UIBackgroundFetchResult.NoData)
+                }
+            }
+        }
+        
+        
+//        PFPush.handlePush(userInfo)
+        
+
+        completionHandler(.NoData)
+    }
     
     //--------------------------------------
     // MARK: Facebook SDK Integration

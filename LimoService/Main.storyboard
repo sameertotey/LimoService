@@ -118,7 +118,7 @@
                                             </state>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                    <color key="value" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="value" red="0.94117647059999998" green="0.82352941180000006" blue="0.35294117650000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                                     <real key="value" value="1"/>
@@ -1286,9 +1286,9 @@
         <image name="sign-in-with-twitter-gray" width="158" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Jyn-cE-Mre"/>
+        <segue reference="H4I-M0-CC3"/>
         <segue reference="RGs-Ip-oXj"/>
         <segue reference="qEb-9c-d4S"/>
-        <segue reference="OFu-8x-NSP"/>
-        <segue reference="41a-Bq-1cT"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -10,7 +10,7 @@ import UIKit
 
 class PreviousLocationLookupViewController: PFQueryTableViewController {
     
-    var currentUser: PFUser!
+    weak var currentUser: PFUser!
     var selectedLocation: LimoUserLocation?
 
     override init(style: UITableViewStyle, className: String!) {

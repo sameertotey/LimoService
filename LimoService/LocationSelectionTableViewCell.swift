@@ -13,7 +13,7 @@ class LocationSelectionTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var locationNameTextField: UITextField!
     @IBOutlet weak var locationLookupButton: UIButton!
     @IBOutlet weak var locationAddressLabel: UILabel!
-    var delegate: LocationCellDelegate?
+    weak var delegate: LocationCellDelegate?
     
     var locationName: String? {
         didSet {

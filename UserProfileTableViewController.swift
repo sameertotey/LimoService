@@ -10,7 +10,7 @@ import UIKit
 
 class UserProfileTableViewController: UITableViewController, UITextFieldDelegate {
 
-    var currentUser: PFUser!
+    weak var currentUser: PFUser!
 
     override func viewDidLoad() {
         super.viewDidLoad()

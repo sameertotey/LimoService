@@ -10,8 +10,7 @@ import UIKit
 
 class LimoRequestViewController: UITableViewController, LocationCellDelegate, TextFieldCellDelegate, NumStepperCellDelegate, ButtonCellDelegate, DateSelectionDelegate {
     
-    var currentUser: PFUser!
-    var userFetched = false
+    weak var currentUser: PFUser!
     var userRole = ""
 
     var whenCell: DateSelectionTableViewCell!
@@ -22,15 +21,56 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     var specialCommentsCell: TextFieldCellTableViewCell!
     var actionButtonCell: ButtonCellTableViewCell!
     
+    var lookUpSelectionController:UIAlertController?
+
     
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        listenToPushNotificatons()
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
         configureLookUpSelector()
         configureCells()
         configureToolbar()
+        println("loading \(__FILE__)")
+
+    }
+    
+    var observer:  NSObjectProtocol?
+    func listenToPushNotificatons() {
+        // sign up to hear about push notifications arriving
+        
+        let center = NSNotificationCenter.defaultCenter()
+        let queue = NSOperationQueue.mainQueue()
+        let appDelegate = UIApplication.sharedApplication().delegate
+        
+        observer = center.addObserverForName(PushNotifications.Notification, object: appDelegate, queue: queue)  { notification in
+            if let alert = notification?.userInfo?["aps"]?["alert"] as? String {
+                println("alert is \(alert)")
+                let controller = UIAlertController(title: "Update Available", message: alert, preferredStyle: .Alert)
+                controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                controller.addAction(UIAlertAction(title: "Settings", style: UIAlertActionStyle.Default) { (action) -> Void in
+                    UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
+                    return
+                    })
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+            if let limoreqId = notification?.userInfo?["limoreq"] as? String {
+                println("limoreq is \(limoreqId)")
+            }
+        }
+    }
+    
+    deinit {
+        println("deallocing \(__FILE__)")
+        if let observer = observer {
+            NSNotificationCenter.defaultCenter().removeObserver(observer)
+        }
+    }
+    
+    func handlePushedLimoRequest() {
+        println("handle pushed request")
     }
     
     override func didReceiveMemoryWarning() {
@@ -46,14 +86,14 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         
         let actionAddressLookUp = UIAlertAction(title: "Via Address Look Up",
             style: .Default,
-            handler: {(paramAction:UIAlertAction!) in
+            handler: {[unowned self](paramAction:UIAlertAction!) in
                 /* Ask for address lookup */
                 self.performSegueWithIdentifier("Find Address", sender: self.originalLocationText)
         })
         
         let actionLocalSearch = UIAlertAction(title: "Via Local Search",
             style: .Default,
-            handler: {(paramAction:UIAlertAction!) in
+            handler: {[unowned self](paramAction:UIAlertAction!) in
                 /* Send for Local Search */
                 self.performSegueWithIdentifier("Search Location", sender: self.originalLocationText)
                 
@@ -61,7 +101,7 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         
         let actionPreviousLocation = UIAlertAction(title: "Via Previous Locations",
             style: .Default,
-            handler: {(paramAction:UIAlertAction!) in
+            handler: {[unowned self](paramAction:UIAlertAction!) in
                 /* Use previous location lookup here */
                 self.performSegueWithIdentifier("Select Previous Location", sender: nil)
         })
@@ -161,7 +201,6 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         }
     }
     
-    var lookUpSelectionController:UIAlertController?
     var locationSpecifier = ""
     var originalLocationText = ""
     var fromLocation: LimoUserLocation?

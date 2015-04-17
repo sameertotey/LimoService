@@ -10,9 +10,15 @@ import UIKit
 
 class RequestDetailTableViewController: LimoRequestViewController {
     
-    var limoRequest: LimoRequest!
+    weak var limoRequest: LimoRequest! {
+        didSet {
+            limoRequest.fetchFromLocalDatastoreInBackgroundWithBlock { [unowned self](object, error) -> Void in
+                self.setupDisplayFields()
+            }
+        }
+    }
 
-    var actionButton: UIButton!
+    weak var actionButton: UIButton!
     var action = ""
     var enabled: Bool = false {
         didSet {
@@ -28,9 +34,15 @@ class RequestDetailTableViewController: LimoRequestViewController {
       // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        println("load \(__FILE__)")
+
         navigationItem.rightBarButtonItem = editButtonItem()
         navigationItem.leftBarButtonItem = nil
         editing = false
+    }
+    
+    deinit {
+        println("deallocing \(__FILE__)")
     }
     
     override func viewDidAppear(animated: Bool) {

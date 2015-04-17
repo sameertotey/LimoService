@@ -10,7 +10,7 @@ import UIKit
 
 class RequestsTableViewController: PFQueryTableViewController {
 
-    var currentUser: PFUser!
+    weak var currentUser: PFUser!
     var userRole = ""
     
     required init(coder aDecoder: NSCoder) {
@@ -37,6 +37,8 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        println("loading \(__FILE__)")
+
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
         let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Plain, target: self, action: "showProfile")
@@ -46,6 +48,10 @@ class RequestsTableViewController: PFQueryTableViewController {
         } else {
             self.navigationItem.rightBarButtonItem = profileBarButtonItem
         }
+    }
+    
+    deinit {
+        println("deallocing \(__FILE__)")
     }
     
     func showProfile() {
@@ -128,7 +134,6 @@ class RequestsTableViewController: PFQueryTableViewController {
                 let toVC = segue.destinationViewController as! RequestDetailTableViewController
                 toVC.currentUser = currentUser
                 toVC.userRole = userRole
-                println("sender is \(sender)")
                 if sender is UITableViewCell {
                     let index = tableView.indexPathForCell(sender as! UITableViewCell)
                     if let object =  objectAtIndexPath(index){

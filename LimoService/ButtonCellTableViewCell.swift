@@ -12,7 +12,7 @@ class ButtonCellTableViewCell: UITableViewCell {
 
     @IBOutlet weak var button: ActionButton!
     
-    var delegate: ButtonCellDelegate?
+    weak var delegate: ButtonCellDelegate?
     
     var title: String? {
         didSet {
