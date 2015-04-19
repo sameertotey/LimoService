@@ -29,3 +29,4 @@ protocol DateSelectionDelegate: class {
     func dateUpdated(sender: DateSelectionTableViewCell) -> Void
     func dateButtonToggled(sender: DateSelectionTableViewCell) -> Void
 }
+

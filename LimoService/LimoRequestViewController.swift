@@ -23,105 +23,59 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
     
     var lookUpSelectionController:UIAlertController?
 
-    
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        listenToPushNotificatons()
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
         configureLookUpSelector()
         configureCells()
-        configureToolbar()
         println("loading \(__FILE__)")
-
-    }
-    
-    var observer:  NSObjectProtocol?
-    func listenToPushNotificatons() {
-        // sign up to hear about push notifications arriving
-        
-        let center = NSNotificationCenter.defaultCenter()
-        let queue = NSOperationQueue.mainQueue()
-        let appDelegate = UIApplication.sharedApplication().delegate
-        
-        observer = center.addObserverForName(PushNotifications.Notification, object: appDelegate, queue: queue)  { notification in
-            if let alert = notification?.userInfo?["aps"]?["alert"] as? String {
-                println("alert is \(alert)")
-                let controller = UIAlertController(title: "Update Available", message: alert, preferredStyle: .Alert)
-                controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                controller.addAction(UIAlertAction(title: "Settings", style: UIAlertActionStyle.Default) { (action) -> Void in
-                    UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
-                    return
-                    })
-                self.presentViewController(controller, animated: true, completion: nil)
-            }
-            if let limoreqId = notification?.userInfo?["limoreq"] as? String {
-                println("limoreq is \(limoreqId)")
-            }
-        }
-    }
-    
-    deinit {
-        println("deallocing \(__FILE__)")
-        if let observer = observer {
-            NSNotificationCenter.defaultCenter().removeObserver(observer)
-        }
-    }
-    
-    func handlePushedLimoRequest() {
-        println("handle pushed request")
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    deinit {
+        println("deallocing \(__FILE__)")
+    }
+
     // MARK: - Configuration
     func configureLookUpSelector() {
         lookUpSelectionController = UIAlertController(
             title: "Choose how you would like to Look Up \(locationSpecifier) Location",
             message: "You can choose any method",
             preferredStyle: .ActionSheet)
-        
         let actionAddressLookUp = UIAlertAction(title: "Via Address Look Up",
             style: .Default,
             handler: {[unowned self](paramAction:UIAlertAction!) in
                 /* Ask for address lookup */
                 self.performSegueWithIdentifier("Find Address", sender: self.originalLocationText)
         })
-        
         let actionLocalSearch = UIAlertAction(title: "Via Local Search",
             style: .Default,
             handler: {[unowned self](paramAction:UIAlertAction!) in
                 /* Send for Local Search */
                 self.performSegueWithIdentifier("Search Location", sender: self.originalLocationText)
-                
         })
-        
         let actionPreviousLocation = UIAlertAction(title: "Via Previous Locations",
             style: .Default,
             handler: {[unowned self](paramAction:UIAlertAction!) in
                 /* Use previous location lookup here */
                 self.performSegueWithIdentifier("Select Previous Location", sender: nil)
         })
-        
         let actionCancel = UIAlertAction(title: "Cancel",
             style: .Cancel,
             handler: {(paramAction:UIAlertAction!) in
                 /* Do nothing here */
         })
-        
         lookUpSelectionController!.addAction(actionAddressLookUp)
         lookUpSelectionController!.addAction(actionLocalSearch)
         lookUpSelectionController!.addAction(actionPreviousLocation)
         lookUpSelectionController!.addAction(actionCancel)
     }
     
-    func configureToolbar() {
-        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Plain, target: self, action: "showProfile")
-        setToolbarItems([profileBarButtonItem], animated: false)
-    }
     
     func showProfile() {
         performSegueWithIdentifier("Show Profile", sender: nil)
@@ -182,7 +136,8 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
                     if succeeded {
                         println("Succeed in creating a limo request: \(limoRequest)")
                         let controller = UIAlertController(title: "Request Created", message: "Your limo request has been saved", preferredStyle: .Alert)
-                        controller.addAction(UIAlertAction(title: "OK", style: .Default) { _ in
+                        controller.addAction(UIAlertAction(title: "OK", style: .Default) {[unowned self] _ in
+                            self.scheduleLocalNotification()
                             self.performSegueWithIdentifier("Show Created Request", sender: limoRequest)
                             self.resetFields()
                             })
@@ -201,6 +156,17 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         }
     }
     
+    
+    func scheduleLocalNotification() {
+        var localNotification = UILocalNotification()
+        localNotification.fireDate =  NSCalendar.currentCalendar().dateByAddingUnit(NSCalendarUnit.CalendarUnitMinute, value: -2, toDate: whenCell.date!, options: nil)!
+        localNotification.timeZone = NSTimeZone.localTimeZone()
+        localNotification.alertBody = "Limo service due soon"
+        
+        UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
+    }
+    
+
     var locationSpecifier = ""
     var originalLocationText = ""
     var fromLocation: LimoUserLocation?
@@ -250,14 +216,25 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
                     toVC.userRole = userRole
                 }
             case "Show Created Request":
-                if segue.destinationViewController is RequestDetailTableViewController {
-                    let toVC = segue.destinationViewController as! RequestDetailTableViewController
-                    toVC.currentUser = currentUser
-                    toVC.userRole = userRole
-                    if sender is LimoRequest {
-                        toVC.limoRequest = sender as! LimoRequest
-                    } else {
-                        displayAlertWithTitle("Oops there was a problem", message: "The sender is not a request")
+//                if segue.destinationViewController is RequestDetailTableViewController {
+//                    let toVC = segue.destinationViewController as! RequestDetailTableViewController
+//                    toVC.currentUser = currentUser
+//                    toVC.userRole = userRole
+//                    if sender is LimoRequest {
+//                        toVC.limoRequest = sender as! LimoRequest
+//                    } else {
+//                        displayAlertWithTitle("Oops there was a problem", message: "The sender is not a request")
+//                    }
+//                }
+                if segue.destinationViewController is UINavigationController {
+                    if let toVC = segue.destinationViewController.viewControllers?.first as? RequestDetailTableViewController {
+                        toVC.currentUser = currentUser
+                        toVC.userRole = userRole
+                        if sender is LimoRequest {
+                            toVC.limoRequest = sender as! LimoRequest
+                        } else {
+                            displayAlertWithTitle("Oops there was a problem", message: "The sender is not a request")
+                        }
                     }
                 }
 
@@ -406,7 +383,7 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         case 3: return "To"
         case 4: return "Num Passengers"
         case 5: return "Num Bags"
-        case 6: return "Specail Request"
+        case 6: return "Special Request"
         default: return "Title for \(section)"
         }
     }

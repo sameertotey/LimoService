@@ -164,20 +164,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        println("User info in didReceiveNotification = \(userInfo)")
-        // post a notification when a GPX file arrives
-        let center = NSNotificationCenter.defaultCenter()
-        let notification = NSNotification(name: PushNotifications.Notification, object: self, userInfo: [PushNotifications.Key:userInfo])
-        center.postNotification(notification)
-
-        PFPush.handlePush(userInfo)
+//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+//        println("User info in didReceiveNotification = \(userInfo)")
+//        // post a notification when a GPX file arrives
+//        let center = NSNotificationCenter.defaultCenter()
+//        let notification = NSNotification(name: PushNotifications.Notification, object: self, userInfo: [PushNotifications.Key:userInfo])
+//        center.postNotification(notification)
+//
+//        PFPush.handlePush(userInfo)
+//        
+//        if application.applicationState == UIApplicationState.Inactive {
+//            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+//        }
+//    }
+    
+    
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
         
-        if application.applicationState == UIApplicationState.Inactive {
-            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-        }
+        println(notificationSettings.types.rawValue)
     }
     
+    
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+        // Do something serious in a real app.
+        println("Received Local Notification:")
+        println(notification.alertBody)
+    }
+    
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
+        
+        if identifier == "editList" {
+            NSNotificationCenter.defaultCenter().postNotificationName("modifyListNotification", object: nil)
+        }
+        else if identifier == "trashAction" {
+            NSNotificationCenter.defaultCenter().postNotificationName("deleteListNotification", object: nil)
+        }
+        
+        completionHandler()
+    }
     
         
     /////////////////////////////////////////////////////////
@@ -192,18 +217,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let limoreqId: String = userInfo["limoreq"] as? String {
             let limoRequest = LimoRequest(withoutDataWithObjectId: limoreqId)
-            limoRequest.fetchIfNeededInBackgroundWithBlock { (object, error) in
+            limoRequest.fetchInBackgroundWithBlock { (object, error) in
                 if error != nil {
                     completionHandler(UIBackgroundFetchResult.Failed)
                 } else if PFUser.currentUser() != nil {
                     completionHandler(UIBackgroundFetchResult.NewData)
-                    if let numbags = object?["numBags"] as? NSNumber {
-                        println("numBags = \(numbags)")
-                    }
-                    // post a notification after pinning this request record
+                     // post a notification after pinning this request record
                     limoRequest.pinInBackgroundWithBlock() { (succeeded, error) in
                         if succeeded {
-//                            let alert = 
                             let center = NSNotificationCenter.defaultCenter()
                             let notification = NSNotification(name: PushNotifications.Notification, object: self, userInfo: userInfo)
                             center.postNotification(notification)

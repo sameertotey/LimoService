@@ -38,6 +38,7 @@ class RequestsTableViewController: PFQueryTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         println("loading \(__FILE__)")
+        configureToolbar() 
 
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -54,6 +55,20 @@ class RequestsTableViewController: PFQueryTableViewController {
         println("deallocing \(__FILE__)")
     }
     
+    override func viewWillAppear(animated: Bool) {
+        navigationController?.toolbarHidden = false
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        navigationController?.toolbarHidden = true
+    }
+
+    func configureToolbar() {
+        navigationController?.toolbarHidden = false
+        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Plain, target: self, action: "showProfile")
+        setToolbarItems([profileBarButtonItem], animated: false)
+    }
+
     func showProfile() {
         performSegueWithIdentifier("Show Provider Profile", sender: nil)
     }
@@ -130,16 +145,30 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "Show Request Detail") {
-            if segue.destinationViewController is RequestDetailTableViewController {
-                let toVC = segue.destinationViewController as! RequestDetailTableViewController
-                toVC.currentUser = currentUser
-                toVC.userRole = userRole
-                if sender is UITableViewCell {
-                    let index = tableView.indexPathForCell(sender as! UITableViewCell)
-                    if let object =  objectAtIndexPath(index){
-                        toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
-                    } else {
-                        alert("did not find the right object")
+//            if segue.destinationViewController is RequestDetailTableViewController {
+//                let toVC = segue.destinationViewController as! RequestDetailTableViewController
+//                toVC.currentUser = currentUser
+//                toVC.userRole = userRole
+//                if sender is UITableViewCell {
+//                    let index = tableView.indexPathForCell(sender as! UITableViewCell)
+//                    if let object =  objectAtIndexPath(index){
+//                        toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
+//                    } else {
+//                        alert("did not find the right object")
+//                    }
+//                }
+//            }
+            if segue.destinationViewController is UINavigationController {
+                if let toVC = segue.destinationViewController.viewControllers?.first as? RequestDetailTableViewController {
+                    toVC.currentUser = currentUser
+                    toVC.userRole = userRole
+                    if sender is UITableViewCell {
+                        let index = tableView.indexPathForCell(sender as! UITableViewCell)
+                        if let object =  objectAtIndexPath(index){
+                            toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
+                        } else {
+                            alert("did not find the right object")
+                        }
                     }
                 }
             }

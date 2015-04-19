@@ -10,9 +10,10 @@ import UIKit
 
 class RequestDetailTableViewController: LimoRequestViewController {
     
-    weak var limoRequest: LimoRequest! {
+    var limoRequest: LimoRequest! {
         didSet {
             limoRequest.fetchFromLocalDatastoreInBackgroundWithBlock { [unowned self](object, error) -> Void in
+                println("fetched from local datastore")
                 self.setupDisplayFields()
             }
         }
@@ -36,19 +37,39 @@ class RequestDetailTableViewController: LimoRequestViewController {
         super.viewDidLoad()
         println("load \(__FILE__)")
 
-        navigationItem.rightBarButtonItem = editButtonItem()
+//        navigationItem.rightBarButtonItem = editButtonItem()
         navigationItem.leftBarButtonItem = nil
-        editing = false
+        navigationItem.rightBarButtonItem = nil
+
+//        editing = false
     }
     
     deinit {
         println("deallocing \(__FILE__)")
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationItem.rightBarButtonItem = nil
+    // Constants for Storyboard/ViewControllers
+    struct StoryboardConstants {
+        static let storyboardName = "Main"
+        static let viewControllerIdentifier = "RequestDetail"
     }
+
+    // MARK: Factory Methods to return the parent navigation controller
+    
+    class func forRequest(limorequest: LimoRequest) -> RequestDetailTableViewController {
+        let storyboard = UIStoryboard(name: StoryboardConstants.storyboardName, bundle: nil)
+        let navController = storyboard.instantiateViewControllerWithIdentifier(StoryboardConstants.viewControllerIdentifier) as! UINavigationController
+        let viewController = navController.viewControllers?.first as! RequestDetailTableViewController
+        viewController.limoRequest = limorequest
+        return viewController
+    }
+    
+
+    
+//    override func viewDidAppear(animated: Bool) {
+//        super.viewDidAppear(animated)
+//        navigationItem.rightBarButtonItem = nil
+//    }
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return false
