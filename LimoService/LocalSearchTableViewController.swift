@@ -37,20 +37,7 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
                 message: "Could not get the user's location")
     }
     
-    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!){
-            println("Latitude = \(newLocation.coordinate.latitude)")
-            println("Longitude = \(newLocation.coordinate.longitude)")
-            self.userLocation = newLocation
-            if searchText != "" {
-                performLocalSearch(searchText)
-            }
-    }
-    
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!){
-            println("Location manager failed with error = \(error)")
-    }
-    
-    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+      func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
             println("Location managed did update the user location: \(userLocation)")
       }
 
@@ -100,6 +87,19 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
         }
     }
 
+    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!){
+        println("Latitude = \(newLocation.coordinate.latitude)")
+        println("Longitude = \(newLocation.coordinate.longitude)")
+        self.userLocation = newLocation
+        if searchText != "" {
+            performLocalSearch(searchText)
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!){
+        println("Location manager failed with error = \(error)")
+    }
+    
     /* The authorization status of the user has changed, we need to react
     to that so that if she has authorized our app to to view her location,
     we will accordingly attempt to do so */

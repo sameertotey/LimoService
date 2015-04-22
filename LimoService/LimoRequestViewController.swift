@@ -65,6 +65,12 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
                 /* Use previous location lookup here */
                 self.performSegueWithIdentifier("Select Previous Location", sender: nil)
         })
+        let actionMapSelect = UIAlertAction(title: "Via Map Selection",
+            style: .Default,
+            handler: {[unowned self](paramAction:UIAlertAction!) in
+                /* Use map location selection here */
+                self.performSegueWithIdentifier("Select From Map", sender: nil)
+            })
         let actionCancel = UIAlertAction(title: "Cancel",
             style: .Cancel,
             handler: {(paramAction:UIAlertAction!) in
@@ -74,6 +80,7 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         lookUpSelectionController!.addAction(actionLocalSearch)
         lookUpSelectionController!.addAction(actionPreviousLocation)
         lookUpSelectionController!.addAction(actionCancel)
+        lookUpSelectionController!.addAction(actionMapSelect)
     }
     
     
@@ -210,6 +217,12 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
                     toVC.currentUser = currentUser
                 }
              case "Requests":
+                if segue.destinationViewController is RequestsTableViewController {
+                    let toVC = segue.destinationViewController as! RequestsTableViewController
+                    toVC.currentUser = currentUser
+                    toVC.userRole = userRole
+                }
+            case "Select From Map":
                 if segue.destinationViewController is RequestsTableViewController {
                     let toVC = segue.destinationViewController as! RequestsTableViewController
                     toVC.currentUser = currentUser

@@ -5,6 +5,41 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
+        <!--Map Location Select View Controller-->
+        <scene sceneID="06A-JM-VmQ">
+            <objects>
+                <viewController id="RdR-zd-c6B" customClass="MapLocationSelectViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="s1E-Iy-5hn"/>
+                        <viewControllerLayoutGuide type="bottom" id="Mfe-oM-fDl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="M4I-hp-eiV">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="bhI-xE-taQ">
+                                <rect key="frame" x="16" y="0.0" width="568" height="592"/>
+                                <connections>
+                                    <outlet property="delegate" destination="RdR-zd-c6B" id="cFF-gV-2VC"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Mfe-oM-fDl" firstAttribute="top" secondItem="bhI-xE-taQ" secondAttribute="bottom" constant="8" symbolic="YES" id="0wb-r2-Zx1"/>
+                            <constraint firstItem="bhI-xE-taQ" firstAttribute="leading" secondItem="M4I-hp-eiV" secondAttribute="leadingMargin" id="HTc-aJ-lBk"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="bhI-xE-taQ" secondAttribute="trailing" id="gRb-sw-ONk"/>
+                            <constraint firstItem="bhI-xE-taQ" firstAttribute="top" secondItem="M4I-hp-eiV" secondAttribute="topMargin" id="tRe-du-JbO"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="bhI-xE-taQ" id="w9p-sO-1vd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2tB-s1-MQJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1933" y="-250"/>
+        </scene>
         <!--Limo Service-->
         <scene sceneID="IX5-6l-XEE">
             <objects>
@@ -295,6 +330,7 @@
                         <segue destination="yqg-Kv-s4w" kind="show" identifier="Find Address" id="qEb-9c-d4S"/>
                         <segue destination="BfS-dI-IZM" kind="show" identifier="Select Previous Location" id="Lc2-kE-FE5"/>
                         <segue destination="vEn-JW-Me7" kind="show" identifier="Show Created Request" id="Jyn-cE-Mre"/>
+                        <segue destination="RdR-zd-c6B" kind="show" identifier="Select From Map" id="Szq-P6-iLd"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1W-mS-AvB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1305,8 +1341,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="H4I-M0-CC3"/>
+        <segue reference="qEb-9c-d4S"/>
         <segue reference="RGs-Ip-oXj"/>
-        <segue reference="0NA-1d-nRj"/>
-        <segue reference="OFu-8x-NSP"/>
+        <segue reference="Jyn-cE-Mre"/>
     </inferredMetricsTieBreakers>
 </document>
