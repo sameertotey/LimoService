@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="E9G-si-8WL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="E9G-si-8WL">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -18,22 +18,38 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="bhI-xE-taQ">
-                                <rect key="frame" x="16" y="0.0" width="568" height="592"/>
+                                <rect key="frame" x="0.0" y="300" width="600" height="300"/>
                                 <connections>
                                     <outlet property="delegate" destination="RdR-zd-c6B" id="cFF-gV-2VC"/>
                                 </connections>
                             </mapView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bju-1q-NF6">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="VtK-F3-5e5"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="Ybc-a6-7ym" kind="embed" identifier="Request Info" id="NwH-RY-7Ls"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Mfe-oM-fDl" firstAttribute="top" secondItem="bhI-xE-taQ" secondAttribute="bottom" constant="8" symbolic="YES" id="0wb-r2-Zx1"/>
-                            <constraint firstItem="bhI-xE-taQ" firstAttribute="leading" secondItem="M4I-hp-eiV" secondAttribute="leadingMargin" id="HTc-aJ-lBk"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="bhI-xE-taQ" secondAttribute="trailing" id="gRb-sw-ONk"/>
-                            <constraint firstItem="bhI-xE-taQ" firstAttribute="top" secondItem="M4I-hp-eiV" secondAttribute="topMargin" id="tRe-du-JbO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="bhI-xE-taQ" secondAttribute="trailing" constant="-16" id="3kd-6q-0ls"/>
+                            <constraint firstItem="bju-1q-NF6" firstAttribute="top" secondItem="M4I-hp-eiV" secondAttribute="topMargin" id="4F1-c8-ADq"/>
+                            <constraint firstItem="bju-1q-NF6" firstAttribute="leading" secondItem="M4I-hp-eiV" secondAttribute="leadingMargin" constant="-16" id="8dN-px-kzy"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="bhI-xE-taQ" secondAttribute="bottom" id="VGU-UP-opk"/>
+                            <constraint firstItem="bhI-xE-taQ" firstAttribute="leading" secondItem="M4I-hp-eiV" secondAttribute="leadingMargin" constant="-16" id="VvO-tl-BoT"/>
+                            <constraint firstItem="bhI-xE-taQ" firstAttribute="top" secondItem="bju-1q-NF6" secondAttribute="bottom" id="oEQ-8u-Jrm"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="bju-1q-NF6" secondAttribute="trailing" constant="-16" id="rOw-it-dQx"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <keyCommands/>
                     <connections>
                         <outlet property="mapView" destination="bhI-xE-taQ" id="w9p-sO-1vd"/>
+                        <outlet property="requestInfoViewHeightConstraint" destination="VtK-F3-5e5" id="1jL-qc-3f2"/>
+                        <segue destination="o5B-Of-khN" kind="presentation" identifier="Show Main Menu" id="hct-aG-BlY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2tB-s1-MQJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1292,10 +1308,10 @@
             </objects>
             <point key="canvasLocation" x="1646" y="1616"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Custom Navigation Controller-->
         <scene sceneID="JkS-oM-afZ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="E9G-si-8WL" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="E9G-si-8WL" customClass="CustomNavigationController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hQl-36-DSV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1330,6 +1346,85 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MsE-iP-WGY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2488" y="2436"/>
+        </scene>
+        <!--Main Menu View Controller-->
+        <scene sceneID="N4T-nB-jw8">
+            <objects>
+                <viewController id="o5B-Of-khN" customClass="MainMenuViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vzi-AI-LQ0"/>
+                        <viewControllerLayoutGuide type="bottom" id="VjT-5h-N6M"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bY6-fn-i2R">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hello" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S4B-9T-sXo">
+                                <rect key="frame" x="16" y="28" width="40" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="World" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A48-Ff-dOD">
+                                <rect key="frame" x="16" y="57" width="45" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yGB-zQ-jNh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1908" y="-981"/>
+        </scene>
+        <!--Request Info View Controller-->
+        <scene sceneID="5vs-hk-32c">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Ybc-a6-7ym" customClass="RequestInfoViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="EZi-IU-9BH"/>
+                        <viewControllerLayoutGuide type="bottom" id="zZG-UU-Ae8"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="3F2-Oi-g0h">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="aw0-QU-rFX">
+                                <rect key="frame" x="16" y="20" width="568" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="448824939.50206101">
+                                    <!--2015-03-23 17:35:39 +0000-->
+                                </date>
+                            </datePicker>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Pickup Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R1k-St-Bs6">
+                                <rect key="frame" x="16" y="238" width="568" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YbZ-5S-mPf">
+                                <rect key="frame" x="16" y="190" width="568" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <state key="normal" title="Date Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="buttonTouched:" destination="Ybc-a6-7ym" eventType="touchUpInside" id="Dcb-03-vYP"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems/>
+                    <connections>
+                        <outlet property="dateButton" destination="YbZ-5S-mPf" id="n1B-8R-Bv5"/>
+                        <outlet property="datePicker" destination="aw0-QU-rFX" id="bMZ-Hb-GGC"/>
+                        <outlet property="textField" destination="R1k-St-Bs6" id="C1s-PB-AQx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DPc-lH-EJQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1080" y="-295"/>
         </scene>
     </scenes>
     <resources>

@@ -30,3 +30,11 @@ protocol DateSelectionDelegate: class {
     func dateButtonToggled(sender: DateSelectionTableViewCell) -> Void
 }
 
+protocol NavBarNotificationDelegate: class {
+    func navigationBarStatusUpdated(newStatus: Bool) -> Void
+}
+
+protocol RequestInfoDelegate: class {
+    func dateUpdated(newDate: NSDate) -> Void
+    func neededHeight(height: CGFloat) -> Void
+}
