@@ -22,8 +22,18 @@ class LocationPin: NSObject, MKAnnotation {
             _coordinate = newValue
         }
     }
+    
+    var location: CLLocation? {
+        get {
+            if _coordinate != nil {
+                return CLLocation(latitude: _coordinate!.latitude, longitude: _coordinate!.longitude)
+            } else {
+                return nil
+            }
+        }
+    }
 
     var title: String! = "Searching Location...."
     var subtitle: String! 
-    
+    var address: String!
  }

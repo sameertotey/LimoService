@@ -30,98 +30,6 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
     var searchRequest: MKLocalSearchRequest!
     var localSearch: MKLocalSearch!
     
-    // MARK: - MapView delegate
-    func mapView(mapView: MKMapView!,
-        didFailToLocateUserWithError error: NSError!) {
-            displayAlertWithTitle("Failed",
-                message: "Could not get the user's location")
-    }
-    
-      func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
-            println("Location managed did update the user location: \(userLocation)")
-      }
-
-    /* We will call this method when we are sure that the user has given
-    us access to her location */
-    func showUserLocationOnMapView(){
-        mapView.showsUserLocation = true
-        mapView.userTrackingMode = .Follow
-    }
-
-    func performLocalSearch(searchString: NSString) {
-        if userLocation != nil {
-            let request = MKLocalSearchRequest()
-            request.naturalLanguageQuery = searchString as String
-            let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-            request.region = MKCoordinateRegion( center: userLocation.coordinate, span: span)
-            localSearch = MKLocalSearch(request: request)
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-            localSearch.startWithCompletionHandler{
-                (response: MKLocalSearchResponse!, error: NSError!) in
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                if error == nil {
-                    var placemarks = [CLPlacemark]()
-                    for item in response.mapItems as! [MKMapItem]{
-                        
-                        println("Item name = \(item.name)")
-                        println("Item phone number = \(item.phoneNumber)")
-                        println("Item url = \(item.url)")
-                        println("Item location = \(item.placemark.location)")
-                        placemarks.append(item.placemark)
-                    }
-                    self.mapView.removeAnnotations(self.mapView.annotations)
-                    // this seems to work here, but we need to get custom annotations so that we can provide more information
-                    self.mapView.addAnnotations(placemarks)
-                    self.mapView.showAnnotations(self.mapView.annotations, animated: false)
-                    self.searchResults = response.mapItems as! [MKMapItem]
-                    // Hand over the filtered results to our search results table.
-                    println("received \(placemarks.count) results")
-                    let resultsController = self.searchController.searchResultsController as! LocationResultsTableViewController
-                    resultsController.possibleMatches = placemarks
-                    resultsController.searchText = self.searchText
-                    resultsController.tableView.reloadData()
-                } else {
-                    println("Received error \(error) for search \(searchString)")
-                }
-            }
-        }
-    }
-
-    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!){
-        println("Latitude = \(newLocation.coordinate.latitude)")
-        println("Longitude = \(newLocation.coordinate.longitude)")
-        self.userLocation = newLocation
-        if searchText != "" {
-            performLocalSearch(searchText)
-        }
-    }
-    
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!){
-        println("Location manager failed with error = \(error)")
-    }
-    
-    /* The authorization status of the user has changed, we need to react
-    to that so that if she has authorized our app to to view her location,
-    we will accordingly attempt to do so */
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus){
-            
-            print("The authorization status of location services is changed to: ")
-            
-            switch CLLocationManager.authorizationStatus(){
-            case .Denied:
-                println("Denied")
-            case .NotDetermined:
-                println("Not determined")
-            case .Restricted:
-                println("Restricted")
-            default:
-                showUserLocationOnMapView()
-                println("Now you have the authorization for location services.")
-                manager.startUpdatingLocation()
-            }
-            
-    }
-
     // MARK: View Life Cycle
     
     override func viewDidLoad() {
@@ -252,26 +160,7 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
 //        NSLog(__FUNCTION__)
     }
     
-    typealias Closure = ()->()
-    var closures = [String: Closure]()
-    
-    func delayed(delay: Double, name: String, closure: Closure) {
-        // store the closure to execute in the closures dictionary
-        closures[name] = closure
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))),
-            dispatch_get_main_queue()) {
-                if let closure = self.closures[name] {
-                    closure()
-                    self.closures[name] = nil
-                }
-        }
-    }
-    
-    func cancelDelayed(name: String) {
-        closures[name] = nil
-    }
-    
+
     // MARK: UISearchResultsUpdating
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -296,13 +185,118 @@ class LocalSearchTableViewController: UIViewController, UISearchBarDelegate, UIS
         } // else do nothing
     }
     
-    // MARK: - Helpers
+    typealias Closure = ()->()
+    var closures = [String: Closure]()
     
+    func delayed(delay: Double, name: String, closure: Closure) {
+        // store the closure to execute in the closures dictionary
+        closures[name] = closure
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))),
+            dispatch_get_main_queue()) {
+                if let closure = self.closures[name] {
+                    closure()
+                    self.closures[name] = nil
+                }
+        }
+    }
+    
+    func cancelDelayed(name: String) {
+        closures[name] = nil
+    }
+    
+    func performLocalSearch(searchString: NSString) {
+        if userLocation != nil {
+            let request = MKLocalSearchRequest()
+            request.naturalLanguageQuery = searchString as String
+            let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+            request.region = MKCoordinateRegion( center: userLocation.coordinate, span: span)
+            localSearch = MKLocalSearch(request: request)
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+            localSearch.startWithCompletionHandler{
+                (response: MKLocalSearchResponse!, error: NSError!) in
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                if error == nil {
+                    var placemarks = [CLPlacemark]()
+                    for item in response.mapItems as! [MKMapItem]{
+                        println("Item name = \(item.name)")
+                        println("Item phone number = \(item.phoneNumber)")
+                        println("Item url = \(item.url)")
+                        println("Item location = \(item.placemark.location)")
+                        placemarks.append(item.placemark)
+                    }
+                    self.mapView.removeAnnotations(self.mapView.annotations)
+                    // this seems to work here, but we need to get custom annotations so that we can provide more information
+                    self.mapView.addAnnotations(placemarks)
+                    self.mapView.showAnnotations(self.mapView.annotations, animated: false)
+                    self.searchResults = response.mapItems as! [MKMapItem]
+                    // Hand over the filtered results to our search results table.
+                    println("received \(placemarks.count) results")
+                    let resultsController = self.searchController.searchResultsController as! LocationResultsTableViewController
+                    resultsController.possibleMatches = placemarks
+                    resultsController.searchText = self.searchText
+                    resultsController.tableView.reloadData()
+                } else {
+                    println("Received error \(error) for search \(searchString)")
+                }
+            }
+        }
+    }
+
+    // MARK: - MapView delegate
+    func mapView(mapView: MKMapView!, didFailToLocateUserWithError error: NSError!) {
+        displayAlertWithTitle("Failed", message: "Could not get the user's location")
+    }
+    
+    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+        println("Location managed did update the user location: \(userLocation)")
+    }
+    
+    // MARK: - LocationManagerDelegate
+    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!){
+        println("Latitude = \(newLocation.coordinate.latitude)")
+        println("Longitude = \(newLocation.coordinate.longitude)")
+        self.userLocation = newLocation
+        if searchText != "" {
+            performLocalSearch(searchText)
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!){
+        println("Location manager failed with error = \(error)")
+    }
+    
+    /* The authorization status of the user has changed, we need to react
+    to that so that if she has authorized our app to to view her location,
+    we will accordingly attempt to do so */
+    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus){
+        print("The authorization status of location services is changed to: ")
+        switch CLLocationManager.authorizationStatus(){
+        case .Denied:
+            println("Denied")
+        case .NotDetermined:
+            println("Not determined")
+        case .Restricted:
+            println("Restricted")
+        default:
+            showUserLocationOnMapView()
+            println("Now you have the authorization for location services.")
+            manager.startUpdatingLocation()
+        }
+    }
+
+    // MARK: - Helpers
     /* Just a little method to help us display alert dialogs to the user */
     func displayAlertWithTitle(title: String, message: String){
         let controller = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    /* We will call this method when we are sure that the user has given us access to her location */
+    func showUserLocationOnMapView(){
+        mapView.showsUserLocation = true
+        mapView.userTrackingMode = .Follow
     }
     
     // MARK: - Table View Delegate

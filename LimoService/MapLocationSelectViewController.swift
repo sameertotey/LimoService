@@ -10,7 +10,10 @@ import UIKit
 import MapKit
 import AddressBookUI
 
-class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NavBarNotificationDelegate, RequestInfoDelegate {
+class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NavBarNotificationDelegate, RequestInfoDelegate, UITextFieldDelegate {
+
+    weak var currentUser: PFUser!
+    var userRole = ""
 
     @IBOutlet weak var mapView: MKMapView!
     var locationManager: CLLocationManager?
@@ -29,14 +32,26 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         }
     }
     var locationSubtitle = ""
+    var address = ""
     // bar button items
     var saveBarButton: UIBarButtonItem!
     var menuBarButtonItem: UIBarButtonItem!
     lazy var modalTransitioningDelegate = ModalPresentationTransitionVendor()
 
+    @IBOutlet weak var navToUserLocationButton: UIButton!
     
     @IBOutlet weak var requestInfoViewHeightConstraint: NSLayoutConstraint!
     var requestInfoDate: NSDate?
+    var requestInfoDateString: String!
+    var numPassengers = 0
+    var numBags = 0
+    var specialComments = ""
+    
+    @IBOutlet var pinchGestureRecognizer: UIPinchGestureRecognizer!
+    @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
+    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet var rotationGestureRecognizer: UIRotationGestureRecognizer!
+    
     // MARK: View Life Cycle
 
     override func viewDidLoad() {
@@ -69,16 +84,16 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                     message: "Location services are not allowed for this app")
             default:
                 println("We have authorization to display location")
-                if locationManager == nil {
-                    locationManager = CLLocationManager()
-                }
-                if let manager = locationManager {
-                    manager.delegate = self
-                    manager.desiredAccuracy = kCLLocationAccuracyKilometer
-                    // Set a movement threshold for new events.
-                    manager.distanceFilter = 500; // meters
-                    manager.startUpdatingLocation()
-                }
+//                if locationManager == nil {
+//                    locationManager = CLLocationManager()
+//                }
+//                if let manager = locationManager {
+//                    manager.delegate = self
+//                    manager.desiredAccuracy = kCLLocationAccuracyKilometer
+//                    // Set a movement threshold for new events.
+//                    manager.distanceFilter = 500; // meters
+//                    manager.startUpdatingLocation()
+//                }
                 showUserLocationOnMapView()
             }
         } else {
@@ -99,7 +114,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         // Search is now just presenting a view controller. As such, normal view controller
         // presentation semantics apply. Namely that presentation will walk up the view controller
         // hierarchy until it finds the root view controller or one that defines a presentation context.
-        definesPresentationContext = true
+        definesPresentationContext = false
         
         // Do any additional setup after loading the view.
         menuBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain , target: self, action: "mainMenu")
@@ -130,19 +145,25 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        switch CLLocationManager.authorizationStatus() {
-        case .AuthorizedAlways, .AuthorizedWhenInUse:
-            locationManager?.startUpdatingLocation()
-            showUserLocationOnMapView()
-        default:
-            break   // do nothing
-        }
 //        navigationController?.hidesBarsOnTap = true
 //        navigationController?.barHideOnTapGestureRecognizer.addTarget(self, action: "updateOverlayedTableView")
+        
+        if locationPin != nil {
+            showUserLocationOnMapView()
+        } else {
+            switch CLLocationManager.authorizationStatus() {
+            case .AuthorizedAlways, .AuthorizedWhenInUse:
+                //            locationManager?.startUpdatingLocation()
+                showUserLocationOnMapView()
+                mapView.userTrackingMode = .Follow
+            default:
+                break   // do nothing
+            }
+        }
     }
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        locationManager?.stopUpdatingLocation()
+//        locationManager?.stopUpdatingLocation()
         mapView.showsUserLocation = false
 //        navigationController?.hidesBarsOnTap = false
     }
@@ -157,9 +178,18 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         locationManager = nil
     }
     
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
+    
+    override func supportedInterfaceOrientations() -> Int {
+        return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    }
+    
     // MARK: - RequestInfoDelegate
-    func dateUpdated(newDate: NSDate) -> Void {
+    func dateUpdated(newDate: NSDate, newDateString: String) -> Void {
         requestInfoDate = newDate
+        requestInfoDateString = newDateString
     }
     func neededHeight(height: CGFloat) -> Void {
         requestInfoViewHeightConstraint.constant = height
@@ -170,27 +200,8 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        println("prepare for segue")
-        if let identifier = segue.identifier {
-            switch identifier {
-            case "Show Main Menu":
-                println("segue to main menu")
-                if segue.destinationViewController is MainMenuViewController {
-                    let toVC = segue.destinationViewController as! MainMenuViewController
-                    toVC.modalPresentationStyle = .Custom
-                    toVC.transitioningDelegate = self.modalTransitioningDelegate
-                }
-                
-            case "Request Info":
-                if segue.destinationViewController is RequestInfoViewController {
-                    requestInfo = segue.destinationViewController as! RequestInfoViewController
-                    requestInfo.delegate = self
-                }
-            default:
-                break
-            }
-        }
+    func textFieldActivated() {
+        performSegueWithIdentifier("Show Location Search", sender: nil)
     }
 
     // MARK: - MKMapViewDelegate
@@ -235,9 +246,16 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         locatingUser = true
     }
     
+    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+        println("received user location update")
+        if locationPin == nil {
+            createLocationPin(userLocation.coordinate)
+        }
+    }
+    
     func mapViewDidFinishRenderingMap(mapView: MKMapView!, fullyRendered: Bool) {
         mapView.scrollEnabled = true
-        mapView.zoomEnabled = true
+//        mapView.zoomEnabled = true
         mapView.rotateEnabled = true
         mapRendered = true
     }
@@ -302,20 +320,15 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 if error == nil {
                     if let firstPlacemark = placemarks.first as? CLPlacemark {
                         self.locationTitle = firstPlacemark.name
-                        //                        self.subtitle = String(map((ABCreateStringWithAddressDictionary(firstPlacemark.addressDictionary, false) as String).generate()) {
-                        //                            $0 == "\n" ? "," : $0
-                        //                            })
                         self.locationSubtitle = (ABCreateStringWithAddressDictionary(firstPlacemark.addressDictionary, false) as String).componentsSeparatedByString("\n")[1]
-                        
+                        self.address = String(map((ABCreateStringWithAddressDictionary(firstPlacemark.addressDictionary, false) as String).generate()) {
+                            $0 == "\n" ? "," : $0
+                            })
                     }
-                    //
-                    //                    for placemark in placemarks {
-                    //                        println("The name of the location is \(placemark.name)")
-                    //                        println("\(ABCreateStringWithAddressDictionary(placemark.addressDictionary, false) as NSString)")
-                    //                    }
                     if let locationPin = self.locationPin {
                         locationPin.title = self.locationTitle
                         locationPin.subtitle = self.locationSubtitle
+                        locationPin.address = self.address
                         // only select the locationPin if it is already added to the mapView
                         for annotation in self.mapView.annotations {
                             if annotation === locationPin {
@@ -330,6 +343,57 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 }
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         }
+    }
+    
+    //MARK: - Gesture Recognizer Actions
+    @IBAction func pinchGesture(sender: UIPinchGestureRecognizer) {
+//        mapView.transform = CGAffineTransformScale(mapView.transform, sender.scale, sender.scale)
+        var  originalRegion: MKCoordinateRegion
+        originalRegion = mapView.region
+        
+        var latdelta = originalRegion.span.latitudeDelta / Double(sender.scale)
+        var londelta = originalRegion.span.longitudeDelta / Double(sender.scale)
+        
+        latdelta = max(min(latdelta, 80), 0.002)
+        londelta = max(min(londelta, 80), 0.002)
+        let span = MKCoordinateSpanMake(latdelta, londelta)
+        
+        mapView.region = MKCoordinateRegionMake(originalRegion.center, span)
+        sender.scale = 1
+
+    }
+    
+    @IBAction func panGesture(sender: UIPanGestureRecognizer) {
+        
+//        let translation = sender.translationInView(view)
+//        println("translation is \(translation)")
+//        if let mapview = sender.view {
+//            let oldCenter = mapView.convertCoordinate(mapView.centerCoordinate, toPointToView: mapView)
+//            let newCenter = CGPoint(x:oldCenter.x - translation.x,
+//                y:oldCenter.y - translation.y)
+//            mapView.centerCoordinate = mapView.convertPoint(newCenter, toCoordinateFromView: mapView)
+//        }
+//        sender.setTranslation(CGPointZero, inView: view)
+        
+    }
+    
+    @IBAction func tapGesture(sender: UITapGestureRecognizer) {
+        var  originalRegion: MKCoordinateRegion
+        originalRegion = mapView.region
+        
+        var latdelta = originalRegion.span.latitudeDelta / 1.2
+        var londelta = originalRegion.span.longitudeDelta / 1.2
+        
+//        // TODO: set these constants to appropriate values to set max/min zoomscale
+        latdelta = max(min(latdelta, 80), 0.005)
+        londelta = max(min(londelta, 80), 0.005)
+        let span = MKCoordinateSpanMake(latdelta, londelta)
+        
+        mapView.region = MKCoordinateRegionMake(originalRegion.center, span)
+    }
+    
+    @IBAction func rotationGesture(sender: UIRotationGestureRecognizer) {
+        // let the mapview handle the rotations
     }
     
     // MARK: - LocationManager Delegate
@@ -350,33 +414,103 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         default:
             showUserLocationOnMapView()
             println("Now you have the authorization for location services.")
-            manager.startUpdatingLocation()
+//            manager.startUpdatingLocation()
         }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        if let newLocation = locations.last as? CLLocation {
-            if locationPin == nil {
-                createLocationPin(newLocation.coordinate)
-            } else {
-                locationPin?.coordinate = newLocation.coordinate
-                if locatingUser {
-                    manager.stopUpdatingLocation()    // There is no reason to continue doing this now
-                }
-            }
-        }
+        println("Location manager did update locations")
+
+//        if let newLocation = locations.last as? CLLocation {
+//            if locationPin == nil {
+//                createLocationPin(newLocation.coordinate)
+//            } else {
+//                locationPin?.coordinate = newLocation.coordinate
+//                if locatingUser {
+//                    manager.stopUpdatingLocation()    // There is no reason to continue doing this now
+//                }
+//            }
+//        }
     }
 
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!){
         println("Location manager failed with error = \(error)")
     }
 
+    
+    @IBAction func navToUserLocation() {
+        mapView.setCenterCoordinate(mapView.userLocation.coordinate, animated: true)
+        locationPin?.coordinate = mapView.userLocation.coordinate
+    }
+    
     // MARK: - Constants
     
     private struct Constants {
         static let AnnotationViewReuseIdentifier = "location"
         static let ShowImageSegue = "Show Image"
     }
+    
+    @IBAction func createTheRequest() {
+        println("create the request")
+        let from = LimoUserLocation(className: LimoUserLocation.parseClassName())
+        let geoPoint = PFGeoPoint(location: locationPin?.location)
+        from["location"] = geoPoint
+        from["owner"] = currentUser
+        from["name"] = locationPin?.title
+        from["address"] = locationPin?.address
+        let limoRequest = LimoRequest(className: LimoRequest.parseClassName())
+        limoRequest["from"] = from
+        limoRequest["fromAddress"] = from["address"]
+        limoRequest["fromName"] = from["name"]
+//            if let to = toLocation {
+//                limoRequest["to"] = to
+//                limoRequest["toAddress"] = to["address"]
+//                limoRequest["toName"] = to["name"]
+//            }
+        limoRequest["owner"] = currentUser
+        limoRequest["status"] = "New"
+        limoRequest["when"] = requestInfoDate
+        limoRequest["whenString"] = requestInfoDateString
+        limoRequest["numPassengers"] = numPassengers
+        limoRequest["numBags"] = numBags
+        limoRequest["specialRequests"] = specialComments
+            limoRequest.saveInBackgroundWithBlock { (succeeded, error)  in
+                if succeeded {
+                    println("Succeed in creating a limo request: \(limoRequest)")
+                    let controller = UIAlertController(title: "Request Created", message: "Your limo request has been saved", preferredStyle: .Alert)
+                    controller.addAction(UIAlertAction(title: "OK", style: .Default) {[unowned self] _ in
+                        println("request created")
+//                        self.scheduleLocalNotification()
+//                        self.performSegueWithIdentifier("Show Created Request", sender: limoRequest)
+//                        self.resetFields()
+                        })
+                    self.presentViewController(controller, animated: true, completion: nil)
+                    
+                } else {
+                    println("Received error while creating the request: \(error)")
+                }
+            }
+    }
+    /*
+    // MARK: - Create the Request
+    func createTheRequest() {
+        if let from = fromLocation {
+        } else {
+            displayAlertWithTitle("Incomplete Request", message: "Need 'From' Location")
+        }
+    }
+    
+    
+    func scheduleLocalNotification() {
+        var localNotification = UILocalNotification()
+        localNotification.fireDate =  NSCalendar.currentCalendar().dateByAddingUnit(NSCalendarUnit.CalendarUnitMinute, value: -2, toDate: whenCell.date!, options: nil)!
+        localNotification.timeZone = NSTimeZone.localTimeZone()
+        localNotification.alertBody = "Limo service due soon"
+        
+        UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
+    }
+   */
+
     // MARK: - Helpers
     
     /* Just a little method to help us display alert dialogs to the user */
@@ -389,16 +523,64 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
 
         presentViewController(controller, animated: true, completion: nil)
     }
-    
+    // unwind from a location selection
+    @IBAction func unwindToMapSelection(sender: UIStoryboardSegue)
+    {
+        let sourceViewController: AnyObject = sender.sourceViewController
+        // Pull any data from the view controller which initiated the unwind segue.
+        if let sVC = sourceViewController as? LocationSelectionViewController {
+            locationPin?.coordinate = sVC.selectedPlacemark.location.coordinate
+            mapView.showAnnotations([locationPin!, mapView.userLocation], animated: false)
+            let newRegion = mapView.region
+            var latdelta = newRegion.span.latitudeDelta * 2.0         // zoom out the region
+            var londelta = newRegion.span.longitudeDelta * 2.0
+            let span = MKCoordinateSpanMake(latdelta, londelta)
+            mapView.region = MKCoordinateRegionMake(sVC.selectedPlacemark.location.coordinate, span)
+
+            mapView.centerCoordinate = sVC.selectedPlacemark.location.coordinate
+        }
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        println("prepare for segue")
+        if let identifier = segue.identifier {
+            switch identifier {
+            case "Show Location Search":
+                    if segue.destinationViewController is LocationSelectionViewController {
+                        let toVC = segue.destinationViewController as! LocationSelectionViewController
+                        toVC.searchRegion = mapView.region
+                        toVC.userLocation = mapView.userLocation.location
+                        toVC.searchText = locationTitle
+                }
+            case "Show Main Menu":
+                println("segue to main menu")
+                if segue.destinationViewController is MainMenuViewController {
+                    let toVC = segue.destinationViewController as! MainMenuViewController
+                    toVC.modalPresentationStyle = .Custom
+                    toVC.transitioningDelegate = self.modalTransitioningDelegate
+                }
+                
+            case "Request Info":
+                if segue.destinationViewController is RequestInfoViewController {
+                    requestInfo = segue.destinationViewController as! RequestInfoViewController
+                    requestInfo.delegate = self
+                }
+            default:
+                break
+            }
+        }
+    }
+
     /* We will call this method when we are sure that the user has given
     us access to her location */
     func showUserLocationOnMapView(){
         mapView.showsUserLocation = true
-        mapView.userTrackingMode = .Follow
+        mapView.userTrackingMode = .None
     }
     
     func createLocationPin(coordinate: CLLocationCoordinate2D) {
         if locationPin == nil {
+            println("created the locationPin")
             locationPin = LocationPin()
             locationPin?.coordinate = coordinate
             mapView.addAnnotation(locationPin)

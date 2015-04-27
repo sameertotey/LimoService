@@ -20,8 +20,16 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         // using the rootview controller's currentUser instead of setting it in the prepare for segue
-        currentUser = (navigationController?.viewControllers[0] as! LoginManagerViewController).currentUser
+        let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController
+        currentUser = (rootVC?.viewControllers[0] as! LoginManagerViewController).currentUser
+        let homeBarButtonItem = UIBarButtonItem(title: "Home", style: .Plain, target: self, action: "goHome")
+        navigationItem.leftBarButtonItem = homeBarButtonItem
         displayCurrentValues()
+    }
+    
+    func goHome() {
+        println("go home")
+        performSegueWithIdentifier("Home", sender: nil)
     }
 
     func displayCurrentValues() {
@@ -240,7 +248,9 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         let installation = PFInstallation.currentInstallation()
         installation.removeObjectForKey("user")
         installation.saveEventually()
-        navigationController?.popToRootViewControllerAnimated(false)
+        performSegueWithIdentifier("logoff", sender: nil)
+//        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+//        navigationController?.popToRootViewControllerAnimated(false)
     }
     
     // facebook

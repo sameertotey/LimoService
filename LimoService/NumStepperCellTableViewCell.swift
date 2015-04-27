@@ -48,12 +48,7 @@ class NumStepperCellTableViewCell: UITableViewCell {
         stepper.minimumValue = minimum
         stepper.maximumValue = maximum
         stepper.stepValue = step
-//        upDateLabel()
     }
-
-//    func upDateLabel() {
-//        label.text = "\(Int(stepper.value))"
-//    }
     
     // MARK: - Actions
     @IBAction func stepperValueChangd(sender: UIStepper) {

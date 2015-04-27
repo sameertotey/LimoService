@@ -16,7 +16,7 @@ class ModalPresentationTransitionVendor: NSObject, UIViewControllerTransitioning
     
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let animator = ModalTransitionAnimator()
-        animator.duration = 0.55
+        animator.duration = 0.65
         animator.presenting = true
 //        animator.finalScale = 0.9
         return animator
@@ -24,7 +24,7 @@ class ModalPresentationTransitionVendor: NSObject, UIViewControllerTransitioning
     
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let animator = ModalTransitionAnimator()
-        animator.duration = 0.3
+        animator.duration = 0.35
         animator.presenting = false
         return animator
     }

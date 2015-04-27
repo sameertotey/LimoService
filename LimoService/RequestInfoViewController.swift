@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RequestInfoViewController: UIViewController {
+class RequestInfoViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var dateButton: UIButton!
     @IBOutlet weak var datePicker: UIDatePicker!
@@ -88,6 +88,7 @@ class RequestInfoViewController: UIViewController {
     
     func updateDatePickerLabel() {
         dateButton.setTitle(dateFormatter.stringFromDate(datePicker.date), forState: .Normal)
+        delegate?.dateUpdated(datePicker.date, newDateString: dateFormatter.stringFromDate(datePicker.date))
     }
     
     var datePickerHidden = false {
@@ -126,4 +127,8 @@ class RequestInfoViewController: UIViewController {
         datePickerHidden = !datePickerHidden
     }
 
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        delegate?.textFieldActivated()
+        return false
+    }
 }

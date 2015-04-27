@@ -1,4 +1,4 @@
-//
+    //
 //  LoginManagerViewController.swift
 //  LimoService
 //
@@ -67,7 +67,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     
     private struct UIStoryboardConstants {
         static let showRequests = "Show Requests"
-        static let makeRequest = "Make a Request"
+        static let makeRequest = "Make a Request from Map"
     }
 
     override func viewDidLoad() {
@@ -147,10 +147,11 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let identifier = segue.identifier {
             switch identifier {
-             case "Make a Request":
-                if segue.destinationViewController is LimoRequestViewController {
-                    let toVC = segue.destinationViewController as! LimoRequestViewController
+            case "Make a Request from Map":
+                if segue.destinationViewController is MapLocationSelectViewController {
+                    let toVC = segue.destinationViewController as! MapLocationSelectViewController
                     toVC.currentUser = currentUser
+                    toVC.userRole = userRole
                 }
             case "Show Requests":
                 if segue.destinationViewController is RequestsTableViewController {
@@ -163,6 +164,15 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
                 break
             }
         }
+    }
+
+    // unwind a logoff
+    @IBAction func unwindFromLogoff(sender: UIStoryboardSegue)
+    {
+        let sourceViewController: AnyObject = sender.sourceViewController
+        // Pull any data from the view controller which initiated the unwind segue.
+        println("user has now logged off")
+        navigationController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
     // MARK: - PFLoginViewControllerDelegate

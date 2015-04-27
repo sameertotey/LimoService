@@ -21,7 +21,7 @@ class MenuPresentationController: UIPresentationController {
     func setupDimmingView() {
         dimmingView = UIView(frame: presentingViewController.view.bounds)
         
-        var visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .Light)) as UIVisualEffectView
+        var visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .ExtraLight)) as UIVisualEffectView
         visualEffectView.frame = dimmingView.bounds
         visualEffectView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
         dimmingView.addSubview(visualEffectView)
@@ -59,7 +59,7 @@ class MenuPresentationController: UIPresentationController {
         let currentDevice = UIDevice.currentDevice().userInterfaceIdiom
         
         // We always want a size that's a half of our parent view width, and just as tall as our parent
-        return CGSizeMake(floor(parentSize.width / 2.0), parentSize.height);
+        return CGSizeMake(floor(parentSize.width * 0.66), parentSize.height);
     }
     
     override func shouldPresentInFullscreen() -> Bool {
