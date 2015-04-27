@@ -67,11 +67,7 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
         
         searchController.searchBar.text = searchText
         searchController.active = true
-        if searchText != "" {
-            performLocalSearch(searchText)
-        }
-//        searchController.searchBar.becomeFirstResponder()
-        searchController.active = true
+        searchController.searchBar.becomeFirstResponder()
     }
     
      // MARK: UISearchBarDelegate
