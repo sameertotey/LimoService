@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// Move to the next screen without an animation.
+/// This segue only works inside a navigation controller to push the next viewcontroller without animation.
 class PushNoAnimationSegue: UIStoryboardSegue {
     override func perform() {
         let source = sourceViewController as! UIViewController

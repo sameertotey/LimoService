@@ -556,6 +556,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 println("segue to main menu")
                 if segue.destinationViewController is MainMenuViewController {
                     let toVC = segue.destinationViewController as! MainMenuViewController
+                    toVC.listner = self
                     toVC.modalPresentationStyle = .Custom
                     toVC.transitioningDelegate = self.modalTransitioningDelegate
                 }

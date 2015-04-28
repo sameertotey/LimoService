@@ -154,10 +154,16 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
                     toVC.userRole = userRole
                 }
             case "Show Requests":
-                if segue.destinationViewController is RequestsTableViewController {
-                    let toVC = segue.destinationViewController as! RequestsTableViewController
-                    toVC.currentUser = currentUser
-                    toVC.userRole = userRole
+                //                if segue.destinationViewController is UINavigationController {
+                //                    if let toVC = (segue.destinationViewController.viewControllers as? [UIViewController])?.first as? RequestsTableViewController {
+                ////                        toVC = segue.destinationViewController as! RequestsTableViewController
+                //                        toVC.currentUser = currentUser
+                //                        toVC.userRole = userRole
+                //                    }
+                //                  }
+                if let toVC = segue.destinationViewController as? RequestsTableViewController {
+                        toVC.currentUser = currentUser
+                        toVC.userRole = userRole
                 }
                 
             default:

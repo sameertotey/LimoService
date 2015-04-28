@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BaseTransitionAnimator: NSObject {
+class BaseTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
 
     var duration = 0.5
@@ -26,6 +26,13 @@ class BaseTransitionAnimator: NSObject {
         return duration
     }
 
+    func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+        // perform animation here using overrides
+    }
     
+    func animationEnded(transitionCompleted: Bool) {
+        // cleanup after animation ended
+    }
+
 }
 

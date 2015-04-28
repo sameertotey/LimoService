@@ -16,10 +16,14 @@ class RequestsTableViewController: PFQueryTableViewController {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        self.parseClassName = "LimoRequest"
-        self.textKey = "fromString"
-        self.pullToRefreshEnabled = true
-        self.objectsPerPage = 20
+        parseClassName = "LimoRequest"
+        textKey = "fromString"
+        pullToRefreshEnabled = true
+        objectsPerPage = 20
+        let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController
+        currentUser = (rootVC?.viewControllers[0] as! LoginManagerViewController).currentUser
+
+        
     }
     
     private func alert(message : String) {
@@ -49,8 +53,16 @@ class RequestsTableViewController: PFQueryTableViewController {
         } else {
             self.navigationItem.rightBarButtonItem = profileBarButtonItem
         }
+        let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
+        navigationItem.leftBarButtonItem = homeBarButtonItem
+        
     }
     
+    func goHome() {
+        println("go home")
+        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+
     deinit {
         println("deallocing \(__FILE__)")
     }

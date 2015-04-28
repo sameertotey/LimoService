@@ -66,14 +66,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // setup the default appearances here
         let navbar = UINavigationBar.appearance()
-        navbar.barTintColor = UIColor(red: 220.0/255, green: 200.0/255, blue: 90.0/255, alpha: 1)
+        navbar.barTintColor = UIColor(red: 255.0/255, green: 215.0/255, blue: 0.0/255, alpha: 1)
         let font = UIFont(name: "Avenir", size: 20)
         navbar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.blackColor(), NSFontAttributeName: font!]
         navbar.tintColor = UIColor.blueColor()
         
         
         let toolbar = UIToolbar.appearance()
-        toolbar.barTintColor = UIColor(red: 220.0/255, green: 200.0/255, blue: 90.0/255, alpha: 1)
+        toolbar.barTintColor = UIColor(red: 255.0/255, green: 215.0/255, blue: 0.0/255, alpha: 1)
         toolbar.tintColor = UIColor.blueColor()
         
         let defaultACL = PFACL();

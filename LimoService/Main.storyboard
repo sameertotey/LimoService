@@ -9,12 +9,12 @@
         <scene sceneID="zKn-6G-BD2">
             <objects>
                 <tableViewController id="hoL-WZ-QgV" customClass="MainMenuViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="A5r-AY-Zqd">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="A5r-AY-Zqd">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
-                            <tableViewSection headerTitle=" " footerTitle=" " id="mLA-9y-eyP">
+                            <tableViewSection headerTitle=" " id="mLA-9y-eyP" userLabel="Links">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="hFB-tu-m0C" userLabel="Home">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -96,6 +96,30 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="9yf-hc-zSc" userLabel="Destination">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9yf-hc-zSc" id="vJR-9b-gdz">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Destination" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jcq-Co-qU7">
+                                                    <rect key="frame" x="8" y="8" width="551" height="27"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Jcq-Co-qU7" secondAttribute="trailing" id="9Da-uW-ljL"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="Jcq-Co-qU7" secondAttribute="bottom" id="MhA-3B-rOi"/>
+                                                <constraint firstItem="Jcq-Co-qU7" firstAttribute="leading" secondItem="vJR-9b-gdz" secondAttribute="leadingMargin" id="lBO-SY-7u2"/>
+                                                <constraint firstItem="Jcq-Co-qU7" firstAttribute="top" secondItem="vJR-9b-gdz" secondAttribute="topMargin" id="slX-UI-Lab"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Num Passengers" id="V8o-vP-ZzK">
+                                <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Stepper1" rowHeight="46" id="kum-j0-VGV" userLabel="Num Passengers" customClass="NumStepperCellTableViewCell" customModule="LimoService" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="303" width="703" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -128,6 +152,10 @@
                                             <outlet property="stepper" destination="efu-Nc-brf" id="SFV-XX-634"/>
                                         </connections>
                                     </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Num Bags" id="EKF-Pj-m4e">
+                                <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Stepper2" rowHeight="46" id="RhJ-bc-SSd" userLabel="Num Bags" customClass="NumStepperCellTableViewCell" customModule="LimoService" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="303" width="703" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -160,12 +188,16 @@
                                             <outlet property="stepper" destination="WA9-ap-U9W" id="Znt-Wz-KDg"/>
                                         </connections>
                                     </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Comments" footerTitle=" " id="bcK-1x-bb5">
+                                <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Text Field" rowHeight="48" id="9Ke-NF-rM7" userLabel="Text Field" customClass="TextFieldCellTableViewCell" customModule="LimoService" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9Ke-NF-rM7" id="sdG-bw-9XM">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Comments" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3i3-Xk-quz" userLabel="special requests">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Special Requests" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3i3-Xk-quz" userLabel="special requests">
                                                     <rect key="frame" x="16" y="10" width="568" height="27"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -182,26 +214,6 @@
                                             <outlet property="textField" destination="3i3-Xk-quz" id="9f2-MI-IsD"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="9yf-hc-zSc" userLabel="Destination">
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9yf-hc-zSc" id="vJR-9b-gdz">
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Destination" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jcq-Co-qU7">
-                                                    <rect key="frame" x="8" y="8" width="551" height="27"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="Jcq-Co-qU7" secondAttribute="trailing" id="9Da-uW-ljL"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="Jcq-Co-qU7" secondAttribute="bottom" id="MhA-3B-rOi"/>
-                                                <constraint firstItem="Jcq-Co-qU7" firstAttribute="leading" secondItem="vJR-9b-gdz" secondAttribute="leadingMargin" id="lBO-SY-7u2"/>
-                                                <constraint firstItem="Jcq-Co-qU7" firstAttribute="top" secondItem="vJR-9b-gdz" secondAttribute="topMargin" id="slX-UI-Lab"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -213,7 +225,8 @@
                     <connections>
                         <outlet property="numBagsCell" destination="RhJ-bc-SSd" id="1tr-JO-0lk"/>
                         <outlet property="numPassengersCell" destination="kum-j0-VGV" id="88a-HY-S1G"/>
-                        <segue destination="Lcv-tR-lVn" kind="show" identifier="Profile" id="lUA-nu-WvO"/>
+                        <segue destination="Lcv-tR-lVn" kind="presentation" identifier="Profile" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="lUA-nu-WvO"/>
+                        <segue destination="63p-XA-sri" kind="show" identifier="History" id="bKw-Pm-qod"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UU7-cX-QSy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -622,7 +635,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="History" id="Z6k-D9-sOr">
                             <connections>
-                                <segue destination="Ktp-z7-rcB" kind="show" identifier="Requests" id="RGs-Ip-oXj"/>
+                                <segue destination="63p-XA-sri" kind="show" identifier="Requests" id="RGs-Ip-oXj"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -636,7 +649,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1W-mS-AvB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2488" y="1785"/>
+            <point key="canvasLocation" x="1756" y="1749"/>
         </scene>
         <!--Login Manager View Controller-->
         <scene sceneID="Jlm-rK-2DN">
@@ -665,13 +678,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="DSI-Op-4wa"/>
                     <connections>
-                        <segue destination="Ktp-z7-rcB" kind="custom" identifier="Show Requests" customClass="PushNoAnimationSegue" customModule="LimoService" customModuleProvider="target" id="zKw-ll-T6a"/>
                         <segue destination="RdR-zd-c6B" kind="custom" identifier="Make a Request from Map" customClass="PushNoAnimationSegue" customModule="LimoService" customModuleProvider="target" id="xTn-2G-SV4"/>
+                        <segue destination="Ktp-z7-rcB" kind="custom" identifier="Show Requests" customClass="PushNoAnimationSegue" customModule="LimoService" customModuleProvider="target" id="Af0-4s-9Pj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mIm-Uo-9uw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="891" y="1492"/>
+            <point key="canvasLocation" x="723" y="1492"/>
         </scene>
         <!--Request Detail-->
         <scene sceneID="CFQ-Iw-oTW">
@@ -952,7 +965,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UG3-aZ-1Rg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3300" y="2436"/>
+            <point key="canvasLocation" x="4112" y="2436"/>
         </scene>
         <!--User Profile-->
         <scene sceneID="DeG-2m-6iT">
@@ -1358,7 +1371,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nQh-ql-JLw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3641" y="1712"/>
+            <point key="canvasLocation" x="4453" y="1712"/>
         </scene>
         <!--Previous Location Lookup View Controller-->
         <scene sceneID="MoJ-gn-bNi">
@@ -1429,7 +1442,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dck-xA-fWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="uRx-G7-82O" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4329" y="2284"/>
+            <point key="canvasLocation" x="5141" y="2284"/>
         </scene>
         <!--Location Search Table View Controller-->
         <scene sceneID="pMo-D6-o0a">
@@ -1595,7 +1608,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lgp-lS-Sjg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1750" y="2009"/>
+            <point key="canvasLocation" x="391" y="2210"/>
         </scene>
         <!--Custom Navigation Controller-->
         <scene sceneID="JkS-oM-afZ">
@@ -1684,7 +1697,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DPc-lH-EJQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3325" y="-693"/>
+            <point key="canvasLocation" x="1041" y="687"/>
         </scene>
         <!--Location Selection View Controller-->
         <scene sceneID="Y1F-3M-on4">
@@ -1727,6 +1740,25 @@
             </objects>
             <point key="canvasLocation" x="3409" y="-73"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Xrp-ha-Vm7">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="63p-XA-sri" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="T9G-Sz-Alm"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fhq-d2-9yp">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Ktp-z7-rcB" kind="relationship" relationship="rootViewController" id="C1p-kS-mxF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XVC-OG-wXJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="648" y="221"/>
+        </scene>
     </scenes>
     <resources>
         <image name="earth" width="32" height="32"/>
@@ -1737,10 +1769,11 @@
         <image name="sign-in-with-twitter-gray" width="158" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Szq-P6-iLd"/>
-        <segue reference="qEb-9c-d4S"/>
-        <segue reference="RGs-Ip-oXj"/>
-        <segue reference="Jyn-cE-Mre"/>
         <segue reference="lUA-nu-WvO"/>
+        <segue reference="xTn-2G-SV4"/>
+        <segue reference="bKw-Pm-qod"/>
+        <segue reference="C1p-kS-mxF"/>
+        <segue reference="OFu-8x-NSP"/>
+        <segue reference="0NA-1d-nRj"/>
     </inferredMetricsTieBreakers>
 </document>

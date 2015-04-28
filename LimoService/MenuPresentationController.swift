@@ -21,10 +21,14 @@ class MenuPresentationController: UIPresentationController {
     func setupDimmingView() {
         dimmingView = UIView(frame: presentingViewController.view.bounds)
         
-        var visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .ExtraLight)) as UIVisualEffectView
-        visualEffectView.frame = dimmingView.bounds
-        visualEffectView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
-        dimmingView.addSubview(visualEffectView)
+//        var visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .ExtraLight)) as UIVisualEffectView
+//        visualEffectView.frame = dimmingView.bounds
+//        visualEffectView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
+//        dimmingView.addSubview(visualEffectView)
+        
+        dimmingView.backgroundColor = UIColor(white:0.0, alpha:0.5)
+        dimmingView.alpha = 0.0
+
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "dimmingViewTapped:")
         dimmingView.addGestureRecognizer(tapRecognizer)
@@ -58,7 +62,7 @@ class MenuPresentationController: UIPresentationController {
     override func sizeForChildContentContainer(container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
         let currentDevice = UIDevice.currentDevice().userInterfaceIdiom
         
-        // We always want a size that's a half of our parent view width, and just as tall as our parent
+        // We always want a size that's a 2/3 of our parent view width, and just as tall as our parent
         return CGSizeMake(floor(parentSize.width * 0.66), parentSize.height);
     }
     

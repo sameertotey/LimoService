@@ -22,14 +22,15 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         // using the rootview controller's currentUser instead of setting it in the prepare for segue
         let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController
         currentUser = (rootVC?.viewControllers[0] as! LoginManagerViewController).currentUser
-        let homeBarButtonItem = UIBarButtonItem(title: "Home", style: .Plain, target: self, action: "goHome")
+        let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
         navigationItem.leftBarButtonItem = homeBarButtonItem
         displayCurrentValues()
     }
     
     func goHome() {
         println("go home")
-        performSegueWithIdentifier("Home", sender: nil)
+//        performSegueWithIdentifier("Home", sender: nil)
+        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
     func displayCurrentValues() {
