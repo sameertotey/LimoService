@@ -10,7 +10,8 @@ import UIKit
 import MapKit
 
 class LocationMapPinView: MKPinAnnotationView {
-    
-    
+    override func prepareForReuse() {
+        println("preparing for reuse")
+    }
    
 }

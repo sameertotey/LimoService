@@ -13,6 +13,7 @@ import AddressBookUI
 class LocationResultsTableViewController: UITableViewController {
 
     var possibleMatches = [CLPlacemark]()
+    var previousLocations = [LimoUserLocation]()
     var searchText = ""
 
     override func viewDidLoad() {
@@ -30,11 +31,24 @@ class LocationResultsTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // MARK: - Table view data source
-
+    
+     // MARK: - Table view data source
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 2
+    }
+        
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return possibleMatches.count
+        var numRows = 0
+        switch section {
+        case 0:
+            numRows =  possibleMatches.count
+        case 1:
+            numRows = previousLocations.count
+        default:
+            break
+        }
+        return numRows
     }
 
     
@@ -42,6 +56,7 @@ class LocationResultsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("locationCell", forIndexPath: indexPath) as! LocationTableViewCell
         
         cell.addressLabel!.attributedText = attributedAddressStringAtIndexPath(indexPath)
+
         cell.accessoryType = .DisclosureIndicator
         return cell
     }
@@ -51,8 +66,19 @@ class LocationResultsTableViewController: UITableViewController {
     
     
     func addressStringAtIndexPath(indexPath: NSIndexPath) -> NSString {
-        let placemark = possibleMatches[indexPath.row]
-        return ABCreateStringWithAddressDictionary(placemark.addressDictionary, false) as NSString
+        var returnString: NSString = ""
+        switch indexPath.section {
+        case 0:
+            let placemark = possibleMatches[indexPath.row]
+            returnString =  ABCreateStringWithAddressDictionary(placemark.addressDictionary, false) as NSString
+        case 1:
+            if let string = previousLocations[indexPath.row].address {
+                returnString = string as NSString
+            }
+        default:
+            break
+        }
+        return returnString
     }
     
     func attributedAddressStringAtIndexPath(indexPath: NSIndexPath) -> NSAttributedString {

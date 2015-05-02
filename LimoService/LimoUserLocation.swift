@@ -10,7 +10,7 @@ import Foundation
 
 class LimoUserLocation: PFObject, PFSubclassing {
     override class func initialize() {
-        var onceToken : dispatch_once_t = 0;
+        var onceToken : dispatch_once_t = 0
         dispatch_once(&onceToken) {
             self.registerSubclass()
         }
@@ -23,4 +23,5 @@ class LimoUserLocation: PFObject, PFSubclassing {
     @NSManaged var location: PFGeoPoint?
     @NSManaged var address: String?
     @NSManaged var owner: PFUser?
-}
+    
+ }

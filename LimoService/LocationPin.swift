@@ -8,12 +8,22 @@
 
 import UIKit
 import MapKit
-import AddressBook
-import AddressBookUI
+
+enum LocationType : UInt {
+    case Selector
+    case From
+    case To
+}
+
 
 class LocationPin: NSObject, MKAnnotation {
     
+    var kind: LocationType!
+    
     var _coordinate: CLLocationCoordinate2D?
+    var coordinateSet: Bool {
+        return _coordinate != nil
+    }
       
     // make coordinate get & set (for draggable annotations)
     var coordinate: CLLocationCoordinate2D {

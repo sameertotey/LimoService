@@ -41,8 +41,8 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
         case 0: goHome()
         case 1: performSegueWithIdentifier("Profile", sender: nil)
         case 2: performSegueWithIdentifier("History", sender: nil)
-        case 3: goHome()
-        case 4: goHome()
+        case 3: performSegueWithIdentifier("Help", sender: nil)
+        case 4: performSegueWithIdentifier("Destination", sender: nil)
         case 5: goHome()
         default: break
         }
@@ -56,7 +56,17 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
     {
         let sourceViewController: AnyObject = sender.sourceViewController
         // Pull any data from the view controller which initiated the unwind segue.
-//        goHome()
+        
+        // This is a destination search return
+        if let sVC = sourceViewController as? LocationSelectionViewController {
+            if let presentingViewController = presentingViewController {
+                println("\(presentingViewController)")
+                
+            }
+            listner?.toLocation = sVC.selectedLocation
+        }
+        
+        goHome()
     }
     
     // MARK: - NumSteppersCell delegate
@@ -99,6 +109,11 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
                     toNavVC.modalPresentationStyle = .Custom
                     toNavVC.transitioningDelegate = self.transitioningDelegate
                     
+                }
+            case "Destination":
+                if let toNavVC = segue.destinationViewController as? UINavigationController {
+                    toNavVC.modalPresentationStyle = .Custom
+                    toNavVC.transitioningDelegate = self.transitioningDelegate
                 }
             default:
                 break

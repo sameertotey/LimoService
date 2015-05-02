@@ -20,8 +20,8 @@ class LocationTableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addressLabel = UILabel(frame: CGRectZero)
-        addressLabel!.autoresizingMask = .FlexibleWidth | .FlexibleHeight;
-        addressLabel!.numberOfLines = 0;
+        addressLabel!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        addressLabel!.numberOfLines = 0
         contentView.addSubview(addressLabel!)
     }
 

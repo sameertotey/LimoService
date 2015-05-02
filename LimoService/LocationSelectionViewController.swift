@@ -8,10 +8,13 @@
 
 import UIKit
 import MapKit
+import AddressBookUI
 
 class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDelegate {
     
-    // MARK: Properties
+    // MARK: Properties    
+    weak var currentUser: PFUser!
+
     var searchResults = [MKMapItem]()
     // Search controller to help us with filtering.
     var searchController: UISearchController!
@@ -19,15 +22,14 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
     var resultsTableController: LocationResultsTableViewController!
     
     // text in the search bar
-    var searchText = ""
+    var searchText = " "
     let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
     
-    var userLocation: CLLocation!
-    var searchRegion: MKCoordinateRegion!
+    var searchRegion: MKCoordinateRegion?
     var searchRequest: MKLocalSearchRequest!
     var localSearch: MKLocalSearch!
     
-    var selectedPlacemark: CLPlacemark!
+    var selectedLocation: LimoUserLocation!
     // MARK: View Life Cycle
     
     override func viewDidLoad() {
@@ -43,6 +45,7 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
         
         searchController = UISearchController(searchResultsController: resultsTableController)
         searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Enter Location"
         searchController.searchBar.sizeToFit()
         navigationItem.titleView = searchController.searchBar
         
@@ -56,12 +59,55 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
         // hierarchy until it finds the root view controller or one that defines a presentation context.
         definesPresentationContext = true
         
-        // Do any additional setup after loading the view.
-        //        let saveBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveLocation")
-        //        navigationItem.rightBarButtonItem = saveBarButtonItem
-        
+        // If the searchRegion is nil, we are trying to set the destination, so show the menu
+        if searchRegion == nil {
+            let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
+            navigationItem.leftBarButtonItem = homeBarButtonItem
+        }
+  
+        let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController
+        currentUser = (rootVC?.viewControllers[0] as! LoginManagerViewController).currentUser
+        queryForTable().findObjectsInBackgroundWithBlock { [unowned self](objects, error) in
+            if error == nil {
+                var previousLocations = [LimoUserLocation]()
+                for item in objects as! [LimoUserLocation]{
+                    println("Item name = \(item.name)")
+//                    println("Item phone number = \(item.phoneNumber)")
+//                    println("Item url = \(item.url)")
+//                    println("Item location = \(item.placemark.location)")
+                    previousLocations.append(item)
+                }
+                // Hand over the locations to the results table controller
+                let resultsController = self.searchController.searchResultsController as! LocationResultsTableViewController
+                resultsController.previousLocations = previousLocations
+                resultsController.tableView.reloadData()
+            } else {
+                println("Received error while querying for previous locations: \(error)")
+            }
+        }
     }
     
+    func goHome() {
+        println("go home")
+        //        performSegueWithIdentifier("Home", sender: nil)
+        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    func queryForTable() -> PFQuery {
+        if let query = LimoUserLocation.query() {
+            query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
+            query.orderByDescending("createdAt")
+            query.limit = 20;
+            return query
+        } else {
+            let query = PFQuery(className: "LimoUserLocation")
+            query.whereKey("owner", equalTo: currentUser)            // expect currentUser to be set here
+            query.orderByDescending("createdAt")
+            query.limit = 20;
+            return query
+        }
+    }
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -71,31 +117,33 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
     }
     
      // MARK: UISearchBarDelegate
-    
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
+//    
+//    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+//        searchBar.resignFirstResponder()
+//    }
     
     // MARK: UISearchControllerDelegate
     
     func presentSearchController(searchController: UISearchController) {
-        //        NSLog(__FUNCTION__)
+                NSLog(__FUNCTION__)
     }
     
     func willPresentSearchController(searchController: UISearchController) {
-        //        NSLog(__FUNCTION__)
+                NSLog(__FUNCTION__)
     }
     
     func didPresentSearchController(searchController: UISearchController) {
-        //        NSLog(__FUNCTION__)
+                NSLog(__FUNCTION__)
+        searchController.active = true
+        searchController.searchBar.becomeFirstResponder()
     }
     
     func willDismissSearchController(searchController: UISearchController) {
-        //        NSLog(__FUNCTION__)
+                NSLog(__FUNCTION__)
     }
     
     func didDismissSearchController(searchController: UISearchController) {
-        //        NSLog(__FUNCTION__)
+                NSLog(__FUNCTION__)
     }
     
     
@@ -146,12 +194,12 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
     func performLocalSearch(searchString: NSString) {
         let request = MKLocalSearchRequest()
         request.naturalLanguageQuery = searchString as String
-//        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-//        request.region = MKCoordinateRegion( center: userLocation.coordinate, span: span)
-        request.region = searchRegion
+        if let searchRegion = searchRegion {
+            request.region = searchRegion
+        }
         localSearch = MKLocalSearch(request: request)
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        localSearch.startWithCompletionHandler{
+        localSearch.startWithCompletionHandler{[unowned self]
             (response: MKLocalSearchResponse!, error: NSError!) in
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             if error == nil {
@@ -186,7 +234,6 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
     
      // MARK: - Table View Delegate
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        // Check to see which table view cell was selected.
         let attributedString = resultsTableController.attributedAddressStringAtIndexPath(indexPath)
         let neededSize = attributedString.size()
         return ceil(neededSize.height) + 20
@@ -196,20 +243,41 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-//        // Check to see which table view cell was selected.
-//        let selectedPlacemark = resultsTableController.possibleMatches[indexPath.row]
-//        
-//        // Set up the detail view controller to show.
-//        let mapViewController = LocationMapViewController.forPlacemark(selectedPlacemark)
-//        
-//        // Note: Should not be necessary but current iOS 8.0 bug requires it.
-//        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow()!, animated: false)
-//        
-//        navigationController!.pushViewController(mapViewController, animated: true)
-        
-        selectedPlacemark = resultsTableController.possibleMatches[indexPath.row]
-        performSegueWithIdentifier("return location", sender: nil)
-        
+        switch indexPath.section {
+        case 0:
+            getSelectedLocation(resultsTableController.possibleMatches[indexPath.row])
+        case 1:
+             selectedLocation = resultsTableController.previousLocations[indexPath.row]
+            returnToCaller()
+        default:
+            break
+        }
+    }
+    
+    func getSelectedLocation(forPlacemark: CLPlacemark) {
+        if selectedLocation == nil {
+            selectedLocation = LimoUserLocation(className: LimoUserLocation.parseClassName())
+            let geoPoint = PFGeoPoint(location: forPlacemark.location )
+            selectedLocation["location"] = geoPoint
+            selectedLocation["owner"] = currentUser
+            selectedLocation["name"] = forPlacemark.name
+            selectedLocation["address"] = ABCreateStringWithAddressDictionary(forPlacemark.addressDictionary, false)
+            selectedLocation.saveInBackgroundWithBlock { (succeeded, error)  in
+                if succeeded {
+                    self.returnToCaller()
+                } else {
+                    println("Received error while creating the location: \(error)")
+                }
+            }
+        }
+    }
+    
+    func returnToCaller() {
+        if searchRegion != nil {
+            performSegueWithIdentifier("return location", sender: nil)
+        } else {
+            performSegueWithIdentifier("Go Back", sender: nil)
+        }
     }
     
 }
