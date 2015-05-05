@@ -190,28 +190,56 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Comments" footerTitle=" " id="bcK-1x-bb5">
+                            <tableViewSection headerTitle="Preference" footerTitle=" " id="bcK-1x-bb5">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Text Field" rowHeight="48" id="9Ke-NF-rM7" userLabel="Text Field" customClass="TextFieldCellTableViewCell" customModule="LimoService" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Segment Control" rowHeight="45" id="9Ke-NF-rM7" customClass="SegmentControlTableViewCell" customModule="LimoService" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9Ke-NF-rM7" id="sdG-bw-9XM">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Special Requests" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3i3-Xk-quz" userLabel="special requests">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="glp-MA-wD7">
+                                                    <rect key="frame" x="8" y="8" width="584" height="29"/>
+                                                    <segments>
+                                                        <segment title="Limo"/>
+                                                        <segment title="Taxi"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="glp-MA-wD7" secondAttribute="trailing" id="dfp-64-8S7"/>
+                                                <constraint firstItem="glp-MA-wD7" firstAttribute="leading" secondItem="sdG-bw-9XM" secondAttribute="leadingMargin" id="ejH-XJ-MUs"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="glp-MA-wD7" secondAttribute="bottom" id="uqg-3N-ULa"/>
+                                                <constraint firstItem="glp-MA-wD7" firstAttribute="top" secondItem="sdG-bw-9XM" secondAttribute="topMargin" id="wek-NE-HKi"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="segmentControl" destination="glp-MA-wD7" id="3up-1O-OPr"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Comments" footerTitle=" " id="Zlv-b4-GjB">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Text Field" rowHeight="48" id="vs6-bE-U2e" userLabel="Text Field" customClass="TextFieldCellTableViewCell" customModule="LimoService" customModuleProvider="target">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vs6-bE-U2e" id="Bw5-a5-L5p">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Special Requests" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Vha-6G-DoK" userLabel="special requests">
                                                     <rect key="frame" x="16" y="10" width="568" height="27"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="3i3-Xk-quz" secondAttribute="trailing" constant="8" id="Imc-1C-c4o"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="3i3-Xk-quz" secondAttribute="bottom" constant="2" id="L3M-RJ-qis"/>
-                                                <constraint firstItem="3i3-Xk-quz" firstAttribute="leading" secondItem="sdG-bw-9XM" secondAttribute="leadingMargin" constant="8" id="RlD-qe-m65"/>
-                                                <constraint firstItem="3i3-Xk-quz" firstAttribute="top" secondItem="sdG-bw-9XM" secondAttribute="topMargin" constant="2" id="dZ1-G7-snp"/>
+                                                <constraint firstItem="Vha-6G-DoK" firstAttribute="top" secondItem="Bw5-a5-L5p" secondAttribute="topMargin" constant="2" id="U8k-aR-8W4"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Vha-6G-DoK" secondAttribute="trailing" constant="8" id="njD-Ua-Nxg"/>
+                                                <constraint firstItem="Vha-6G-DoK" firstAttribute="leading" secondItem="Bw5-a5-L5p" secondAttribute="leadingMargin" constant="8" id="oRf-2P-0Nx"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="Vha-6G-DoK" secondAttribute="bottom" constant="2" id="pyI-cj-iLZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="textField" destination="3i3-Xk-quz" id="9f2-MI-IsD"/>
+                                            <outlet property="textField" destination="Vha-6G-DoK" id="oZY-S1-ek7"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -225,6 +253,7 @@
                     <connections>
                         <outlet property="numBagsCell" destination="RhJ-bc-SSd" id="1tr-JO-0lk"/>
                         <outlet property="numPassengersCell" destination="kum-j0-VGV" id="88a-HY-S1G"/>
+                        <outlet property="preferredVehicleCell" destination="9Ke-NF-rM7" id="exY-nH-OSQ"/>
                         <segue destination="Lcv-tR-lVn" kind="presentation" identifier="Profile" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="lUA-nu-WvO"/>
                         <segue destination="63p-XA-sri" kind="show" identifier="History" id="bKw-Pm-qod"/>
                         <segue destination="O8p-hi-vwF" kind="presentation" identifier="Destination" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="b62-UN-rsi"/>
@@ -243,11 +272,11 @@
                         <viewControllerLayoutGuide type="bottom" id="Mfe-oM-fDl"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="M4I-hp-eiV">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="bhI-xE-taQ">
-                                <rect key="frame" x="0.0" y="300" width="600" height="236"/>
+                                <rect key="frame" x="0.0" y="300" width="600" height="300"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="RdR-zd-c6B" id="cFF-gV-2VC"/>
@@ -280,7 +309,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jvm-Xt-zDB" customClass="ActionButton" customModule="LimoService" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="506" width="600" height="30"/>
+                                <rect key="frame" x="0.0" y="570" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.88235294117647056" green="0.78431372549019607" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Create Request">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -297,7 +326,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="createTheRequest" destination="RdR-zd-c6B" eventType="touchUpInside" id="m0z-d4-XUK"/>
+                                    <action selector="createRequestButtonTouched:" destination="RdR-zd-c6B" eventType="touchUpInside" id="aps-v7-2un"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -320,6 +349,7 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <keyCommands/>
                     <connections>
+                        <outlet property="createRequestButton" destination="Jvm-Xt-zDB" id="b3R-TN-I2D"/>
                         <outlet property="mapView" destination="bhI-xE-taQ" id="w9p-sO-1vd"/>
                         <outlet property="navToUserLocationButton" destination="wkE-ER-CBK" id="tVP-Y7-1ez"/>
                         <outlet property="panGestureRecognizer" destination="VMe-hy-Dbl" id="uKP-iM-72g"/>
@@ -1509,7 +1539,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6UK-yR-KXm" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ZmE-pf-xoM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4397" y="30"/>
+            <point key="canvasLocation" x="4289" y="-202"/>
         </scene>
         <!--Requests-->
         <scene sceneID="l1Q-OO-TZk">
@@ -1593,7 +1623,6 @@
                                     <outlet property="statusIndicatorView" destination="o5j-Ee-2ek" id="mtc-CI-F19"/>
                                     <outlet property="toTextField" destination="urs-e6-TYt" id="f0K-ho-PqC"/>
                                     <outlet property="whenLabel" destination="ynG-eu-LLU" id="ev1-Pf-0Lh"/>
-                                    <segue destination="RdR-zd-c6B" kind="show" identifier="Display Request Details" id="kQK-ni-pBz"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1605,9 +1634,11 @@
                     <navigationItem key="navigationItem" title="Requests" id="d9h-J0-NCl"/>
                     <connections>
                         <segue destination="Lcv-tR-lVn" kind="show" identifier="Show Provider Profile" id="41a-Bq-1cT"/>
+                        <segue destination="wvg-Ih-op6" kind="unwind" identifier="go Home" unwindAction="unwindToHome:" id="MFD-Im-Q3E"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lgp-lS-Sjg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="wvg-Ih-op6" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="731" y="930"/>
         </scene>
@@ -1757,7 +1788,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oug-VS-YS9" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Q9t-Hq-AZd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2359" y="543"/>
+            <point key="canvasLocation" x="2328" y="83"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="IIB-BQ-a73">
@@ -1824,10 +1855,10 @@
         <image name="sign-in-with-twitter-gray" width="158" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="xTn-2G-SV4"/>
         <segue reference="Cfm-Gi-stK"/>
-        <segue reference="kQK-ni-pBz"/>
+        <segue reference="bKw-Pm-qod"/>
         <segue reference="C1p-kS-mxF"/>
-        <segue reference="RGs-Ip-oXj"/>
         <segue reference="41a-Bq-1cT"/>
         <segue reference="0NA-1d-nRj"/>
     </inferredMetricsTieBreakers>

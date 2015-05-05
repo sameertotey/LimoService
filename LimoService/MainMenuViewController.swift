@@ -8,10 +8,13 @@
 
 import UIKit
 
-class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
+class MainMenuViewController: UITableViewController, NumStepperCellDelegate, SegmentControlCellDelegate {
     
     @IBOutlet weak var numPassengersCell: NumStepperCellTableViewCell!
     @IBOutlet weak var numBagsCell: NumStepperCellTableViewCell!
+    @IBOutlet weak var preferredVehicleCell: SegmentControlTableViewCell!
+    
+  
     var listner: MapLocationSelectViewController!
     
     var specialComments = ""
@@ -25,7 +28,11 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
             listner?.numPassengers = numPassengers
         }
     }
-
+    var preferredVehicle = "Limo" {
+        didSet {
+            listner?.preferredVehicle = preferredVehicle
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +40,9 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
         numPassengersCell.delegate = self
         numBagsCell.configureSteppers(Double(numBags), minimum: 0, maximum: 10, step: 1)
         numBagsCell.delegate = self
+        
+        preferredVehicleCell.configureSegmentedControl()
+        preferredVehicleCell.delegate = self
 
     }
 
@@ -66,10 +76,19 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
             listner?.toLocation = sVC.selectedLocation
         }
         
+        // This is a history search return
+        if let sVC = sourceViewController as? RequestsTableViewController {
+            if let presentingViewController = presentingViewController {
+                println("\(presentingViewController)")
+                
+            }
+            listner?.limoRequest = sVC.selectedRequest
+        }
+
         goHome()
     }
     
-    // MARK: - NumSteppersCell delegate
+    // MARK: - NumSteppersCellDelegate
     
     func stepperValueUpdated(sender: NumStepperCellTableViewCell) {
         if let value = sender.value, indexPath = tableView.indexPathForCell(sender as UITableViewCell) {
@@ -81,6 +100,14 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
             default:
                 println("Unexpected index for stepper cell")
             }
+        }
+    }
+    
+      // MARK: - SegmentedControlDelegate
+    
+    func segmentControlUpdated(sender: SegmentControlTableViewCell) {
+        if let vehicle = sender.selection {
+            preferredVehicle = vehicle
         }
     }
 

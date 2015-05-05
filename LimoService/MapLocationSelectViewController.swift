@@ -48,6 +48,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     var requestInfoDateString: String!
     var numPassengers = 1
     var numBags = 0
+    var preferredVehicle = "Limo"
     var specialComments = ""
     var fromLocation: LimoUserLocation? {
         didSet {
@@ -96,6 +97,9 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     
     var limoRequest: LimoRequest? {
         didSet {
+            fromLocation = nil
+            toLocation = nil
+            resetUI()
             updateUI()
          }
     }
@@ -114,21 +118,20 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 break   // do nothing
             }
             requestInfo?.limoRequest = limoRequest
-            resetUI()
             if limoRequest == nil {
                 navigationItem.rightBarButtonItem = nil
-                mapView.userTrackingMode = .Follow
-                if mapView.userLocation.location != nil {
+                if mapView.userLocation.location != nil && fromLocation == nil {
                     mapView.setCenterCoordinate(mapView.userLocation.location.coordinate, animated: true)
                     createLocationPin(mapView.userLocation.location.coordinate)
-                    adjustMap()
-                } else {
-                    println("user location is nil..................")
                 }
+                adjustMap()
+                createRequestButton.setTitle("Create Request", forState: .Normal)
             } else {
                 navigationItem.rightBarButtonItem = doneBarButton
                 toLocation = limoRequest?.to
                 fromLocation = limoRequest?.from
+                createRequestButton.setTitle("Start New Request", forState: .Normal)
+
             }
         }
      }
@@ -200,6 +203,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         doneBarButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButton")
 //        navigationItem.rightBarButtonItem = menuBarButtonItem
         navigationItem.leftBarButtonItem = menuBarButtonItem
+        makeToFromPins()
     }
     
     
@@ -399,7 +403,12 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 if error == nil {
                     if let firstPlacemark = placemarks.first as? CLPlacemark {
                         self.locationTitle = firstPlacemark.name
-                        self.locationSubtitle = (ABCreateStringWithAddressDictionary(firstPlacemark.addressDictionary, false) as String).componentsSeparatedByString("\n")[1]
+                        let addressString = ABCreateStringWithAddressDictionary(firstPlacemark.addressDictionary, false)
+                        let addressComponents = addressString.componentsSeparatedByString("\n")
+                        if addressComponents.count >= 2 {
+                            self.locationSubtitle = addressComponents[1]
+                        }
+                        //                        self.locationSubtitle = (ABCreateStringWithAddressDictionary(firstPlacemark.addressDictionary, false) as String).componentsSeparatedByString("\n")[1]
 //                        self.address = String(map((ABCreateStringWithAddressDictionary(firstPlacemark.addressDictionary, false) as String).generate()) {
 //                            $0 == "\n" ? "," : $0
 //                            })
@@ -545,7 +554,22 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         return from
     }
     
-    @IBAction func createTheRequest() {
+    @IBOutlet weak var createRequestButton: ActionButton!
+    
+    @IBAction func createRequestButtonTouched(sender: ActionButton) {
+        if let title = sender.titleForState(.Normal) {
+            switch title {
+                case "Create Request":
+                createTheRequest()
+                case "Start New Request":
+                doneButton()
+            default:
+                break
+            }
+        }
+    }
+    
+    func createTheRequest() {
         println("create the request")
         let from = getFromLocation()
         let limoRequest = LimoRequest(className: LimoRequest.parseClassName())
@@ -563,6 +587,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         limoRequest["whenString"] = requestInfoDateString
         limoRequest["numPassengers"] = numPassengers
         limoRequest["numBags"] = numBags
+        limoRequest["preferredVehicle"] = preferredVehicle
         limoRequest["specialRequests"] = specialComments
         limoRequest.saveInBackgroundWithBlock {[unowned self](succeeded, error)  in
             if succeeded {
@@ -655,7 +680,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     }
     
     func resetUI() {
-        mapView.removeAnnotations(mapView.annotations)
+        mapView?.removeAnnotations(mapView.annotations)
         locationPin = nil
         locationMapPinView?.removeFromSuperview()
         makeToFromPins()
@@ -664,15 +689,15 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         numPassengers = 1
         numBags = 0
         specialComments = ""
-        fromLocation = nil
-        toLocation = nil
     }
     
     /* We will call this method when we are sure that the user has given
     us access to her location */
     func showUserLocationOnMapView(){
         mapView.showsUserLocation = true
-        mapView.userTrackingMode = .None
+        if fromLocation == nil {
+            mapView.userTrackingMode = .Follow
+        }
     }
     
     func createLocationPin(coordinate: CLLocationCoordinate2D) {
@@ -711,6 +736,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 fromPin.subtitle = fromLocation["address"] as? String
                 mapView.addAnnotation(fromPin)
                 mapView.centerCoordinate = fromPin.coordinate
+                mapView.userTrackingMode = .None
             }
         }
     }

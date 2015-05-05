@@ -21,6 +21,11 @@ protocol NumStepperCellDelegate: class {
     func stepperValueUpdated(sender: NumStepperCellTableViewCell) -> Void
 }
 
+
+protocol SegmentControlCellDelegate: class {
+    func segmentControlUpdated(sender: SegmentControlTableViewCell) -> Void
+}
+
 protocol ButtonCellDelegate: class {
     func buttonTouched(sender: ButtonCellTableViewCell) -> Void
 }
@@ -30,9 +35,6 @@ protocol DateSelectionDelegate: class {
     func dateButtonToggled(sender: DateSelectionTableViewCell) -> Void
 }
 
-protocol NavBarNotificationDelegate: class {
-    func navigationBarStatusUpdated(newStatus: Bool) -> Void
-}
 
 protocol RequestInfoDelegate: class {
     func dateUpdated(newDate: NSDate,  newDateString: String) -> Void

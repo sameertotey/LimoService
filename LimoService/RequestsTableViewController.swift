@@ -12,6 +12,7 @@ class RequestsTableViewController: PFQueryTableViewController {
 
     weak var currentUser: PFUser!
     var userRole = ""
+    var selectedRequest: LimoRequest?
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -155,49 +156,49 @@ class RequestsTableViewController: PFQueryTableViewController {
          return cell
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let identifier = segue.identifier {
-            switch identifier {
-            case "Display Request Details":
-                println("Display Request Details")
-                if let toVC = segue.destinationViewController as? MapLocationSelectViewController {
-                    if sender is UITableViewCell {
-                        let index = tableView.indexPathForCell(sender as! UITableViewCell)
-                        if let object =  objectAtIndexPath(index){
-                            toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
-                            toVC.currentUser = currentUser
-                            toVC.userRole = userRole
-                        } else {
-                            alert("did not find the right object")
-                        }
-                    }
-                }
-            case "Show Request Detail":
-                if segue.destinationViewController is UINavigationController {
-                    if let toVC = segue.destinationViewController.viewControllers?.first as? RequestDetailTableViewController {
-                        toVC.currentUser = currentUser
-                        toVC.userRole = userRole
-                        if sender is UITableViewCell {
-                            let index = tableView.indexPathForCell(sender as! UITableViewCell)
-                            if let object =  objectAtIndexPath(index){
-                                toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
-                            } else {
-                                alert("did not find the right object")
-                            }
-                        }
-                    }
-                }
-            default:
-            break
-            }
-        }
-    }
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if let identifier = segue.identifier {
+//            switch identifier {
+//            case "Display Request Details":
+//                println("Display Request Details")
+//                if let toVC = segue.destinationViewController as? MapLocationSelectViewController {
+//                    if sender is UITableViewCell {
+//                        let index = tableView.indexPathForCell(sender as! UITableViewCell)
+//                        if let object =  objectAtIndexPath(index){
+//                            toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
+//                            toVC.currentUser = currentUser
+//                            toVC.userRole = userRole
+//                        } else {
+//                            alert("did not find the right object")
+//                        }
+//                    }
+//                }
+//            case "Show Request Detail":
+//                if segue.destinationViewController is UINavigationController {
+//                    if let toVC = segue.destinationViewController.viewControllers?.first as? RequestDetailTableViewController {
+//                        toVC.currentUser = currentUser
+//                        toVC.userRole = userRole
+//                        if sender is UITableViewCell {
+//                            let index = tableView.indexPathForCell(sender as! UITableViewCell)
+//                            if let object =  objectAtIndexPath(index){
+//                                toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
+//                            } else {
+//                                alert("did not find the right object")
+//                            }
+//                        }
+//                    }
+//                }
+//            default:
+//            break
+//            }
+//        }
+//    }
     
     // MARK: - TableViewDelegate
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        selectedLocation = objectAtIndexPath(indexPath) as? LimoUserLocation
-//        performSegueWithIdentifier("Return Selection", sender: nil)
+        selectedRequest = objectAtIndexPath(indexPath) as? LimoRequest
+        performSegueWithIdentifier("go Home", sender: nil)
     }
     
     
