@@ -14,17 +14,35 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var textField: UITextField!
     
+    @IBOutlet weak var labelLine1: UILabel!
+    @IBOutlet weak var labelLine2: UILabel!
+    @IBOutlet weak var labelLine3: UILabel!
+    @IBOutlet weak var labelLine4: UILabel!
+    @IBOutlet weak var labelLine5: UILabel!
+    
+    var savedLine1: UILabel!
+    var savedLine2: UILabel!
+    var savedLine3: UILabel!
+    var savedLine4: UILabel!
+    var savedLine5: UILabel!
+    
     var savedDatePicker: UIDatePicker!
     var savedDateButton: UIButton!
     var savedTextField: UITextField!
+    
+    var limoRequest: LimoRequest? {
+        didSet {
+            updateUI()
+        }
+    }
     
     weak var delegate: RequestInfoDelegate?
     
     var date: NSDate? {
         didSet {
             if date != nil {
-                datePicker.minimumDate = date!.earlierDate(NSDate())
-                datePicker.date = date!
+                datePicker?.minimumDate = date!.earlierDate(NSDate())
+                datePicker?.date = date!
                 dateString = dateFormatter.stringFromDate(date!)
                 updateDatePickerLabel()
             }
@@ -41,28 +59,44 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    private func updateUI() {
+        if let datePicker = datePicker {
+            if limoRequest == nil {
+                placeEditableView()
+            } else {
+                placeDisplayView()
+            }
+        }
+     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Initialization code
+        // save a reference to all the views so that they are not deallocated by ARC
         savedDatePicker = datePicker
         savedDateButton = dateButton
         savedTextField = textField
-        let fromLabel = UILabel(frame: CGRectZero)
-        fromLabel.text = "From: "
-        fromLabel.sizeToFit()
-        textField.leftView = fromLabel
+        savedLine1 = labelLine1
+        savedLine2 = labelLine2
+        labelLine2.numberOfLines = 2
+        savedLine3 = labelLine3
+        labelLine3.numberOfLines = 2
+        savedLine4 = labelLine4
+        savedLine5 = labelLine5
+        let fromLeftLabel = UILabel(frame: CGRectZero)
+        fromLeftLabel.text = "From: "
+        fromLeftLabel.sizeToFit()
+        textField.leftView = fromLeftLabel
         textField.leftViewMode = .Always
-        configureDatePicker()
-        datePickerHidden = true
+        updateUI()
     }
     
     func configureDatePicker() {
-        datePicker.datePickerMode = .DateAndTime
+        datePicker?.datePickerMode = .DateAndTime
         
         // Set min/max date for the date picker.
         // As an example we will limit the date between now and 15 days from now.
         let now = NSDate()
-        datePicker.minimumDate = now
+        datePicker?.minimumDate = now
         date = now
         
         let currentCalendar = NSCalendar.currentCalendar()
@@ -71,9 +105,9 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         dateComponents.day = 15
         
         let fifteenDaysFromNow = currentCalendar.dateByAddingComponents(dateComponents, toDate: now, options: nil)
-        datePicker.maximumDate = fifteenDaysFromNow
-        datePicker.minuteInterval = 2
-        datePicker.addTarget(self, action: "updateDatePickerLabel", forControlEvents: .ValueChanged)
+        datePicker?.maximumDate = fifteenDaysFromNow
+        datePicker?.minuteInterval = 2
+        datePicker?.addTarget(self, action: "updateDatePickerLabel", forControlEvents: .ValueChanged)
         updateDatePickerLabel()
     }
     
@@ -87,8 +121,10 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         }()
     
     func updateDatePickerLabel() {
-        dateButton.setTitle(dateFormatter.stringFromDate(datePicker.date), forState: .Normal)
-        delegate?.dateUpdated(datePicker.date, newDateString: dateFormatter.stringFromDate(datePicker.date))
+        dateButton?.setTitle(dateFormatter.stringFromDate(datePicker.date), forState: .Normal)
+        if let date = datePicker?.date {
+            delegate?.dateUpdated(date, newDateString: dateFormatter.stringFromDate(date))
+        }
     }
     
     var datePickerHidden = false {
@@ -130,5 +166,65 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         delegate?.textFieldActivated()
         return false
+    }
+    
+    func placeEditableView() {
+        configureDatePicker()
+        if datePicker != nil {
+            datePickerHidden = !datePickerHidden
+            datePickerHidden = true
+        }
+    }
+    
+    func placeDisplayView() {
+        setLines()
+        var viewsDict = Dictionary <String, UIView>()
+        viewsDict["line1"] = labelLine1
+        viewsDict["line2"] = labelLine2
+        viewsDict["line3"] = labelLine3
+        viewsDict["line4"] = labelLine4
+        viewsDict["line5"] = labelLine5
+        view.subviews.map({ $0.removeFromSuperview() })
+        view.addSubview(labelLine1)
+        view.addSubview(labelLine2)
+        view.addSubview(labelLine3)
+        view.addSubview(labelLine4)
+        view.addSubview(labelLine5)
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line1]-|", options: nil, metrics: nil, views: viewsDict))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line2]-|", options: nil, metrics: nil, views: viewsDict))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line3]-|", options: nil, metrics: nil, views: viewsDict))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line4]-|", options: nil, metrics: nil, views: viewsDict))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line5]-|", options: nil, metrics: nil, views: viewsDict))
+        
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[line1][line2][line3][line4][line5]|", options: nil, metrics: nil, views: viewsDict))
+        let heightNeeded = labelLine1.sizeThatFits(self.view.bounds.size).height +
+            labelLine2.sizeThatFits(self.view.bounds.size).height +
+            labelLine3.sizeThatFits(self.view.bounds.size).height +
+            labelLine4.sizeThatFits(self.view.bounds.size).height +
+            labelLine5.sizeThatFits(self.view.bounds.size).height
+            
+        
+        delegate?.neededHeight(heightNeeded)
+
+    }
+    
+    func setLines() {
+        [labelLine1, labelLine2, labelLine3, labelLine4, labelLine5].map {
+            $0.text = ""
+        }
+        labelLine1.text = limoRequest?.whenString
+        if let fromAddress = limoRequest?.fromAddress {
+            if !fromAddress.isEmpty {
+                labelLine2.text = "From: \(fromAddress) "
+            }
+        }
+        if let toAddress = limoRequest?.toAddress {
+            if !toAddress.isEmpty {
+                labelLine3.text = "To: \(toAddress) "
+            }
+        }
+        if let numBags = limoRequest?.numBags, numPassengers = limoRequest?.numPassengers {
+            labelLine4.text = "Passengers: \(numPassengers)  Bags: \(numBags)"
+        }
     }
 }

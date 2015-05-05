@@ -9,20 +9,32 @@
 import UIKit
 import MapKit
 
-enum LocationType : UInt {
+enum LocationType : UInt, Printable {
     case Selector
     case From
     case To
+    
+    var description: String {
+        switch self {
+        case .Selector: return "Selector"
+        case .From: return "From"
+        case .To: return "To"
+        }
+    
+    }
 }
-
 
 class LocationPin: NSObject, MKAnnotation {
     
     var kind: LocationType!
     
-    var _coordinate: CLLocationCoordinate2D?
+    private var _coordinate: CLLocationCoordinate2D?
     var coordinateSet: Bool {
         return _coordinate != nil
+    }
+    
+    func coordinateReset() {
+        _coordinate = nil
     }
       
     // make coordinate get & set (for draggable annotations)

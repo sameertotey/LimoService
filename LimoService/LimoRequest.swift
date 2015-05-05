@@ -31,4 +31,6 @@ class LimoRequest: PFObject, PFSubclassing {
     @NSManaged var assignedTo: PFUser?
     @NSManaged var comment: String?
     @NSManaged var status: String?
+    @NSManaged var numBags: Int
+    @NSManaged var numPassengers: Int
 }

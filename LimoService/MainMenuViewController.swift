@@ -41,7 +41,7 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate {
         case 0: goHome()
         case 1: performSegueWithIdentifier("Profile", sender: nil)
         case 2: performSegueWithIdentifier("History", sender: nil)
-        case 3: performSegueWithIdentifier("Help", sender: nil)
+        case 3: goHome()
         case 4: performSegueWithIdentifier("Destination", sender: nil)
         case 5: goHome()
         default: break

@@ -70,12 +70,11 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
         queryForTable().findObjectsInBackgroundWithBlock { [unowned self](objects, error) in
             if error == nil {
                 var previousLocations = [LimoUserLocation]()
-                for item in objects as! [LimoUserLocation]{
-                    println("Item name = \(item.name)")
-//                    println("Item phone number = \(item.phoneNumber)")
-//                    println("Item url = \(item.url)")
-//                    println("Item location = \(item.placemark.location)")
-                    previousLocations.append(item)
+                if objects is [LimoUserLocation] {
+                    for item in objects as! [LimoUserLocation]{
+                        println("Item name = \(item.name)")
+                        previousLocations.append(item)
+                    }
                 }
                 // Hand over the locations to the results table controller
                 let resultsController = self.searchController.searchResultsController as! LocationResultsTableViewController
