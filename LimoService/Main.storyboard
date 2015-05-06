@@ -251,6 +251,7 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="commentCell" destination="vs6-bE-U2e" id="kmS-I8-Kic"/>
                         <outlet property="numBagsCell" destination="RhJ-bc-SSd" id="1tr-JO-0lk"/>
                         <outlet property="numPassengersCell" destination="kum-j0-VGV" id="88a-HY-S1G"/>
                         <outlet property="preferredVehicleCell" destination="9Ke-NF-rM7" id="exY-nH-OSQ"/>

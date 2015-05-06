@@ -17,7 +17,11 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
 
     @IBOutlet weak var mapView: MKMapView!
     var locationManager: CLLocationManager?
-    var locationPin: LocationPin?
+    var locationPin: LocationPin? {
+        didSet {
+            println(locationPin)
+        }
+    }
     var locationMapPinView: LocationMapPinView?
     var fromPin: LocationPin!
     var toPin: LocationPin!
@@ -127,7 +131,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 adjustMap()
                 createRequestButton.setTitle("Create Request", forState: .Normal)
             } else {
-                navigationItem.rightBarButtonItem = doneBarButton
+                navigationItem.rightBarButtonItem = nil
                 toLocation = limoRequest?.to
                 fromLocation = limoRequest?.from
                 createRequestButton.setTitle("Start New Request", forState: .Normal)
@@ -341,25 +345,29 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     }
     func mapView(mapView: MKMapView!, regionWillChangeAnimated animated: Bool) {
         println("region will change")
-        mapView.removeAnnotation(locationPin)
-        if let locationMapPinView = locationMapPinView {
-            locationMapPinViewRect = mapView.convertRect(locationMapPinView.frame, toView: mapView)
-            locationMapPinView.frame = locationMapPinViewRect!
-            mapView.addSubview(locationMapPinView)
-            println("did add subview")
+        if fromLocation == nil {
+            mapView.removeAnnotation(locationPin)
+            if let locationMapPinView = locationMapPinView {
+                locationMapPinViewRect = mapView.convertRect(locationMapPinView.frame, toView: mapView)
+                locationMapPinView.frame = locationMapPinViewRect!
+                mapView.addSubview(locationMapPinView)
+                println("did add subview")
+            }
         }
-    }
+     }
     
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
         println("region did change")
-        locationPin?.coordinate = mapView.centerCoordinate
-        if locationMapPinView?.annotation === locationPin {
-            // only remove the view if it is still attached to this annotation (it can be reused for another annotation
-            locationMapPinView?.removeFromSuperview()
-        }
-        mapView.addAnnotation(locationPin)
-        if mapRendered {
-            reverseGeoCode(mapView.centerCoordinate)
+        if fromLocation == nil {
+            locationPin?.coordinate = mapView.centerCoordinate
+            if locationMapPinView?.annotation === locationPin {
+                // only remove the view if it is still attached to this annotation (it can be reused for another annotation)
+                locationMapPinView?.removeFromSuperview()
+            }
+            mapView.addAnnotation(locationPin)
+            if mapRendered {
+                reverseGeoCode(mapView.centerCoordinate)
+            }
         }
     }
     
@@ -541,7 +549,8 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     
     func getFromLocation() -> LimoUserLocation {
         var from: LimoUserLocation!
-        if fromLocation == nil || fromLocation!.name != locationPin?.title || fromLocation!.address != locationPin?.address {
+        if fromLocation == nil {
+//            if fromLocation == nil || fromLocation!.name != locationPin?.title || fromLocation!.address != locationPin?.address {
             from = LimoUserLocation(className: LimoUserLocation.parseClassName())
             let geoPoint = PFGeoPoint(location: locationPin?.location)
             from["location"] = geoPoint
@@ -588,7 +597,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         limoRequest["numPassengers"] = numPassengers
         limoRequest["numBags"] = numBags
         limoRequest["preferredVehicle"] = preferredVehicle
-        limoRequest["specialRequests"] = specialComments
+        limoRequest["comment"] = specialComments
         limoRequest.saveInBackgroundWithBlock {[unowned self](succeeded, error)  in
             if succeeded {
                 println("Succeed in creating a limo request: \(limoRequest)")
@@ -683,6 +692,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         mapView?.removeAnnotations(mapView.annotations)
         locationPin = nil
         locationMapPinView?.removeFromSuperview()
+        locationMapPinView = nil
         makeToFromPins()
         requestInfoDate = NSDate()
         requestInfoDateString = ""
@@ -701,7 +711,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     }
     
     func createLocationPin(coordinate: CLLocationCoordinate2D) {
-        if locationPin == nil && limoRequest == nil && mapRendered {
+        if locationPin == nil && limoRequest == nil && mapRendered && fromLocation == nil {
             println("created the locationPin")
             locationPin = LocationPin()
             locationPin?.kind = .Selector
@@ -720,7 +730,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 toPin.title = toLocation["name"] as? String
                 toPin.subtitle = toLocation["address"] as? String
                 mapView.addAnnotation(toPin)
-                mapView.centerCoordinate = toPin.coordinate
+//                mapView.centerCoordinate = toPin.coordinate
             }
         }
     }
@@ -736,7 +746,17 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 fromPin.subtitle = fromLocation["address"] as? String
                 mapView.addAnnotation(fromPin)
                 mapView.centerCoordinate = fromPin.coordinate
+
+                if locationMapPinView?.annotation === locationPin {
+                    // only remove the view if it is still attached to this annotation (it can be reused for another annotation)
+                    locationMapPinView?.removeFromSuperview()
+                }
+                mapView.removeAnnotation(locationPin)
+                locationPin = nil
                 mapView.userTrackingMode = .None
+                
+                locationTitle = fromPin.title
+                locationSubtitle = fromPin.subtitle
             }
         }
     }

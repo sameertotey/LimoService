@@ -8,16 +8,21 @@
 
 import UIKit
 
-class MainMenuViewController: UITableViewController, NumStepperCellDelegate, SegmentControlCellDelegate {
+class MainMenuViewController: UITableViewController, NumStepperCellDelegate, SegmentControlCellDelegate, TextFieldCellDelegate {
     
     @IBOutlet weak var numPassengersCell: NumStepperCellTableViewCell!
     @IBOutlet weak var numBagsCell: NumStepperCellTableViewCell!
     @IBOutlet weak var preferredVehicleCell: SegmentControlTableViewCell!
+    @IBOutlet weak var commentCell: TextFieldCellTableViewCell!
     
   
     var listner: MapLocationSelectViewController!
     
-    var specialComments = ""
+    var comments = "" {
+        didSet {
+            listner?.specialComments = comments
+        }
+    }
     var numBags = 0 {
         didSet {
             listner?.numBags = numBags
@@ -43,6 +48,8 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
         
         preferredVehicleCell.configureSegmentedControl()
         preferredVehicleCell.delegate = self
+        
+        commentCell.delegate = self
 
     }
 
@@ -110,6 +117,14 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
             preferredVehicle = vehicle
         }
     }
+    
+    // MARK: - TextFieldCellDelegate
+    func textFieldUpdated(sender: TextFieldCellTableViewCell) {
+        if let comment = sender.textField.text {
+            comments = comment
+        }
+    }
+
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         println("prepare for segue")

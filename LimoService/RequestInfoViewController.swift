@@ -223,8 +223,11 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
                 labelLine3.text = "To: \(toAddress) "
             }
         }
-        if let numBags = limoRequest?.numBags, numPassengers = limoRequest?.numPassengers {
-            labelLine4.text = "Passengers: \(numPassengers)  Bags: \(numBags)"
+        if let numBags = limoRequest?.numBags, numPassengers = limoRequest?.numPassengers, vehicle = limoRequest?.preferredVehicle {
+            labelLine4.text = "Passengers:\(numPassengers) Bags:\(numBags) for \(vehicle)"
+        }
+        if let comment = limoRequest?.comment {
+            labelLine5.text = comment
         }
     }
 }
