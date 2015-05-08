@@ -19,15 +19,22 @@ class RequestsTableViewCell: PFTableViewCell {
         super.awakeFromNib()
         // Initialization code
         let fromLabel = UILabel(frame: CGRectZero)
-        fromLabel.text = "From: "
-        fromLabel.sizeToFit()
-        fromTextField.leftView = fromLabel
+//        fromLabel.text = "From: "
+//        fromLabel.sizeToFit()
+        let fromImageView = UIImageView(image: UIImage(named: "GreenLocationPin"))
+        fromImageView.frame = CGRectMake(0, 0, 16, 24)
+
+        fromTextField.leftView = fromImageView
         fromTextField.leftViewMode = .Always
         
         let toLabel = UILabel(frame: CGRectZero)
-        toLabel.text = "To: "
-        toLabel.sizeToFit()
-        toTextField.leftView = toLabel
+//        toLabel.text = "To: "
+//        toLabel.sizeToFit()
+        let toImageView = UIImageView(image: UIImage(named: "RedLocationPin"))
+        toImageView.frame = CGRectMake(0, 0, 16, 24)
+        
+
+        toTextField.leftView = toImageView
         toTextField.leftViewMode = .Always
 
     }

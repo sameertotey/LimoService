@@ -43,20 +43,28 @@ class RequestsTableViewController: PFQueryTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         println("loading \(__FILE__)")
-        configureToolbar() 
+//        configureToolbar() 
 
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
-        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Plain, target: self, action: "showProfile")
-
-        if userRole == "provider" {
-            self.navigationItem.leftBarButtonItem = profileBarButtonItem
-        } else {
-            self.navigationItem.rightBarButtonItem = profileBarButtonItem
-        }
-        let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
-        navigationItem.leftBarButtonItem = homeBarButtonItem
+//        let profileBarButtonItem = UIBarButtonItem(title: "Profile", style: .Plain, target: self, action: "showProfile")
+//
+//        if userRole == "provider" {
+//            self.navigationItem.leftBarButtonItem = profileBarButtonItem
+//        } else {
+//            self.navigationItem.rightBarButtonItem = profileBarButtonItem
+//        }
+//        let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
+//        navigationItem.leftBarButtonItem = homeBarButtonItem
         
+        let menuImage = UIImage(named: "Menu")
+        let menuButton = UIButton.buttonWithType(.System) as! UIButton
+        menuButton.setImage(menuImage, forState: .Normal)
+        menuButton.frame = CGRectMake(0, 0, 24, 24)
+        menuButton.addTarget(self, action: "goHome", forControlEvents: .TouchUpInside)
+        
+        let menuBarButtonItem = UIBarButtonItem(customView: menuButton)
+        navigationItem.leftBarButtonItem = menuBarButtonItem
     }
     
     func goHome() {

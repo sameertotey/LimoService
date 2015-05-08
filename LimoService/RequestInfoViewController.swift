@@ -74,7 +74,6 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         // save a reference to all the views so that they are not deallocated by ARC
         savedDatePicker = datePicker
         savedDateButton = dateButton
-        savedTextField = textField
         savedLine1 = labelLine1
         savedLine2 = labelLine2
         labelLine2.numberOfLines = 2
@@ -91,6 +90,7 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         textField.leftView = fromImageView
         
         textField.leftViewMode = .Always
+        savedTextField = textField
         updateUI()
     }
     

@@ -22,8 +22,16 @@ class UserProfileTableViewController: UITableViewController, UITextFieldDelegate
         // using the rootview controller's currentUser instead of setting it in the prepare for segue
         let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController
         currentUser = (rootVC?.viewControllers[0] as! LoginManagerViewController).currentUser
-        let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
-        navigationItem.leftBarButtonItem = homeBarButtonItem
+//        let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
+//        navigationItem.leftBarButtonItem = homeBarButtonItem
+        let menuImage = UIImage(named: "Menu")
+        let menuButton = UIButton.buttonWithType(.System) as! UIButton
+        menuButton.setImage(menuImage, forState: .Normal)
+        menuButton.frame = CGRectMake(0, 0, 24, 24)
+        menuButton.addTarget(self, action: "goHome", forControlEvents: .TouchUpInside)
+        
+        let menuBarButtonItem = UIBarButtonItem(customView: menuButton)
+        navigationItem.leftBarButtonItem = menuBarButtonItem
         displayCurrentValues()
     }
     

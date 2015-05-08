@@ -390,8 +390,9 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jvm-Xt-zDB" customClass="ActionButton" customModule="LimoService" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="570" width="600" height="30"/>
+                                <rect key="frame" x="0.0" y="559" width="600" height="41"/>
                                 <color key="backgroundColor" red="0.88235294117647056" green="0.78431372549019607" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Create Request">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1934,8 +1935,8 @@
         <image name="History" width="363" height="367"/>
         <image name="Passengers" width="380" height="294"/>
         <image name="Profile" width="290" height="299"/>
-        <image name="PurpleLocationPin" width="286" height="417"/>
-        <image name="RedLocationPin" width="286" height="417"/>
+        <image name="PurpleLocationPin" width="24" height="35"/>
+        <image name="RedLocationPin" width="24" height="35"/>
         <image name="earth" width="32" height="32"/>
         <image name="facebook-small" width="151" height="43"/>
         <image name="facebook-small-pressed" width="151" height="43"/>
