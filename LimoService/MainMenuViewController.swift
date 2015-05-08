@@ -56,10 +56,10 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch indexPath.row {
         case 0: goHome()
-        case 1: performSegueWithIdentifier("Profile", sender: nil)
+        case 1: performSegueWithIdentifier("Destination", sender: nil)
         case 2: performSegueWithIdentifier("History", sender: nil)
-        case 3: goHome()
-        case 4: performSegueWithIdentifier("Destination", sender: nil)
+        case 3: performSegueWithIdentifier("Profile", sender: nil)
+        case 4: goHome()
         case 5: goHome()
         default: break
         }

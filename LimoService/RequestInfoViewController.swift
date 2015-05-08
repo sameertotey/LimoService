@@ -82,10 +82,14 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         labelLine3.numberOfLines = 2
         savedLine4 = labelLine4
         savedLine5 = labelLine5
-        let fromLeftLabel = UILabel(frame: CGRectZero)
-        fromLeftLabel.text = "From: "
-        fromLeftLabel.sizeToFit()
-        textField.leftView = fromLeftLabel
+//        let fromLeftLabel = UILabel(frame: CGRectZero)
+//        fromLeftLabel.text = "From: "
+//        fromLeftLabel.sizeToFit()
+//        textField.leftView = fromLeftLabel
+        let fromImageView = UIImageView(image: UIImage(named: "GreenLocationPin"))
+        fromImageView.frame = CGRectMake(0, 0, 16, 24)
+        textField.leftView = fromImageView
+        
         textField.leftViewMode = .Always
         updateUI()
     }

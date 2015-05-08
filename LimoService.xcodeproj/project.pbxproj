@@ -85,6 +85,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		0557FA191AFAC208000EDE4D /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		050DF30A1ACCFE96003640DE /* LocationLookupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationLookupTableViewCell.swift; path = ../LocationLookupTableViewCell.swift; sourceTree = "<group>"; };
 		050DF30D1ACEED81003640DE /* LoginManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManagerViewController.swift; sourceTree = "<group>"; };
@@ -391,6 +404,7 @@
 				05649BAE1AB0EFCC007566C3 /* Sources */,
 				05649BAF1AB0EFCC007566C3 /* Frameworks */,
 				05649BB01AB0EFCC007566C3 /* Resources */,
+				0557FA191AFAC208000EDE4D /* Embed App Extensions */,
 			);
 			buildRules = (
 			);

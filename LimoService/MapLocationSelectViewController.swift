@@ -202,7 +202,13 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         definesPresentationContext = false
         
         // Do any additional setup after loading the view.
-        menuBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain , target: self, action: "mainMenu")
+        let menuImage = UIImage(named: "Menu")
+        let menuButton = UIButton.buttonWithType(.System) as! UIButton
+        menuButton.setImage(menuImage, forState: .Normal)
+        menuButton.frame = CGRectMake(0, 0, 24, 24)
+        menuButton.addTarget(self, action: "mainMenu", forControlEvents: .TouchUpInside)
+        
+        menuBarButtonItem = UIBarButtonItem(customView: menuButton)
         saveBarButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveButton")
         doneBarButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButton")
 //        navigationItem.rightBarButtonItem = menuBarButtonItem
@@ -303,7 +309,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                     if view is LocationMapPinView {
                         locationMapPinView = view as? LocationMapPinView
                         locationMapPinView!.pinColor = .Purple
-                    }
+                     }
                 case .From:
                     (view as? LocationMapPinView)?.pinColor = .Green
                 case .To:
