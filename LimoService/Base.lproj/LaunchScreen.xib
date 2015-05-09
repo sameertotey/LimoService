@@ -23,6 +23,12 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="GreenLocationPin" translatesAutoresizingMaskIntoConstraints="NO" id="Hw4-6g-bGx">
+                    <rect key="frame" x="27" y="210" width="38" height="59"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="RedLocationPin" translatesAutoresizingMaskIntoConstraints="NO" id="bJW-ik-jhh">
+                    <rect key="frame" x="297" y="210" width="38" height="59"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="0.84313725490196079" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
@@ -38,4 +44,8 @@
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>
+    <resources>
+        <image name="GreenLocationPin" width="24" height="35"/>
+        <image name="RedLocationPin" width="24" height="35"/>
+    </resources>
 </document>
