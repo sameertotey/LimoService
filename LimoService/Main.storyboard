@@ -391,7 +391,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jvm-Xt-zDB" customClass="ActionButton" customModule="LimoService" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="559" width="600" height="41"/>
-                                <color key="backgroundColor" red="0.88235294117647056" green="0.78431372549019607" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="1" green="0.84313725490196079" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Create Request">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -773,7 +773,7 @@
                         <viewControllerLayoutGuide type="bottom" id="pnX-Tl-iqw"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZP6-CK-T7D">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to the GO LimoService" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zGE-HF-DAs">
@@ -783,7 +783,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="0.84313725490000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="zGE-HF-DAs" secondAttribute="centerY" id="4Nf-IP-XQ1"/>
                             <constraint firstAttribute="centerX" secondItem="zGE-HF-DAs" secondAttribute="centerX" id="IgM-Jc-b3C"/>
@@ -1083,7 +1083,7 @@
         <!--User Profile-->
         <scene sceneID="DeG-2m-6iT">
             <objects>
-                <tableViewController title="User Profile" id="0aT-SJ-FBw" customClass="UserProfileTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="User Profile" extendedLayoutIncludesOpaqueBars="YES" id="0aT-SJ-FBw" customClass="UserProfileTableViewController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" allowsSelection="NO" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="gfJ-ln-BWC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1724,14 +1724,15 @@
             </objects>
             <point key="canvasLocation" x="731" y="930"/>
         </scene>
-        <!--Custom Navigation Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="JkS-oM-afZ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="E9G-si-8WL" customClass="CustomNavigationController" customModule="LimoService" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="E9G-si-8WL" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hQl-36-DSV">
+                    <navigationBar key="navigationBar" alpha="0.24999999999999967" contentMode="scaleToFill" id="hQl-36-DSV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Cfc-yM-Xcx">
@@ -1783,6 +1784,7 @@
                             </datePicker>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Pickup Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R1k-St-Bs6">
                                 <rect key="frame" x="16" y="212" width="568" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -1801,47 +1803,99 @@
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Cg-pb-mQQ">
                                 <rect key="frame" x="16" y="250" width="42" height="21"/>
+                                <color key="backgroundColor" red="1" green="0.84313725490000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DXp-fo-FeZ">
-                                <rect key="frame" x="71" y="250" width="42" height="21"/>
+                                <rect key="frame" x="61" y="250" width="42" height="21"/>
+                                <color key="backgroundColor" red="1" green="0.84313725490000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lp-mN-X3t">
-                                <rect key="frame" x="121" y="250" width="42" height="21"/>
+                                <rect key="frame" x="107" y="250" width="42" height="21"/>
+                                <color key="backgroundColor" red="1" green="0.84313725490000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mk4-oR-u3f">
-                                <rect key="frame" x="165" y="250" width="42" height="21"/>
+                                <rect key="frame" x="151" y="250" width="42" height="21"/>
+                                <color key="backgroundColor" red="1" green="0.84313725490000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="5" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xII-5r-YRZ">
-                                <rect key="frame" x="224" y="250" width="42" height="21"/>
+                                <rect key="frame" x="198" y="250" width="51" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="FromPin" translatesAutoresizingMaskIntoConstraints="NO" id="yto-Ea-MbG">
+                                <rect key="frame" x="303" y="250" width="24" height="24"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ToPin" translatesAutoresizingMaskIntoConstraints="NO" id="Fia-Pl-wfR">
+                                <rect key="frame" x="333" y="250" width="24" height="24"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xbL-Wj-PpS">
+                                <rect key="frame" x="429" y="250" width="24" height="24"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="BagSmall" translatesAutoresizingMaskIntoConstraints="NO" id="j74-Qv-j4m">
+                                <rect key="frame" x="397" y="250" width="24" height="24"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="PassengersSmall" translatesAutoresizingMaskIntoConstraints="NO" id="FTh-iV-wIY">
+                                <rect key="frame" x="365" y="250" width="24" height="24"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WrF-po-xDl" customClass="RequestInfoLine" customModule="LimoService" customModuleProvider="target">
+                                <rect key="frame" x="101" y="277" width="83" height="25"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4C0-Ps-Kcb" customClass="RequestInfoLine" customModule="LimoService" customModuleProvider="target">
+                                <rect key="frame" x="192" y="277" width="83" height="15"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gU7-Kf-TNv" customClass="RequestInfoLine" customModule="LimoService" customModuleProvider="target">
+                                <rect key="frame" x="283" y="277" width="83" height="15"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="6" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jxu-Sr-LJj">
+                                <rect key="frame" x="253" y="250" width="42" height="21"/>
+                                <color key="backgroundColor" red="1" green="0.84313725490000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" placeholderIntrinsicWidth="83" placeholderIntrinsicHeight="15" translatesAutoresizingMaskIntoConstraints="NO" id="AiA-sH-iWM" customClass="RequestInfoLine" customModule="LimoService" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="275" width="83" height="25"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="0.84313725490000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <toolbarItems/>
                     <connections>
+                        <outlet property="bagsImage" destination="j74-Qv-j4m" id="YM0-mB-HOb"/>
                         <outlet property="dateButton" destination="YbZ-5S-mPf" id="n1B-8R-Bv5"/>
+                        <outlet property="dateImage" destination="xbL-Wj-PpS" id="yeE-oZ-CLz"/>
                         <outlet property="datePicker" destination="aw0-QU-rFX" id="bMZ-Hb-GGC"/>
-                        <outlet property="labelLine1" destination="1Cg-pb-mQQ" id="Ux3-Lo-iwi"/>
-                        <outlet property="labelLine2" destination="DXp-fo-FeZ" id="bfY-vp-G9c"/>
-                        <outlet property="labelLine3" destination="7lp-mN-X3t" id="bKP-oU-SU0"/>
-                        <outlet property="labelLine4" destination="Mk4-oR-u3f" id="RG7-ZW-XDT"/>
-                        <outlet property="labelLine5" destination="xII-5r-YRZ" id="pcc-uN-F4h"/>
+                        <outlet property="fromImage" destination="yto-Ea-MbG" id="gZz-MT-RSd"/>
+                        <outlet property="label1" destination="1Cg-pb-mQQ" id="0Uy-1o-bi6"/>
+                        <outlet property="label2" destination="DXp-fo-FeZ" id="QTg-sT-eBr"/>
+                        <outlet property="label3" destination="7lp-mN-X3t" id="zae-kC-uEn"/>
+                        <outlet property="label4" destination="Mk4-oR-u3f" id="nW3-FL-4tR"/>
+                        <outlet property="label5" destination="xII-5r-YRZ" id="VM9-mz-EGs"/>
+                        <outlet property="label6" destination="Jxu-Sr-LJj" id="h1Q-Jp-4MN"/>
+                        <outlet property="line1" destination="AiA-sH-iWM" id="qRH-ut-aqU"/>
+                        <outlet property="line2" destination="WrF-po-xDl" id="Cbc-zX-6bA"/>
+                        <outlet property="line3" destination="4C0-Ps-Kcb" id="4D4-Wp-DBd"/>
+                        <outlet property="line4" destination="gU7-Kf-TNv" id="Yug-zf-ohV"/>
+                        <outlet property="passengersImage" destination="FTh-iV-wIY" id="JNo-yJ-8GH"/>
                         <outlet property="textField" destination="R1k-St-Bs6" id="C1s-PB-AQx"/>
+                        <outlet property="toImage" destination="Fia-Pl-wfR" id="jVf-bZ-1kb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DPc-lH-EJQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1931,12 +1985,16 @@
     <resources>
         <image name="About" width="344" height="343"/>
         <image name="Bag" width="177" height="405"/>
+        <image name="BagSmall" width="9" height="20"/>
+        <image name="FromPin" width="14" height="20"/>
         <image name="Help" width="272" height="365"/>
         <image name="History" width="363" height="367"/>
         <image name="Passengers" width="380" height="294"/>
+        <image name="PassengersSmall" width="26" height="20"/>
         <image name="Profile" width="290" height="299"/>
         <image name="PurpleLocationPin" width="24" height="35"/>
         <image name="RedLocationPin" width="24" height="35"/>
+        <image name="ToPin" width="14" height="20"/>
         <image name="earth" width="32" height="32"/>
         <image name="facebook-small" width="151" height="43"/>
         <image name="facebook-small-pressed" width="151" height="43"/>
@@ -1945,11 +2003,11 @@
         <image name="sign-in-with-twitter-gray" width="158" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Af0-4s-9Pj"/>
         <segue reference="xTn-2G-SV4"/>
-        <segue reference="Cfm-Gi-stK"/>
-        <segue reference="bKw-Pm-qod"/>
-        <segue reference="C1p-kS-mxF"/>
         <segue reference="41a-Bq-1cT"/>
         <segue reference="0NA-1d-nRj"/>
+        <segue reference="Cfm-Gi-stK"/>
+        <segue reference="bKw-Pm-qod"/>
     </inferredMetricsTieBreakers>
 </document>

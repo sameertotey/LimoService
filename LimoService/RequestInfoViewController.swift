@@ -14,17 +14,41 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var textField: UITextField!
     
-    @IBOutlet weak var labelLine1: UILabel!
-    @IBOutlet weak var labelLine2: UILabel!
-    @IBOutlet weak var labelLine3: UILabel!
-    @IBOutlet weak var labelLine4: UILabel!
-    @IBOutlet weak var labelLine5: UILabel!
+    @IBOutlet weak var label1: UILabel!
+    @IBOutlet weak var label2: UILabel!
+    @IBOutlet weak var label3: UILabel!
+    @IBOutlet weak var label4: UILabel!
+    @IBOutlet weak var label5: UILabel!
+    @IBOutlet weak var label6: UILabel!
     
-    var savedLine1: UILabel!
-    var savedLine2: UILabel!
-    var savedLine3: UILabel!
-    var savedLine4: UILabel!
-    var savedLine5: UILabel!
+    @IBOutlet weak var line1: RequestInfoLine!
+    @IBOutlet weak var line2: RequestInfoLine!
+    @IBOutlet weak var line3: RequestInfoLine!
+    @IBOutlet weak var line4: RequestInfoLine!
+    
+    @IBOutlet weak var fromImage: UIImageView!
+    @IBOutlet weak var toImage: UIImageView!
+    @IBOutlet weak var passengersImage: UIImageView!
+    @IBOutlet weak var bagsImage: UIImageView!
+    @IBOutlet weak var dateImage: UIImageView!
+    
+    var savedLabel1: UILabel!
+    var savedLabel2: UILabel!
+    var savedLabel3: UILabel!
+    var savedLabel4: UILabel!
+    var savedLabel5: UILabel!
+    var savedLabel6: UILabel!
+    
+    var savedLine1: RequestInfoLine!
+    var savedLine2: RequestInfoLine!
+    var savedLine3: RequestInfoLine!
+    var savedLine4: RequestInfoLine!
+    
+    var savedFromImage: UIImageView!
+    var savedToImage: UIImageView!
+    var savedPassengersImage: UIImageView!
+    var savedBagsImage: UIImageView!
+    var savedDateImage: UIImageView!
     
     var savedDatePicker: UIDatePicker!
     var savedDateButton: UIButton!
@@ -74,13 +98,14 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         // save a reference to all the views so that they are not deallocated by ARC
         savedDatePicker = datePicker
         savedDateButton = dateButton
-        savedLine1 = labelLine1
-        savedLine2 = labelLine2
-        labelLine2.numberOfLines = 2
-        savedLine3 = labelLine3
-        labelLine3.numberOfLines = 2
-        savedLine4 = labelLine4
-        savedLine5 = labelLine5
+        savedLabel1 = label1
+        savedLabel2 = label2
+//        labelLine2.numberOfLines = 2
+        savedLabel3 = label3
+//        labelLine3.numberOfLines = 2
+        savedLabel4 = label4
+        savedLabel5 = label5
+        savedLabel6 = label6
 //        let fromLeftLabel = UILabel(frame: CGRectZero)
 //        fromLeftLabel.text = "From: "
 //        fromLeftLabel.sizeToFit()
@@ -91,6 +116,21 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         
         textField.leftViewMode = .Always
         savedTextField = textField
+        
+        fromImage.frame = CGRectMake(0,0, 16, 20)
+        toImage.frame = CGRectMake(0,0, 16, 20)
+        passengersImage.frame = CGRectMake(0,0, 16, 20)
+        bagsImage.frame = CGRectMake(0,0, 16, 20)
+        savedFromImage = fromImage
+        savedToImage = toImage
+        savedDateImage = dateImage
+        savedPassengersImage = passengersImage
+        savedBagsImage = bagsImage
+        savedLine1 = line1
+        savedLine2 = line2
+        savedLine3 = line3
+        savedLine4 = line4
+        
         updateUI()
     }
     
@@ -181,57 +221,169 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     }
     
     func placeDisplayView() {
-        setLines()
         var viewsDict = Dictionary <String, UIView>()
-        viewsDict["line1"] = labelLine1
-        viewsDict["line2"] = labelLine2
-        viewsDict["line3"] = labelLine3
-        viewsDict["line4"] = labelLine4
-        viewsDict["line5"] = labelLine5
         view.subviews.map({ $0.removeFromSuperview() })
-        view.addSubview(labelLine1)
-        view.addSubview(labelLine2)
-        view.addSubview(labelLine3)
-        view.addSubview(labelLine4)
-        view.addSubview(labelLine5)
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line1]-|", options: nil, metrics: nil, views: viewsDict))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line2]-|", options: nil, metrics: nil, views: viewsDict))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line3]-|", options: nil, metrics: nil, views: viewsDict))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line4]-|", options: nil, metrics: nil, views: viewsDict))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line5]-|", options: nil, metrics: nil, views: viewsDict))
+        label1.text = nil
+        label2.text = nil
+        label3.text = nil
+        label4.text = nil
+        label5.text = nil
+        label6.text = nil
+        [line1, line2, line3, line4].map({
+            $0.subviews.map({ $0.removeFromSuperview() })
+        })
+        viewsDict["line1"] = line1
+        viewsDict["line2"] = line2
+        viewsDict["line3"] = line3
+        viewsDict["line4"] = line4
+        viewsDict["label1"] = label1
+        viewsDict["label2"] = label2
+        viewsDict["label3"] = label3
+        viewsDict["label4"] = label4
+        viewsDict["label5"] = label5
+        viewsDict["label6"] = label6
+        viewsDict["fromImage"] = fromImage
+        viewsDict["toImage"] = toImage
+        viewsDict["passengersImage"] = passengersImage
+        viewsDict["bagsImage"] = bagsImage
+
+        view.addSubview(line1)
+        view.addSubview(line2)
+        view.addSubview(line3)
+        view.addSubview(line4)
+
+        setLines(viewsDict)
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line1]", options: nil, metrics: nil, views: viewsDict))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line2]", options: nil, metrics: nil, views: viewsDict))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line3]", options: nil, metrics: nil, views: viewsDict))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[line4]", options: nil, metrics: nil, views: viewsDict))
+
+
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[line1][line2][line3][line4]", options: nil, metrics: nil, views: viewsDict))
+
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
         
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[line1][line2][line3][line4][line5]|", options: nil, metrics: nil, views: viewsDict))
-        let heightNeeded = labelLine1.sizeThatFits(self.view.bounds.size).height +
-            labelLine2.sizeThatFits(self.view.bounds.size).height +
-            labelLine3.sizeThatFits(self.view.bounds.size).height +
-            labelLine4.sizeThatFits(self.view.bounds.size).height +
-            labelLine5.sizeThatFits(self.view.bounds.size).height
-            
+        let heightNeeded = line1.sizeThatFits(view.bounds.size).height +
+            line2.sizeThatFits(view.bounds.size).height +
+            line3.sizeThatFits(view.bounds.size).height +
+            line4.sizeThatFits(view.bounds.size).height
         
         delegate?.neededHeight(heightNeeded)
 
     }
     
-    func setLines() {
-        [labelLine1, labelLine2, labelLine3, labelLine4, labelLine5].map {
-            $0.text = ""
+    func setLines(viewsDict: Dictionary <String, UIView>) {
+        line1.removeConstraints(line1.constraints())
+
+        label1.text = limoRequest?.whenString
+        line1.addSubview(label1)
+        if let numPassengers = limoRequest?.numPassengers {
+            label2.text = "\(numPassengers)  "
         }
-        labelLine1.text = limoRequest?.whenString
-        if let fromAddress = limoRequest?.fromAddress {
+        line1.addSubview(passengersImage)
+        line1.addSubview(label2)
+
+        if let numBags = limoRequest?.numBags {
+            label3.text = "\(numBags)  "
+        }
+        line1.addSubview(bagsImage)
+        line1.addSubview(label3)
+
+        let label1Size = label1.sizeThatFits(view.bounds.size)
+        let label2Size = label2.sizeThatFits(view.bounds.size)
+        let label3Size = label3.sizeThatFits(view.bounds.size)
+        let passengersImageSize = passengersImage.sizeThatFits(view.bounds.size)
+        let bagsImageSize = bagsImage.sizeThatFits(view.bounds.size)
+        let line1Height = max(label1Size.height, label2Size.height, label3Size.height, passengersImageSize.height, bagsImageSize.height)
+        line1.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label1]-[passengersImage]-[label2]-[bagsImage]-[label3]-|", options: nil, metrics: nil, views: viewsDict))
+        line1.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label1]", options: nil, metrics: nil, views: viewsDict))
+        line1.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[passengersImage]", options: nil, metrics: nil, views: viewsDict))
+        line1.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label2]|", options: nil, metrics: nil, views: viewsDict))
+        line1.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[bagsImage]", options: nil, metrics: nil, views: viewsDict))
+        line1.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label3]", options: nil, metrics: nil, views: viewsDict))
+        line1.addConstraint(NSLayoutConstraint(item: line1, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: line1Height))
+        
+        line2.removeConstraints(line2.constraints())
+        if let fromAddress = limoRequest?.fromAddress, fromName = limoRequest?.fromName {
             if !fromAddress.isEmpty {
-                labelLine2.text = "From: \(fromAddress) "
+                var fullString = ""
+                if fromAddress.hasPrefix(fromName) {
+                    fullString = String(map(fromAddress.generate()) {
+                            $0 == "\n" ? ";" : $0
+                            })
+                } else {
+                    fullString = String(map((fromName + ";" + fromAddress).generate()) {
+                        $0 == "\n" ? ";" : $0
+                    })
+                }
+                label4.text = fullString
+                line2.addSubview(fromImage)
+                line2.addSubview(label4)
+                line2.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[fromImage]-[label4]-|", options: nil, metrics: nil, views: viewsDict))
+                line2.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[fromImage]", options: nil, metrics: nil, views: viewsDict))
+                line2.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label4]", options: nil, metrics: nil, views: viewsDict))
+                let label4Size = label4.sizeThatFits(view.bounds.size)
+                let fromImageSize = fromImage.sizeThatFits(view.bounds.size)
+                let line2Height = max(label4Size.height, fromImageSize.height)
+                line2.addConstraint(NSLayoutConstraint(item: line2, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: line2Height))
             }
         }
-        if let toAddress = limoRequest?.toAddress {
+        
+
+        line3.removeConstraints(line3.constraints())
+        if let toAddress = limoRequest?.toAddress, toName = limoRequest?.toName {
             if !toAddress.isEmpty {
-                labelLine3.text = "To: \(toAddress) "
+                var fullString = ""
+                if toAddress.hasPrefix(toName) {
+                    fullString = String(map(toAddress.generate()) {
+                        $0 == "\n" ? ";" : $0
+                        })
+                } else {
+                    fullString = String(map((toName + ";" + toAddress).generate()) {
+                        $0 == "\n" ? ";" : $0
+                        })
+                }
+                label5.text = fullString
+                line3.addSubview(toImage)
+                line3.addSubview(label5)
+                line3.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[toImage]-[label5]-|", options: nil, metrics: nil, views: viewsDict))
+                line3.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[toImage]", options: nil, metrics: nil, views: viewsDict))
+                line3.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label5]", options: nil, metrics: nil, views: viewsDict))
+                let label5Size = label5.sizeThatFits(view.bounds.size)
+                let toImageSize = fromImage.sizeThatFits(view.bounds.size)
+                let line3Height = max(label5Size.height, toImageSize.height)
+                line3.addConstraint(NSLayoutConstraint(item: line3, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: line3Height))
+
             }
         }
-        if let numBags = limoRequest?.numBags, numPassengers = limoRequest?.numPassengers, vehicle = limoRequest?.preferredVehicle {
-            labelLine4.text = "Passengers:\(numPassengers) Bags:\(numBags) for \(vehicle)"
-        }
+//        line3.setNeedsLayout()
+//        line3.layoutIfNeeded()
+//        line3.sizeToFit()
+//        let line3Size = line3.sizeThatFits(CGSizeMake(view.frame.width, 600))
+        
+        line4.removeConstraints(line4.constraints())
         if let comment = limoRequest?.comment {
-            labelLine5.text = comment
+            label6.text = comment
+            line4.addSubview(label6)
+            line4.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label6]-|", options: nil, metrics: nil, views: viewsDict))
+            line4.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[label6]", options: nil, metrics: nil, views: viewsDict))
+            line4.addConstraint(NSLayoutConstraint(item: line4, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: label6.sizeThatFits(view.bounds.size).height))
+
         }
+
+
+
+//        if let toAddress = limoRequest?.toAddress {
+//            if !toAddress.isEmpty {
+//                labelLine3.text = "To: \(toAddress) "
+//            }
+//        }
+//        if let numBags = limoRequest?.numBags, numPassengers = limoRequest?.numPassengers, vehicle = limoRequest?.preferredVehicle {
+//            labelLine4.text = "Passengers:\(numPassengers) Bags:\(numBags) for \(vehicle)"
+//        }
+//        if let comment = limoRequest?.comment {
+//            labelLine5.text = comment
+//        }
     }
 }

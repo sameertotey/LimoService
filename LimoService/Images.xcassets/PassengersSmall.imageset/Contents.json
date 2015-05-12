@@ -3,20 +3,21 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "Passengers.png"
+      "filename" : "PassengersSmall.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "PassengersSmall@2x.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "PassengersSmall@3x.png"
     }
   ],
   "info" : {
     "version" : 1,
-    "author" : "xcode",
-    "template-rendering-intent" : "original"
+    "author" : "xcode"
   }
 }
