@@ -733,8 +733,13 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             if let location = toLocation["location"] as? PFGeoPoint {
                 println("\(NSDate()) \(__FILE__) \(__FUNCTION__) \(__LINE__)")
                 toPin.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                toPin.title = toLocation["name"] as? String
-                toPin.subtitle = toLocation["address"] as? String
+                if let toName = toLocation.name, toAddress = toLocation.address {
+                    toPin.title = toName
+                    toPin.subtitle = toAddress.fullAddressString(toName)
+                }
+
+//                toPin.title = toLocation["name"] as? String
+//                toPin.subtitle = toLocation["address"] as? String
                 mapView.addAnnotation(toPin)
 //                mapView.centerCoordinate = toPin.coordinate
             }
@@ -748,8 +753,12 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             if let location = fromLocation["location"] as? PFGeoPoint {
                 println("\(NSDate()) \(__FILE__) \(__FUNCTION__) \(__LINE__)")
                 fromPin.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                fromPin.title = fromLocation["name"] as? String
-                fromPin.subtitle = fromLocation["address"] as? String
+                if let fromName = fromLocation.name, fromAddress = fromLocation.address {
+                    fromPin.title = fromName
+                    fromPin.subtitle = fromAddress.fullAddressString(fromName)
+                }
+//                fromPin.title = fromLocation["name"] as? String
+//                fromPin.subtitle = fromLocation["address"] as? String
                 mapView.addAnnotation(fromPin)
                 mapView.centerCoordinate = fromPin.coordinate
 

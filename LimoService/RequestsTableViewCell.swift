@@ -21,8 +21,8 @@ class RequestsTableViewCell: PFTableViewCell {
         let fromLabel = UILabel(frame: CGRectZero)
 //        fromLabel.text = "From: "
 //        fromLabel.sizeToFit()
-        let fromImageView = UIImageView(image: UIImage(named: "GreenLocationPin"))
-        fromImageView.frame = CGRectMake(0, 0, 16, 24)
+        let fromImageView = UIImageView(image: UIImage(named: "FromPin"))
+//        fromImageView.frame = CGRectMake(0, 0, 16, 24)
 
         fromTextField.leftView = fromImageView
         fromTextField.leftViewMode = .Always
@@ -30,8 +30,8 @@ class RequestsTableViewCell: PFTableViewCell {
         let toLabel = UILabel(frame: CGRectZero)
 //        toLabel.text = "To: "
 //        toLabel.sizeToFit()
-        let toImageView = UIImageView(image: UIImage(named: "RedLocationPin"))
-        toImageView.frame = CGRectMake(0, 0, 16, 24)
+        let toImageView = UIImageView(image: UIImage(named: "ToPin"))
+//        toImageView.frame = CGRectMake(0, 0, 14, 20)
         
 
         toTextField.leftView = toImageView

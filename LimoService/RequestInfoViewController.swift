@@ -307,17 +307,7 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         line2.removeConstraints(line2.constraints())
         if let fromAddress = limoRequest?.fromAddress, fromName = limoRequest?.fromName {
             if !fromAddress.isEmpty {
-                var fullString = ""
-                if fromAddress.hasPrefix(fromName) {
-                    fullString = String(map(fromAddress.generate()) {
-                            $0 == "\n" ? ";" : $0
-                            })
-                } else {
-                    fullString = String(map((fromName + ";" + fromAddress).generate()) {
-                        $0 == "\n" ? ";" : $0
-                    })
-                }
-                label4.text = fullString
+                label4.text = fromAddress.fullAddressString(fromName)
                 line2.addSubview(fromImage)
                 line2.addSubview(label4)
                 line2.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[fromImage]-[label4]-|", options: nil, metrics: nil, views: viewsDict))
@@ -334,17 +324,7 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         line3.removeConstraints(line3.constraints())
         if let toAddress = limoRequest?.toAddress, toName = limoRequest?.toName {
             if !toAddress.isEmpty {
-                var fullString = ""
-                if toAddress.hasPrefix(toName) {
-                    fullString = String(map(toAddress.generate()) {
-                        $0 == "\n" ? ";" : $0
-                        })
-                } else {
-                    fullString = String(map((toName + ";" + toAddress).generate()) {
-                        $0 == "\n" ? ";" : $0
-                        })
-                }
-                label5.text = fullString
+                label5.text = toAddress.fullAddressString(toName)
                 line3.addSubview(toImage)
                 line3.addSubview(label5)
                 line3.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[toImage]-[label5]-|", options: nil, metrics: nil, views: viewsDict))
@@ -385,5 +365,21 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
 //        if let comment = limoRequest?.comment {
 //            labelLine5.text = comment
 //        }
+    }
+}
+
+extension String {
+    func fullAddressString(name: String) -> String {
+        let fullString: String
+        if self.hasPrefix(name) {
+            fullString = String(map(self.generate()) {
+                $0 == "\n" ? ";" : $0
+                })
+        } else {
+            fullString = String(map((name + ";" + self).generate()) {
+                $0 == "\n" ? ";" : $0
+                })
+        }
+        return fullString
     }
 }

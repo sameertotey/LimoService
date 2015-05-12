@@ -14,7 +14,6 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
     @IBOutlet weak var numBagsCell: NumStepperCellTableViewCell!
     @IBOutlet weak var preferredVehicleCell: SegmentControlTableViewCell!
     @IBOutlet weak var commentCell: TextFieldCellTableViewCell!
-    
   
     var listner: MapLocationSelectViewController!
     
@@ -76,19 +75,14 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
         
         // This is a destination search return
         if let sVC = sourceViewController as? LocationSelectionViewController {
-            if let presentingViewController = presentingViewController {
-                println("\(presentingViewController)")
-                
-            }
+//            if let presentingViewController = presentingViewController {
+//                println("\(presentingViewController)")
+//            }
             listner?.toLocation = sVC.selectedLocation
         }
         
         // This is a history search return
         if let sVC = sourceViewController as? RequestsTableViewController {
-            if let presentingViewController = presentingViewController {
-                println("\(presentingViewController)")
-                
-            }
             listner?.limoRequest = sVC.selectedRequest
         }
 
