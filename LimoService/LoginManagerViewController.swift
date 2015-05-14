@@ -45,13 +45,15 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
         let limoRequest = LimoRequest(withoutDataWithObjectId: limoreqId)
         let controller = UIAlertController(title: "Update Available", message: message, preferredStyle: .Alert)
         controller.addAction(UIAlertAction(title: "OK", style: .Default) {[unowned self](action) -> Void in
-            if self.navigationController?.visibleViewController is RequestDetailTableViewController {
-                let requestDetailVC = self.navigationController?.visibleViewController as! RequestDetailTableViewController
-                requestDetailVC.limoRequest = limoRequest
-            } else {
-                let requestDetailVC = RequestDetailTableViewController.forRequest(limoRequest)
-                self.navigationController!.pushViewController(requestDetailVC, animated: true)
-            }
+//            if self.navigationController?.visibleViewController is RequestDetailTableViewController {
+//                let requestDetailVC = self.navigationController?.visibleViewController as! RequestDetailTableViewController
+//                requestDetailVC.limoRequest = limoRequest
+//            } else {
+//                let requestDetailVC = RequestDetailTableViewController.forRequest(limoRequest)
+//                self.navigationController!.pushViewController(requestDetailVC, animated: true)
+//            }
+            self.limoRequest = limoRequest
+            self.navigationController?.popToViewController(self, animated: false)
             })
         controller.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { (action) -> Void in
             //            limoRequest.unpinInBackground()
