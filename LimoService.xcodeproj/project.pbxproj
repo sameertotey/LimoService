@@ -61,6 +61,8 @@
 		05722C161AD7408B0067B256 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05722C151AD7408B0067B256 /* FBSDKLoginKit.framework */; };
 		0587FBE81ADED8E9002F52B4 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0587FBE71ADED8E9002F52B4 /* ActionButton.swift */; };
 		058E3B141B00E1D100130A31 /* RequestInfoLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058E3B131B00E1D100130A31 /* RequestInfoLine.swift */; };
+		058E3B161B03E1E200130A31 /* ProviderMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058E3B151B03E1E200130A31 /* ProviderMenuViewController.swift */; };
+		058E3B181B03E25000130A31 /* CustomerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058E3B171B03E25000130A31 /* CustomerMenuViewController.swift */; };
 		05BC51F91AD48D0A00506461 /* RequestDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BC51F81AD48D0A00506461 /* RequestDetailTableViewController.swift */; };
 		05D873B31AE9B2CE00C79F67 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D873B21AE9B2CE00C79F67 /* MainMenuViewController.swift */; };
 		05D873B51AE9D45300C79F67 /* ModalPresentationTransitionVendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D873B41AE9D45300C79F67 /* ModalPresentationTransitionVendor.swift */; };
@@ -159,6 +161,8 @@
 		05722C151AD7408B0067B256 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		0587FBE71ADED8E9002F52B4 /* ActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		058E3B131B00E1D100130A31 /* RequestInfoLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestInfoLine.swift; sourceTree = "<group>"; };
+		058E3B151B03E1E200130A31 /* ProviderMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderMenuViewController.swift; sourceTree = "<group>"; };
+		058E3B171B03E25000130A31 /* CustomerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerMenuViewController.swift; sourceTree = "<group>"; };
 		05BC51F81AD48D0A00506461 /* RequestDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestDetailTableViewController.swift; sourceTree = "<group>"; };
 		05D873B21AE9B2CE00C79F67 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		05D873B41AE9D45300C79F67 /* ModalPresentationTransitionVendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalPresentationTransitionVendor.swift; path = ../ModalPresentationTransitionVendor.swift; sourceTree = "<group>"; };
@@ -343,6 +347,8 @@
 			isa = PBXGroup;
 			children = (
 				05D873B21AE9B2CE00C79F67 /* MainMenuViewController.swift */,
+				058E3B151B03E1E200130A31 /* ProviderMenuViewController.swift */,
+				058E3B171B03E25000130A31 /* CustomerMenuViewController.swift */,
 				05DE99751ACF46450039F0A7 /* Location */,
 				05DE99761ACF46520039F0A7 /* Requests */,
 				050DF30C1ACEED14003640DE /* Login */,
@@ -513,8 +519,10 @@
 				0542840A1ADCA3D300EC0D23 /* TextFieldCellTableViewCell.swift in Sources */,
 				056E62C31ACC8460003C6A7C /* PreviousLocationLookupViewController.swift in Sources */,
 				050DF30E1ACEED81003640DE /* LoginManagerViewController.swift in Sources */,
+				058E3B161B03E1E200130A31 /* ProviderMenuViewController.swift in Sources */,
 				05D873B51AE9D45300C79F67 /* ModalPresentationTransitionVendor.swift in Sources */,
 				05DE99781ACF47040039F0A7 /* RequestsTableViewController.swift in Sources */,
+				058E3B181B03E25000130A31 /* CustomerMenuViewController.swift in Sources */,
 				054284021ADC98D400EC0D23 /* Protocols.swift in Sources */,
 				054284001ADC959C00EC0D23 /* LocationSelectionTableViewCell.swift in Sources */,
 				0523BD811AB632D50056CFD8 /* LimoUserSignUpViewController.swift in Sources */,

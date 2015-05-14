@@ -22,6 +22,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     var userFetched = false
     var userRole = ""
+    var limoRequest: LimoRequest?
     
     var observer:  NSObjectProtocol?
     func listenToPushNotificatons() {
@@ -81,11 +82,16 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     
     func route() {
-        if let currentUser = PFUser.currentUser() {
-            self.currentUser = currentUser
+//        dismissViewControllerAnimated(false, completion: nil)
+        if limoRequest != nil {
+            self.performSegueWithIdentifier(UIStoryboardConstants.makeRequest, sender: limoRequest)
         } else {
-            println("did not find current user")
-            login()
+            if let currentUser = PFUser.currentUser() {
+                self.currentUser = currentUser
+            } else {
+                println("did not find current user")
+                login()
+            }
         }
     }
     
@@ -147,20 +153,18 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let identifier = segue.identifier {
             switch identifier {
-            case "Make a Request from Map":
+            case  UIStoryboardConstants.makeRequest:
                 if segue.destinationViewController is MapLocationSelectViewController {
                     let toVC = segue.destinationViewController as! MapLocationSelectViewController
                     toVC.currentUser = currentUser
                     toVC.userRole = userRole
+                    // this will display an existing request
+                    if sender is LimoRequest {
+                        toVC.limoRequest = sender as? LimoRequest
+                        limoRequest = nil                            // reset the limoRequest var
+                    }
                 }
-            case "Show Requests":
-                //                if segue.destinationViewController is UINavigationController {
-                //                    if let toVC = (segue.destinationViewController.viewControllers as? [UIViewController])?.first as? RequestsTableViewController {
-                ////                        toVC = segue.destinationViewController as! RequestsTableViewController
-                //                        toVC.currentUser = currentUser
-                //                        toVC.userRole = userRole
-                //                    }
-                //                  }
+            case UIStoryboardConstants.showRequests:
                 if let toVC = segue.destinationViewController as? RequestsTableViewController {
                         toVC.currentUser = currentUser
                         toVC.userRole = userRole
@@ -170,6 +174,23 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
                 break
             }
         }
+    }
+    
+    
+    // unwind from requestsTVC for providers
+    @IBAction func unwindToLoginManager(sender: UIStoryboardSegue)
+    {
+        let sourceViewController: AnyObject = sender.sourceViewController
+        // Pull any data from the view controller which initiated the unwind segue.
+        
+             // This is a history search return
+        if let sVC = sourceViewController as? RequestsTableViewController {
+            println(" got \(sVC.selectedRequest)")
+            limoRequest =  sVC.selectedRequest
+        } else {
+            dismissViewControllerAnimated(false, completion: nil)
+        }
+        
     }
 
     // unwind a logoff

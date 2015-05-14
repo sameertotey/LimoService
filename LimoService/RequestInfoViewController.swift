@@ -100,27 +100,16 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         savedDateButton = dateButton
         savedLabel1 = label1
         savedLabel2 = label2
-//        labelLine2.numberOfLines = 2
         savedLabel3 = label3
-//        labelLine3.numberOfLines = 2
         savedLabel4 = label4
         savedLabel5 = label5
         savedLabel6 = label6
-//        let fromLeftLabel = UILabel(frame: CGRectZero)
-//        fromLeftLabel.text = "From: "
-//        fromLeftLabel.sizeToFit()
-//        textField.leftView = fromLeftLabel
-        let fromImageView = UIImageView(image: UIImage(named: "GreenLocationPin"))
-        fromImageView.frame = CGRectMake(0, 0, 16, 24)
+        let fromImageView = UIImageView(image: UIImage(named: "FromPin"))
         textField.leftView = fromImageView
         
         textField.leftViewMode = .Always
         savedTextField = textField
         
-        fromImage.frame = CGRectMake(0,0, 16, 20)
-        toImage.frame = CGRectMake(0,0, 16, 20)
-        passengersImage.frame = CGRectMake(0,0, 16, 20)
-        bagsImage.frame = CGRectMake(0,0, 16, 20)
         savedFromImage = fromImage
         savedToImage = toImage
         savedDateImage = dateImage

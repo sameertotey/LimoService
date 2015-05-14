@@ -61,8 +61,13 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
         
         // If the searchRegion is nil, we are trying to set the destination, so show the menu
         if searchRegion == nil {
-            let homeBarButtonItem = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "goHome")
-            navigationItem.leftBarButtonItem = homeBarButtonItem
+            let menuImage = UIImage(named: "Menu")
+            let menuButton = UIButton.buttonWithType(.System) as! UIButton
+            menuButton.setImage(menuImage, forState: .Normal)
+            menuButton.frame = CGRectMake(0, 0, 24, 24)
+            menuButton.addTarget(self, action: "goHome", forControlEvents: .TouchUpInside)
+            let menuBarButtonItem = UIBarButtonItem(customView: menuButton)
+            navigationItem.leftBarButtonItem = menuBarButtonItem
         }
   
         let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController

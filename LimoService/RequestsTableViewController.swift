@@ -13,6 +13,7 @@ class RequestsTableViewController: PFQueryTableViewController {
     weak var currentUser: PFUser!
     var userRole = ""
     var selectedRequest: LimoRequest?
+        lazy var modalTransitioningDelegate = ModalPresentationTransitionVendor()
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -23,6 +24,8 @@ class RequestsTableViewController: PFQueryTableViewController {
         objectsPerPage = 20
         let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController
         currentUser = (rootVC?.viewControllers[0] as! LoginManagerViewController).currentUser
+        userRole = (rootVC?.viewControllers[0] as! LoginManagerViewController).userRole
+
     }
     
     private func alert(message : String) {
@@ -58,7 +61,12 @@ class RequestsTableViewController: PFQueryTableViewController {
     
     func goHome() {
         println("go home")
-        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        if userRole != "provider" {
+            presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        } else {
+            println("got to have the new workflow here")
+            performSegueWithIdentifier("Show Provider Menu", sender: nil)
+        }
     }
 
     deinit {
@@ -153,43 +161,23 @@ class RequestsTableViewController: PFQueryTableViewController {
          return cell
     }
     
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if let identifier = segue.identifier {
-//            switch identifier {
-//            case "Display Request Details":
-//                println("Display Request Details")
-//                if let toVC = segue.destinationViewController as? MapLocationSelectViewController {
-//                    if sender is UITableViewCell {
-//                        let index = tableView.indexPathForCell(sender as! UITableViewCell)
-//                        if let object =  objectAtIndexPath(index){
-//                            toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
-//                            toVC.currentUser = currentUser
-//                            toVC.userRole = userRole
-//                        } else {
-//                            alert("did not find the right object")
-//                        }
-//                    }
-//                }
-//            case "Show Request Detail":
-//                if segue.destinationViewController is UINavigationController {
-//                    if let toVC = segue.destinationViewController.viewControllers?.first as? RequestDetailTableViewController {
-//                        toVC.currentUser = currentUser
-//                        toVC.userRole = userRole
-//                        if sender is UITableViewCell {
-//                            let index = tableView.indexPathForCell(sender as! UITableViewCell)
-//                            if let object =  objectAtIndexPath(index){
-//                                toVC.limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
-//                            } else {
-//                                alert("did not find the right object")
-//                            }
-//                        }
-//                    }
-//                }
-//            default:
-//            break
-//            }
-//        }
-//    }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+             case "Show Provider Menu":
+                println("segue to provider menu")
+                if segue.destinationViewController is ProviderMenuViewController {
+                    let toVC = segue.destinationViewController as! ProviderMenuViewController
+                    toVC.listner = nil
+                    toVC.modalPresentationStyle = .Custom
+                    toVC.transitioningDelegate = self.modalTransitioningDelegate
+                }
+
+             default:
+            break
+            }
+        }
+    }
     
     
     // MARK: - TableViewDelegate

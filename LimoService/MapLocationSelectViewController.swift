@@ -41,6 +41,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     var address = ""
     // bar button items
     var saveBarButton: UIBarButtonItem!
+    var editBarButton: UIBarButtonItem!
     var doneBarButton: UIBarButtonItem!
     var menuBarButtonItem: UIBarButtonItem!
     lazy var modalTransitioningDelegate = ModalPresentationTransitionVendor()
@@ -207,8 +208,16 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         menuButton.setImage(menuImage, forState: .Normal)
         menuButton.frame = CGRectMake(0, 0, 24, 24)
         menuButton.addTarget(self, action: "mainMenu", forControlEvents: .TouchUpInside)
-        
         menuBarButtonItem = UIBarButtonItem(customView: menuButton)
+        
+        let pencilImage = UIImage(named: "Pencil")
+        let pencilButton = UIButton.buttonWithType(.System) as! UIButton
+        pencilButton.setImage(pencilImage, forState: .Normal)
+        pencilButton.frame = CGRectMake(0, 0, 24, 24)
+        pencilButton.addTarget(self, action: "editButton", forControlEvents: .TouchUpInside)
+        editBarButton = UIBarButtonItem(customView: menuButton)
+        
+        
         saveBarButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveButton")
         doneBarButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButton")
 //        navigationItem.rightBarButtonItem = menuBarButtonItem
@@ -216,19 +225,13 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         makeToFromPins()
     }
     
-    
-//    func navigationBarStatusUpdated(newStatus: Bool) {
-//        println("new notification status = \(newStatus)")
-//        updateOverlayedTableView()
-//    }
-//
-//    func updateOverlayedTableView() {
-//        println("update the tableview here")
-//    }
-//    
     func mainMenu() {
         println("main menu")
-        performSegueWithIdentifier("Show Main Menu", sender: nil)
+        if userRole == "provider" {
+            performSegueWithIdentifier(UIStoryboardConstants.showProviderMenu, sender: nil)
+        } else {
+            performSegueWithIdentifier(UIStoryboardConstants.showConsumerMenu, sender: nil)
+        }
     }
     
     func saveButton() {
@@ -239,6 +242,10 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     func doneButton() {
         println("done button")
         limoRequest = nil
+    }
+    
+    func editButton() {
+        println("edit button")
     }
     
     
@@ -344,6 +351,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     }
     
     func mapViewDidFinishRenderingMap(mapView: MKMapView!, fullyRendered: Bool) {
+        updateUI()
         mapView.scrollEnabled = true
 //        mapView.zoomEnabled = true
         mapView.rotateEnabled = true
@@ -733,7 +741,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             if let location = toLocation["location"] as? PFGeoPoint {
                 println("\(NSDate()) \(__FILE__) \(__FUNCTION__) \(__LINE__)")
                 toPin.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                if let toName = toLocation.name, toAddress = toLocation.address {
+                if let toName = toLocation["name"] as? String, toAddress = toLocation["address"] as? String {
                     toPin.title = toName
                     toPin.subtitle = toAddress.fullAddressString(toName)
                 }
@@ -753,7 +761,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             if let location = fromLocation["location"] as? PFGeoPoint {
                 println("\(NSDate()) \(__FILE__) \(__FUNCTION__) \(__LINE__)")
                 fromPin.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                if let fromName = fromLocation.name, fromAddress = fromLocation.address {
+                if let fromName = fromLocation["name"] as? String, fromAddress = fromLocation["address"] as? String {
                     fromPin.title = fromName
                     fromPin.subtitle = fromAddress.fullAddressString(fromName)
                 }
@@ -785,21 +793,29 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         println("prepare for segue")
         if let identifier = segue.identifier {
             switch identifier {
-            case "Show Location Search":
+            case UIStoryboardConstants.showLocationSearch:
                 if segue.destinationViewController is LocationSelectionViewController {
                     let toVC = segue.destinationViewController as! LocationSelectionViewController
                     toVC.searchRegion = mapView.region
                     toVC.searchText = locationTitle
                 }
-            case "Show Main Menu":
-                println("segue to main menu")
-                if segue.destinationViewController is MainMenuViewController {
-                    let toVC = segue.destinationViewController as! MainMenuViewController
+            case UIStoryboardConstants.showConsumerMenu:
+                println("segue to consumer menu")
+                if segue.destinationViewController is CustomerMenuViewController {
+                    let toVC = segue.destinationViewController as! CustomerMenuViewController
                     toVC.listner = self
                     toVC.modalPresentationStyle = .Custom
                     toVC.transitioningDelegate = self.modalTransitioningDelegate
                 }
-            case "Request Info":
+            case UIStoryboardConstants.showProviderMenu:
+                println("segue to provider menu")
+                if segue.destinationViewController is ProviderMenuViewController {
+                    let toVC = segue.destinationViewController as! ProviderMenuViewController
+                    toVC.listner = self
+                    toVC.modalPresentationStyle = .Custom
+                    toVC.transitioningDelegate = self.modalTransitioningDelegate
+                }
+            case UIStoryboardConstants.requestInfo:
                 if segue.destinationViewController is RequestInfoViewController {
                     requestInfo = segue.destinationViewController as! RequestInfoViewController
                     requestInfo.delegate = self
@@ -819,4 +835,12 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             fromLocation = sVC.selectedLocation
         }
     }
+    
+    private struct UIStoryboardConstants {
+        static let showLocationSearch = "Show Location Search"
+        static let showConsumerMenu   = "Show Consumer Menu"
+        static let showProviderMenu   = "Show Provider Menu"
+        static let requestInfo        = "Request Info"
+    }
+
 }

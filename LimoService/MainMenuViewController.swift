@@ -15,28 +15,12 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
     @IBOutlet weak var preferredVehicleCell: SegmentControlTableViewCell!
     @IBOutlet weak var commentCell: TextFieldCellTableViewCell!
   
-    var listner: MapLocationSelectViewController!
+//    var listner: MapLocationSelectViewController!
     
-    var comments = "" {
-        didSet {
-            listner?.specialComments = comments
-        }
-    }
-    var numBags = 0 {
-        didSet {
-            listner?.numBags = numBags
-         }
-    }
-    var numPassengers = 1 {
-        didSet {
-            listner?.numPassengers = numPassengers
-        }
-    }
-    var preferredVehicle = "Limo" {
-        didSet {
-            listner?.preferredVehicle = preferredVehicle
-        }
-    }
+    var comments = ""
+    var numBags = 0
+    var numPassengers = 1
+    var preferredVehicle = "Limo"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,45 +33,12 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
         preferredVehicleCell.delegate = self
         
         commentCell.delegate = self
-
-    }
-
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        switch indexPath.row {
-        case 0: goHome()
-        case 1: performSegueWithIdentifier("Destination", sender: nil)
-        case 2: performSegueWithIdentifier("History", sender: nil)
-        case 3: performSegueWithIdentifier("Profile", sender: nil)
-        case 4: goHome()
-        case 5: goHome()
-        default: break
-        }
     }
   
     func goHome() {
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    @IBAction func unwindToHome(sender: UIStoryboardSegue)
-    {
-        let sourceViewController: AnyObject = sender.sourceViewController
-        // Pull any data from the view controller which initiated the unwind segue.
-        
-        // This is a destination search return
-        if let sVC = sourceViewController as? LocationSelectionViewController {
-//            if let presentingViewController = presentingViewController {
-//                println("\(presentingViewController)")
-//            }
-            listner?.toLocation = sVC.selectedLocation
-        }
-        
-        // This is a history search return
-        if let sVC = sourceViewController as? RequestsTableViewController {
-            listner?.limoRequest = sVC.selectedRequest
-        }
-
-        goHome()
-    }
     
     // MARK: - NumSteppersCellDelegate
     
@@ -118,8 +69,7 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
             comments = comment
         }
     }
-
-
+    // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         println("prepare for segue")
         if let identifier = segue.identifier {
@@ -133,9 +83,7 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
                     }
                     toNavVC.modalPresentationStyle = .Custom
                     toNavVC.transitioningDelegate = self.transitioningDelegate
-
                 }
-                
             case "History":
                 if let toNavVC = segue.destinationViewController as? UINavigationController {
                     if let toVC = (segue.destinationViewController.viewControllers as? [UIViewController])?.first as? RequestsTableViewController {
@@ -144,7 +92,6 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
                     }
                     toNavVC.modalPresentationStyle = .Custom
                     toNavVC.transitioningDelegate = self.transitioningDelegate
-                    
                 }
             case "Destination":
                 if let toNavVC = segue.destinationViewController as? UINavigationController {
@@ -156,6 +103,7 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
             }
         }
     }
+    
 
-
+ 
 }

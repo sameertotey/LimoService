@@ -125,7 +125,7 @@ class FromMainMenuTransitionAnimator: BaseTransitionAnimator {
         let otherView = otherVC.view
         
         let appearedFrame = transitionContext.finalFrameForViewController(animatingVC)
-        // Our dismissed frame is the same as our appeared frame, but off the left edge of the container
+        // Our dismissed frame is the same as our appeared frame, but off the right edge of the container
         var dismissedFrame = appearedFrame
         dismissedFrame.origin.x +=  dismissedFrame.size.width
         
