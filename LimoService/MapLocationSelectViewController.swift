@@ -294,6 +294,9 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         performSegueWithIdentifier("Show Location Search", sender: nil)
     }
 
+    func displayViewTapped() {
+        performSegueWithIdentifier("Show Request Detail", sender: nil)
+    }
     // MARK: - MKMapViewDelegate
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
@@ -821,6 +824,11 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                     requestInfo.delegate = self
                     requestInfo.limoRequest = limoRequest
                 }
+            case UIStoryboardConstants.showRequestDetail:
+                if segue.destinationViewController is RequestDetailTableViewController {
+                    let toVC = segue.destinationViewController as! RequestDetailTableViewController
+                    toVC.limoRequest = limoRequest
+                }
             default:
                 break
             }
@@ -841,6 +849,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         static let showConsumerMenu   = "Show Consumer Menu"
         static let showProviderMenu   = "Show Provider Menu"
         static let requestInfo        = "Request Info"
+        static let showRequestDetail  = "Show Request Detail"
     }
 
 }

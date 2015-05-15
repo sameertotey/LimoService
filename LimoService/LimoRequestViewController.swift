@@ -30,6 +30,10 @@ class LimoRequestViewController: UITableViewController, LocationCellDelegate, Te
         tableView.rowHeight = UITableViewAutomaticDimension
         configureLookUpSelector()
         configureCells()
+        let rootVC = UIApplication.sharedApplication().keyWindow?.rootViewController as? UINavigationController
+        currentUser = (rootVC?.viewControllers[0] as! LoginManagerViewController).currentUser
+        userRole = (rootVC?.viewControllers[0] as! LoginManagerViewController).userRole
+
         println("loading \(__FILE__)")
     }
     

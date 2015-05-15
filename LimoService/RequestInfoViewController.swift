@@ -21,16 +21,18 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var label5: UILabel!
     @IBOutlet weak var label6: UILabel!
     
-    @IBOutlet weak var line1: RequestInfoLine!
-    @IBOutlet weak var line2: RequestInfoLine!
-    @IBOutlet weak var line3: RequestInfoLine!
-    @IBOutlet weak var line4: RequestInfoLine!
+    @IBOutlet weak var line1: UIView!
+    @IBOutlet weak var line2: UIView!
+    @IBOutlet weak var line3: UIView!
+    @IBOutlet weak var line4: UIView!
     
     @IBOutlet weak var fromImage: UIImageView!
     @IBOutlet weak var toImage: UIImageView!
     @IBOutlet weak var passengersImage: UIImageView!
     @IBOutlet weak var bagsImage: UIImageView!
     @IBOutlet weak var dateImage: UIImageView!
+    
+    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     
     var savedLabel1: UILabel!
     var savedLabel2: UILabel!
@@ -39,10 +41,10 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     var savedLabel5: UILabel!
     var savedLabel6: UILabel!
     
-    var savedLine1: RequestInfoLine!
-    var savedLine2: RequestInfoLine!
-    var savedLine3: RequestInfoLine!
-    var savedLine4: RequestInfoLine!
+    var savedLine1: UIView!
+    var savedLine2: UIView!
+    var savedLine3: UIView!
+    var savedLine4: UIView!
     
     var savedFromImage: UIImageView!
     var savedToImage: UIImageView!
@@ -207,9 +209,11 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
             datePickerHidden = !datePickerHidden
             datePickerHidden = true
         }
+        tapGestureRecognizer.enabled = false
     }
     
     func placeDisplayView() {
+        tapGestureRecognizer.enabled = true
         var viewsDict = Dictionary <String, UIView>()
         view.subviews.map({ $0.removeFromSuperview() })
         label1.text = nil
@@ -341,8 +345,6 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
 
         }
 
-
-
 //        if let toAddress = limoRequest?.toAddress {
 //            if !toAddress.isEmpty {
 //                labelLine3.text = "To: \(toAddress) "
@@ -355,6 +357,13 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
 //            labelLine5.text = comment
 //        }
     }
+    
+    
+    @IBAction func viewTapped(sender: AnyObject) {
+        println("view was tapped.......")
+        delegate?.displayViewTapped()
+    }
+    
 }
 
 extension String {

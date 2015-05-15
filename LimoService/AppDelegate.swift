@@ -109,7 +109,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            let types = UIRemoteNotificationType.Badge | UIRemoteNotificationType.Alert | UIRemoteNotificationType.Sound
 //            application.registerForRemoteNotificationTypes(types)
         }
-            
+        
+        // we want to clean up the local datastore when we start
+        PFObject.unpinAllObjectsInBackgroundWithBlock { (success, error)  in
+            if success {
+                println("....finished unpinning all the objects....")
+            }
+        }
+        
         return true
     }
     

@@ -42,7 +42,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     
     func handlePushNotificaton(message: String, limoreqId: String) {
-        let limoRequest = LimoRequest(withoutDataWithObjectId: limoreqId)
+
         let controller = UIAlertController(title: "Update Available", message: message, preferredStyle: .Alert)
         controller.addAction(UIAlertAction(title: "OK", style: .Default) {[unowned self](action) -> Void in
 //            if self.navigationController?.visibleViewController is RequestDetailTableViewController {
@@ -52,7 +52,7 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
 //                let requestDetailVC = RequestDetailTableViewController.forRequest(limoRequest)
 //                self.navigationController!.pushViewController(requestDetailVC, animated: true)
 //            }
-            self.limoRequest = limoRequest
+            self.limoRequest = LimoRequest(withoutDataWithObjectId: limoreqId)
             self.navigationController?.popToViewController(self, animated: false)
             })
         controller.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { (action) -> Void in
@@ -84,7 +84,6 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     
     func route() {
-//        dismissViewControllerAnimated(false, completion: nil)
         if limoRequest != nil {
             self.performSegueWithIdentifier(UIStoryboardConstants.makeRequest, sender: limoRequest)
         } else {
@@ -179,21 +178,21 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
     }
     
     
-    // unwind from requestsTVC for providers
-    @IBAction func unwindToLoginManager(sender: UIStoryboardSegue)
-    {
-        let sourceViewController: AnyObject = sender.sourceViewController
-        // Pull any data from the view controller which initiated the unwind segue.
-        
-             // This is a history search return
-        if let sVC = sourceViewController as? RequestsTableViewController {
-            println(" got \(sVC.selectedRequest)")
-            limoRequest =  sVC.selectedRequest
-        } else {
-            dismissViewControllerAnimated(false, completion: nil)
-        }
-        
-    }
+//    // unwind from requestsTVC for providers
+//    @IBAction func unwindToLoginManager(sender: UIStoryboardSegue)
+//    {
+//        let sourceViewController: AnyObject = sender.sourceViewController
+//        // Pull any data from the view controller which initiated the unwind segue.
+//        
+//             // This is a history search return
+//        if let sVC = sourceViewController as? RequestsTableViewController {
+//            println(" got \(sVC.selectedRequest)")
+//            limoRequest =  sVC.selectedRequest
+//        } else {
+//            dismissViewControllerAnimated(false, completion: nil)
+//        }
+//        
+//    }
 
     // unwind a logoff
     @IBAction func unwindFromLogoff(sender: UIStoryboardSegue)

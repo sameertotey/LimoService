@@ -40,4 +40,5 @@ protocol RequestInfoDelegate: class {
     func dateUpdated(newDate: NSDate,  newDateString: String) -> Void
     func neededHeight(height: CGFloat) -> Void
     func textFieldActivated() -> Void
+    func displayViewTapped() 
 }

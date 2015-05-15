@@ -41,16 +41,11 @@ class ProviderMenuViewController: MainMenuViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch indexPath.row {
         case 0: goHome()
-        case 1: performSegueWithIdentifier("Destination", sender: nil)
-        case 2: performSegueWithIdentifier("Profile", sender: nil)
+        case 1: performSegueWithIdentifier("Profile", sender: nil)
+        case 2: goHome()
         case 3: goHome()
-        case 4: goHome()
         default: break
         }
-    }
-    
-    override func goHome() {
-        performSegueWithIdentifier("Go Home", sender: nil)
     }
     
 
@@ -90,25 +85,5 @@ class ProviderMenuViewController: MainMenuViewController {
 //        }
 //    }
     
-    
-    @IBAction func unwindToHome(sender: UIStoryboardSegue)
-    {
-        let sourceViewController: AnyObject = sender.sourceViewController
-        // Pull any data from the view controller which initiated the unwind segue.
-        
-        // This is a destination search return
-        if let sVC = sourceViewController as? LocationSelectionViewController {
-            //            if let presentingViewController = presentingViewController {
-            //                println("\(presentingViewController)")
-            //            }
-            listner?.toLocation = sVC.selectedLocation
-        }
-        
-        // This is a history search return
-        if let sVC = sourceViewController as? RequestsTableViewController {
-            listner?.limoRequest = sVC.selectedRequest
-        }
-        goHome()
-    }
     
 }

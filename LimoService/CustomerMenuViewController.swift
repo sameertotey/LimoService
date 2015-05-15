@@ -36,7 +36,15 @@ class CustomerMenuViewController: MainMenuViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        numPassengersCell.configureSteppers(Double(numPassengers), minimum: 0, maximum: 10, step: 1)
+        numPassengersCell.delegate = self
+        numBagsCell.configureSteppers(Double(numBags), minimum: 0, maximum: 10, step: 1)
+        numBagsCell.delegate = self
+        
+        preferredVehicleCell.configureSegmentedControl()
+        preferredVehicleCell.delegate = self
+        
+        commentCell.delegate = self
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -101,10 +109,10 @@ class CustomerMenuViewController: MainMenuViewController {
             listner?.toLocation = sVC.selectedLocation
         }
         
-        // This is a history search return
-        if let sVC = sourceViewController as? RequestsTableViewController {
-            listner?.limoRequest = sVC.selectedRequest
-        }
+//        // This is a history search return
+//        if let sVC = sourceViewController as? RequestsTableViewController {
+//            listner?.limoRequest = sVC.selectedRequest
+//        }
         goHome()
     }
 

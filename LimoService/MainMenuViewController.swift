@@ -24,16 +24,7 @@ class MainMenuViewController: UITableViewController, NumStepperCellDelegate, Seg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        numPassengersCell.configureSteppers(Double(numPassengers), minimum: 0, maximum: 10, step: 1)
-        numPassengersCell.delegate = self
-        numBagsCell.configureSteppers(Double(numBags), minimum: 0, maximum: 10, step: 1)
-        numBagsCell.delegate = self
-        
-        preferredVehicleCell.configureSegmentedControl()
-        preferredVehicleCell.delegate = self
-        
-        commentCell.delegate = self
-    }
+     }
   
     func goHome() {
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)

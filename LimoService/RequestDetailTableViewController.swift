@@ -56,20 +56,14 @@ class RequestDetailTableViewController: LimoRequestViewController {
 
     // MARK: Factory Methods to return the parent navigation controller
     
-    class func forRequest(limorequest: LimoRequest) -> RequestDetailTableViewController {
-        let storyboard = UIStoryboard(name: StoryboardConstants.storyboardName, bundle: nil)
-        let navController = storyboard.instantiateViewControllerWithIdentifier(StoryboardConstants.viewControllerIdentifier) as! UINavigationController
-        let viewController = navController.viewControllers?.first as! RequestDetailTableViewController
-        viewController.limoRequest = limorequest
-        return viewController
-    }
-    
-
-    
-//    override func viewDidAppear(animated: Bool) {
-//        super.viewDidAppear(animated)
-//        navigationItem.rightBarButtonItem = nil
+//    class func forRequest(limorequest: LimoRequest) -> RequestDetailTableViewController {
+//        let storyboard = UIStoryboard(name: StoryboardConstants.storyboardName, bundle: nil)
+//        let navController = storyboard.instantiateViewControllerWithIdentifier(StoryboardConstants.viewControllerIdentifier) as! UINavigationController
+//        let viewController = navController.viewControllers?.first as! RequestDetailTableViewController
+//        viewController.limoRequest = limorequest
+//        return viewController
 //    }
+    
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return false

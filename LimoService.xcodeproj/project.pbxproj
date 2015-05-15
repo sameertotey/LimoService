@@ -60,7 +60,6 @@
 		05722C141AD740230067B256 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05722C131AD740230067B256 /* FacebookSDK.framework */; };
 		05722C161AD7408B0067B256 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05722C151AD7408B0067B256 /* FBSDKLoginKit.framework */; };
 		0587FBE81ADED8E9002F52B4 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0587FBE71ADED8E9002F52B4 /* ActionButton.swift */; };
-		058E3B141B00E1D100130A31 /* RequestInfoLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058E3B131B00E1D100130A31 /* RequestInfoLine.swift */; };
 		058E3B161B03E1E200130A31 /* ProviderMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058E3B151B03E1E200130A31 /* ProviderMenuViewController.swift */; };
 		058E3B181B03E25000130A31 /* CustomerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058E3B171B03E25000130A31 /* CustomerMenuViewController.swift */; };
 		05BC51F91AD48D0A00506461 /* RequestDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BC51F81AD48D0A00506461 /* RequestDetailTableViewController.swift */; };
@@ -160,7 +159,6 @@
 		05722C131AD740230067B256 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		05722C151AD7408B0067B256 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		0587FBE71ADED8E9002F52B4 /* ActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
-		058E3B131B00E1D100130A31 /* RequestInfoLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestInfoLine.swift; sourceTree = "<group>"; };
 		058E3B151B03E1E200130A31 /* ProviderMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderMenuViewController.swift; sourceTree = "<group>"; };
 		058E3B171B03E25000130A31 /* CustomerMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerMenuViewController.swift; sourceTree = "<group>"; };
 		05BC51F81AD48D0A00506461 /* RequestDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -373,7 +371,6 @@
 				050DF30A1ACCFE96003640DE /* LocationLookupTableViewCell.swift */,
 				05DE99791ACF48D90039F0A7 /* RequestsTableViewCell.swift */,
 				0543AA8F1AE56D18006ADC27 /* LocationMapPinView.swift */,
-				058E3B131B00E1D100130A31 /* RequestInfoLine.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -555,7 +552,6 @@
 				05649C0D1AB4826E007566C3 /* UserProfileTableViewController.swift in Sources */,
 				05649BB81AB0EFCC007566C3 /* AppDelegate.swift in Sources */,
 				05649C0B1AB47E31007566C3 /* LimoRequestViewController.swift in Sources */,
-				058E3B141B00E1D100130A31 /* RequestInfoLine.swift in Sources */,
 				0587FBE81ADED8E9002F52B4 /* ActionButton.swift in Sources */,
 				05D873B71AE9D46600C79F67 /* ModalTransitionAnimator.swift in Sources */,
 			);

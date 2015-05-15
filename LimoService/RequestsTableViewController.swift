@@ -13,7 +13,13 @@ class RequestsTableViewController: PFQueryTableViewController {
     weak var currentUser: PFUser!
     var userRole = ""
     var selectedRequest: LimoRequest?
-        lazy var modalTransitioningDelegate = ModalPresentationTransitionVendor()
+    lazy var modalTransitioningDelegate = ModalPresentationTransitionVendor()
+    
+    private struct UIStoryboardConstants {
+        static let showRequestDetail = "Show Request Detail"
+        static let showProviderMenu  = "Show Provider Menu"
+    }
+
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -65,9 +71,34 @@ class RequestsTableViewController: PFQueryTableViewController {
             presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
         } else {
             println("got to have the new workflow here")
-            performSegueWithIdentifier("Show Provider Menu", sender: nil)
+            performSegueWithIdentifier(UIStoryboardConstants.showProviderMenu, sender: nil)
         }
     }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+            case UIStoryboardConstants.showProviderMenu:
+                println("segue to provider menu")
+                if segue.destinationViewController is ProviderMenuViewController {
+                    let toVC = segue.destinationViewController as! ProviderMenuViewController
+                    toVC.listner = nil
+                    toVC.modalPresentationStyle = .Custom
+                    toVC.transitioningDelegate = self.modalTransitioningDelegate
+                }
+            case UIStoryboardConstants.showRequestDetail:
+                println("show request details")
+                if segue.destinationViewController is RequestDetailTableViewController {
+                    let toVC = segue.destinationViewController as! RequestDetailTableViewController
+                    toVC.limoRequest = selectedRequest
+                }
+            default:
+                break
+            }
+        }
+    }
+
 
     deinit {
         println("deallocing \(__FILE__)")
@@ -87,9 +118,6 @@ class RequestsTableViewController: PFQueryTableViewController {
         setToolbarItems([profileBarButtonItem], animated: false)
     }
 
-    func showProfile() {
-        performSegueWithIdentifier("Show Provider Profile", sender: nil)
-    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -161,31 +189,24 @@ class RequestsTableViewController: PFQueryTableViewController {
          return cell
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let identifier = segue.identifier {
-            switch identifier {
-             case "Show Provider Menu":
-                println("segue to provider menu")
-                if segue.destinationViewController is ProviderMenuViewController {
-                    let toVC = segue.destinationViewController as! ProviderMenuViewController
-                    toVC.listner = nil
-                    toVC.modalPresentationStyle = .Custom
-                    toVC.transitioningDelegate = self.modalTransitioningDelegate
-                }
-
-             default:
-            break
-            }
-        }
-    }
-    
     
     // MARK: - TableViewDelegate
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        selectedRequest = objectAtIndexPath(indexPath) as? LimoRequest
-        if selectedRequest != nil {
-            performSegueWithIdentifier("go Home", sender: nil)
+        if let object = objectAtIndexPath(indexPath) {
+            let limoRequest = LimoRequest(withoutDataWithObjectId: object.objectId)
+            limoRequest.fetchInBackgroundWithBlock { (object, error) in
+                if error != nil {
+                    println("limoreq fetch failed with \(error)")
+                } else  {
+                    limoRequest.pinInBackgroundWithBlock() { [unowned self] (succeeded, error) in
+                        if succeeded {
+                            self.selectedRequest = limoRequest
+                            self.performSegueWithIdentifier(UIStoryboardConstants.showRequestDetail, sender: nil)
+                        }
+                    }
+                }
+            }
         } else {
             // if we did not get an limoRequest, it must have been the "load more" cell that was selected
             loadNextPage()
