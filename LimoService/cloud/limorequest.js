@@ -1,3 +1,23 @@
+function sendPush(installationQuery, message, limoreq) {
+  Parse.Push.send({
+    where: installationQuery,
+    data: {
+    alert:  message,
+    limoreq: limoreq
+    }
+  }, {
+    success: function() {
+      // Push was successful
+      console.log("Push was sent successfully")
+    },
+    error: function(error) {
+      // Handle error
+          console.error("Got an error in LimoRequest afterSave " + error.code + " : " + error.message)
+    }
+  })
+}
+
+
 Parse.Cloud.afterSave("LimoRequest", function(request) {
   Parse.Cloud.useMasterKey();
 
@@ -35,102 +55,70 @@ Parse.Cloud.afterSave("LimoRequest", function(request) {
   //   request.object.save();
   // }
 
-  if (request.object.get("status") == "New") {
+  var status = request.object.get("status")
+  if (status == "New") {
+    console.log("new request " + request.object.id)
     var installationQuery = new Parse.Query(Parse.Installation)
     var userQuery = new Parse.Query(Parse.User)
     userQuery.equalTo("role", "provider")
     installationQuery.matchesQuery("user", userQuery)
-    installationQuery.find({
-      success: function(installations) {
-        // got all the installations
-        console.log(installations)
-        console.log("There are some installations..." + installations)
-        console.log(installations.length)
-      },
-      error: function(error) {
-        // error is an instance of Parse.Error.
-      }
-    })
-    var status = request.object.get("status")
+
+    // var status = request.object.get("status")
     var whenString = request.object.get("whenString")
-    var when = request.object.get("when")
+    // var when = request.object.get("when")
     var fromAddress = request.object.get("fromAddress")
     var toAddress = request.object.get("toAddress")
 
-    console.log("Status is " + status)
-    console.log("When is " + when)
-    console.log("When String is " + whenString)
-    console.log("From  is " + fromAddress)
+    // console.log("Status is " + status)
+    // console.log("When is " + when)
+    // console.log("When String is " + whenString)
+    // console.log("From  is " + fromAddress)
 
-    var channel = "C" + request.object.id
-    console.log (channel)
-    Parse.Push.send({
-      where: installationQuery,
-      data: {
-        alert:  " From: " + fromAddress  + " At: " + whenString + " To: " + toAddress,
-        limoreq: request.object.id
-        }
-      }, {
-        success: function() {
-        // Push was successful
-        },
-        error: function(error) {
-        // Handle error
-          console.error("Got an error in LimoRequest afterSave " + error.code + " : " + error.message)
-      }
-    })
+    // var channel = "C" + request.object.id
+    // console.log (channel)
+    sendPush(installationQuery, " From: " + fromAddress  + " At: " + whenString + " To: " + toAddress, request.object.id)
+  // })
 
  } else {
-    console.log("updating an existing request")
+    console.log("updating an existing request" + request.object.id)
     var installationQuery = new Parse.Query(Parse.Installation);
     var userQuery = new Parse.Query(Parse.User);
     var owner = new Parse.User();
+    var message
     owner = request.object.get("owner");
     var assignedTo = new Parse.User();
-    assignedTo = request.object.get("assignedTo");
-    var users = [owner, assignedTo];
-    userQuery.containedIn("objectId", [owner.id, assignedTo.id]);
-    installationQuery.matchesQuery("user", userQuery);
-    installationQuery.find({
-      success: function(installations) {
-        // got all the installations
-        console.log(installations)
-        console.log("There are some installations for existing requests..." + installations)
-        console.log(installations.length)
-      },
-      error: function(error) {
-        // error is an instance of Parse.Error.
-        console.error("Got an error in LimoRequest afterSave " + error.code + " : " + error.message)
-      }
-    })
-    var status = request.object.get("status")
-    var whenString = request.object.get("whenString")
-    var when = request.object.get("when")
-    var fromAddress = request.object.get("fromAddress")
-    var toAddress = request.object.get("toAddress")
-    console.log("Status is " + status)
-
-    var channel = "C" + request.object.id
-    console.log (channel)
-    if (status === "Accepted") {
-       Parse.Push.send({
-        where: installationQuery,
-        data: {
-        alert:  " Request has been Accepted! by " + assignedTo.id,
-        limoreq: request.object.id
-        }
-      }, {
-        success: function() {
-          // Push was successful
+    if (request.object.has("assignedTo")) {
+      assignedTo = request.object.get("assignedTo");
+      console.log(assignedTo)
+      var assignedToQuery = new Parse.Query(Parse.User)
+      assignedToQuery.get(assignedTo.id,{
+        success: function(assignedToUser) {
+          userQuery.containedIn("objectId", [owner.id, assignedTo.id]);
+          userQuery.notContainedIn("objectId", [request.user.id])
+          installationQuery.matchesQuery("user", userQuery);
+          if (status === "Accepted") {
+            message = " Request Accepted By " + assignedToUser.get("username") + " has been updated! "
+          } else {
+            message = " Request has been updated! "
+          }
+          sendPush(installationQuery, message , request.object.id);
         },
-        error: function(error) {
-          // Handle error
-              console.error("Got an error in LimoRequest afterSave " + error.code + " : " + error.message)
+        error: function(assignedToUser, error) {
+          console.log (error)
         }
-      })
+      });
+      // var users = [owner, assignedTo];
+    }  else {
+      userQuery.containedIn("objectId", [owner.id]);
+      userQuery.notContainedIn("objectId", [request.user.id])
+      installationQuery.matchesQuery("user", userQuery);
+      if (status === "Accepted") {
+        message = " Request Accepted By " + assignedToUser.get("username") + " has been updated! "
+      } else {
+        message = " Request has been updated! "
+      }
+      sendPush(installationQuery, message , request.object.id);
     }
  }
-
-
 });
 

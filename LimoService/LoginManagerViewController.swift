@@ -52,8 +52,9 @@ class LoginManagerViewController: UIViewController, PFLogInViewControllerDelegat
 //                let requestDetailVC = RequestDetailTableViewController.forRequest(limoRequest)
 //                self.navigationController!.pushViewController(requestDetailVC, animated: true)
 //            }
-            self.limoRequest = LimoRequest(withoutDataWithObjectId: limoreqId)
-            self.navigationController?.popToViewController(self, animated: false)
+//            self.limoRequest = LimoRequest(withoutDataWithObjectId: limoreqId)
+//            self.navigationController?.popToViewController(self, animated: false)
+            println("need to handle the push notification appropriately")
             })
         controller.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { (action) -> Void in
             //            limoRequest.unpinInBackground()

@@ -2151,13 +2151,13 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="qEb-9c-d4S"/>
-        <segue reference="Szq-P6-iLd"/>
         <segue reference="RGs-Ip-oXj"/>
-        <segue reference="inP-6M-VA2"/>
-        <segue reference="Cfm-Gi-stK"/>
+        <segue reference="Szq-P6-iLd"/>
         <segue reference="C1p-kS-mxF"/>
         <segue reference="vp8-9j-4oD"/>
-        <segue reference="F40-CI-kRq"/>
+        <segue reference="Kbh-Dy-4tz"/>
         <segue reference="MGD-YQ-eV5"/>
+        <segue reference="F40-CI-kRq"/>
+        <segue reference="Cfm-Gi-stK"/>
     </inferredMetricsTieBreakers>
 </document>
