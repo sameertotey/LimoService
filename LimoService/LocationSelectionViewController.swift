@@ -150,6 +150,9 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
                 NSLog(__FUNCTION__)
     }
     
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        NSLog(__FUNCTION__)
+    }
     
     // MARK: UISearchResultsUpdating
     
@@ -164,7 +167,10 @@ class LocationSelectionViewController: UIViewController, UISearchBarDelegate, UI
         let searchItems = strippedString.componentsSeparatedByString(" ") as [String]
         
         // cancel previous in flight search
-        localSearch?.cancel()
+        if let lSearch = localSearch where lSearch.searching {
+            lSearch.cancel()
+            println("cancelling old search")
+        }
         
         if count(strippedString) >= 3 {
             // add minimal delay to search to avoid searching for something outdated

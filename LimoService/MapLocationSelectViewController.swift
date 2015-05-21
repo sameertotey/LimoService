@@ -32,11 +32,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     static var geoCoder: CLGeocoder = {
         return CLGeocoder()
         }()
-    var locationTitle = "" {
-        didSet {
-            requestInfo.textField.text = locationTitle
-        }
-    }
+    var locationTitle = ""
     var locationSubtitle = ""
     var address = ""
     // bar button items
@@ -100,6 +96,8 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
          }
     }
     
+    var locationFieldActive: ActiveField?
+    
     var limoRequest: LimoRequest? {
         didSet {
             fromLocation = nil
@@ -108,7 +106,6 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             updateUI()
          }
     }
-    
     @IBOutlet var pinchGestureRecognizer: UIPinchGestureRecognizer!
     @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
@@ -233,22 +230,17 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             performSegueWithIdentifier(UIStoryboardConstants.showConsumerMenu, sender: nil)
         }
     }
-    
     func saveButton() {
         println("save button")
         requestInfo.datePickerHidden = true
     }
-
     func doneButton() {
         println("done button")
         limoRequest = nil
     }
-    
     func editButton() {
         println("edit button")
     }
-    
-    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         updateUI()
@@ -257,7 +249,6 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         super.viewDidDisappear(animated)
         mapView.showsUserLocation = false
     }
-    
     override func prefersStatusBarHidden() -> Bool {
         return false
     }
@@ -267,15 +258,12 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         locationManager?.delegate = nil
         locationManager = nil
     }
-    
     override func shouldAutorotate() -> Bool {
         return false
     }
-    
     override func supportedInterfaceOrientations() -> Int {
         return Int(UIInterfaceOrientationMask.Portrait.rawValue)
     }
-    
     // MARK: - RequestInfoDelegate
     func dateUpdated(newDate: NSDate, newDateString: String) -> Void {
         requestInfoDate = newDate
@@ -290,12 +278,13 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         }
     }
     
-    func textFieldActivated() {
-        performSegueWithIdentifier("Show Location Search", sender: nil)
+    func textFieldActivated(field: ActiveField) {
+        locationFieldActive = field
+        performSegueWithIdentifier(UIStoryboardConstants.showLocationSearch, sender: nil)
     }
 
     func displayViewTapped() {
-        performSegueWithIdentifier("Show Request Detail", sender: nil)
+        performSegueWithIdentifier(UIStoryboardConstants.showRequestDetail, sender: nil)
     }
     // MARK: - MKMapViewDelegate
     
@@ -311,6 +300,11 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
         } else {
             view.annotation = annotation
         }
+        
+        view.canShowCallout = true
+        view.draggable = false
+        view.leftCalloutAccessoryView = nil
+        view.rightCalloutAccessoryView = nil
 
         if annotation is LocationPin {
             if let kind = (annotation as? LocationPin)?.kind  {
@@ -320,6 +314,18 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                         locationMapPinView = view as? LocationMapPinView
                         locationMapPinView!.pinColor = .Purple
                      }
+//                    var fromButton = UIButton.buttonWithType(.Custom) as! UIButton
+//                    fromButton.setImage(UIImage(named: "FromPin"), forState: .Normal)
+//                    fromButton.setTitle("Set Pickup", forState: .Normal)
+//                    fromButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+//                    fromButton.sizeToFit()
+//                    view.leftCalloutAccessoryView = fromButton
+//                    var toButton = UIButton.buttonWithType(.Custom) as! UIButton
+//                    toButton.setImage(UIImage(named: "ToPin"), forState: .Normal)
+//                    toButton.setTitle("Destination", forState: .Normal)
+//                    toButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+//                    toButton.sizeToFit()
+//                    view.rightCalloutAccessoryView = toButton
                 case .From:
                     (view as? LocationMapPinView)?.pinColor = .Green
                 case .To:
@@ -327,12 +333,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                 }
             }
          }
-        
-        view.canShowCallout = true
-        view.draggable = false
-        view.leftCalloutAccessoryView = nil
-        view.rightCalloutAccessoryView = nil
-        return view
+         return view
     }
     
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
@@ -340,6 +341,7 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+        println("control tapped \(control.dynamicType) \(control is UIButton)")
     }
     
     func mapViewWillStartLocatingUser(mapView: MKMapView!) {
@@ -550,7 +552,6 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!){
         println("Location manager failed with error = \(error)")
     }
-
     
     @IBAction func navToUserLocation() {
         mapView.setCenterCoordinate(mapView.userLocation.coordinate, animated: true)
@@ -736,6 +737,15 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
             mapView.addAnnotation(locationPin)
         }
     }
+    func removeLocationPin() {
+        if locationMapPinView?.annotation === locationPin {
+            // only remove the view if it is still attached to this annotation (it can be reused for another annotation)
+            locationMapPinView?.removeFromSuperview()
+        }
+        mapView.removeAnnotation(locationPin)
+        locationPin = nil
+        mapView.userTrackingMode = .None
+    }
     func makeDestinationPin() {
         if let toLocation = toLocation {
             if toPin.coordinateSet {
@@ -748,11 +758,14 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                     toPin.title = toName
                     toPin.subtitle = toAddress.fullAddressString(toName)
                 }
-
-//                toPin.title = toLocation["name"] as? String
-//                toPin.subtitle = toLocation["address"] as? String
                 mapView.addAnnotation(toPin)
-//                mapView.centerCoordinate = toPin.coordinate
+                mapView.centerCoordinate = toPin.coordinate
+                
+                requestInfo.toTextField.text = toPin.title
+                if fromPin.coordinateSet {
+                    removeLocationPin()
+                }
+
             }
         }
     }
@@ -768,29 +781,20 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
                     fromPin.title = fromName
                     fromPin.subtitle = fromAddress.fullAddressString(fromName)
                 }
-//                fromPin.title = fromLocation["name"] as? String
-//                fromPin.subtitle = fromLocation["address"] as? String
                 mapView.addAnnotation(fromPin)
                 mapView.centerCoordinate = fromPin.coordinate
-
-                if locationMapPinView?.annotation === locationPin {
-                    // only remove the view if it is still attached to this annotation (it can be reused for another annotation)
-                    locationMapPinView?.removeFromSuperview()
+                if toPin.coordinateSet {
+                    removeLocationPin()
                 }
-                mapView.removeAnnotation(locationPin)
-                locationPin = nil
-                mapView.userTrackingMode = .None
-                
-                locationTitle = fromPin.title
-                locationSubtitle = fromPin.subtitle
+                requestInfo.fromTextField.text = fromPin.title
             }
         }
     }
     func makeToFromPins() {
         toPin = LocationPin()
-        toPin?.kind = .To
+        toPin.kind = .To
         fromPin = LocationPin()
-        fromPin?.kind = .From
+        fromPin.kind = .From
     }
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         println("prepare for segue")
@@ -837,10 +841,14 @@ class MapLocationSelectViewController: UIViewController, MKMapViewDelegate, CLLo
     // unwind from a location selection
     @IBAction func unwindToMapSelection(sender: UIStoryboardSegue)
     {
-        let sourceViewController: AnyObject = sender.sourceViewController
         // Pull any data from the view controller which initiated the unwind segue.
-        if let sVC = sourceViewController as? LocationSelectionViewController {
-            fromLocation = sVC.selectedLocation
+        if let sVC = sender.sourceViewController as? LocationSelectionViewController {
+            switch locationFieldActive! {
+            case .From:
+                fromLocation = sVC.selectedLocation
+            case .To:
+                toLocation = sVC.selectedLocation
+            }
         }
     }
     

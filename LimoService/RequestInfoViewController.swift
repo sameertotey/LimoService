@@ -12,7 +12,8 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var dateButton: UIButton!
     @IBOutlet weak var datePicker: UIDatePicker!
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var fromTextField: UITextField!
+    @IBOutlet weak var toTextField: UITextField!
     
     @IBOutlet weak var label1: UILabel!
     @IBOutlet weak var label2: UILabel!
@@ -54,7 +55,8 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     
     var savedDatePicker: UIDatePicker!
     var savedDateButton: UIButton!
-    var savedTextField: UITextField!
+    var savedFromTextField: UITextField!
+    var savedToTextField: UITextField!
     
     var limoRequest: LimoRequest? {
         didSet {
@@ -81,7 +83,7 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         didSet {
             dateButton.enabled = enabled
             datePicker.enabled = enabled
-            textField.enabled = enabled
+            fromTextField.enabled = enabled
         }
     }
     
@@ -107,10 +109,13 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
         savedLabel5 = label5
         savedLabel6 = label6
         let fromImageView = UIImageView(image: UIImage(named: "FromPin"))
-        textField.leftView = fromImageView
-        
-        textField.leftViewMode = .Always
-        savedTextField = textField
+        fromTextField.leftView = fromImageView
+        fromTextField.leftViewMode = .Always
+        let toImageView = UIImageView(image: UIImage(named: "ToPin"))
+        toTextField.leftView = toImageView
+        toTextField.leftViewMode = .Always
+        savedFromTextField = fromTextField
+        savedToTextField = toTextField
         
         savedFromImage = fromImage
         savedToImage = toImage
@@ -168,14 +173,17 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
                 var viewsDict = Dictionary <String, UIView>()
                 viewsDict["dateButton"] = dateButton
                 viewsDict["datePicker"] = datePicker
-                viewsDict["textField"] = textField
+                viewsDict["fromTextField"] = fromTextField
+                viewsDict["toTextField"] = toTextField
                 view.subviews.map({ $0.removeFromSuperview() })
                 view.addSubview(dateButton)
                 view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[dateButton]-|", options: nil, metrics: nil, views: viewsDict))
                 if datePickerHidden {
-                    view.addSubview(textField)
-                    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[textField]-|", options: nil, metrics: nil, views: viewsDict))
-                    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[dateButton][textField]|", options: nil, metrics: nil, views: viewsDict))
+                    view.addSubview(fromTextField)
+                    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[fromTextField]-|", options: nil, metrics: nil, views: viewsDict))
+                    view.addSubview(toTextField)
+                    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[toTextField]-|", options: nil, metrics: nil, views: viewsDict))
+                    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[dateButton]-2-[fromTextField]-2-[toTextField]|", options: nil, metrics: nil, views: viewsDict))
                 } else {
                     view.addSubview(datePicker)
                     view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[datePicker]-|", options: nil, metrics: nil, views: viewsDict))
@@ -183,7 +191,7 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
                 }
                 let heightNeeded: CGFloat
                 if datePickerHidden {
-                    heightNeeded = dateButton.sizeThatFits(self.view.bounds.size).height + textField.sizeThatFits(self.view.bounds.size).height
+                    heightNeeded = dateButton.sizeThatFits(self.view.bounds.size).height + fromTextField.sizeThatFits(self.view.bounds.size).height + toTextField.sizeThatFits(self.view.bounds.size).height
                 } else {
                     heightNeeded = dateButton.sizeThatFits(self.view.bounds.size).height + datePicker.sizeThatFits(self.view.bounds.size).height
                 }
@@ -199,7 +207,17 @@ class RequestInfoViewController: UIViewController, UITextFieldDelegate {
     }
 
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        delegate?.textFieldActivated()
+        var field: ActiveField
+        switch textField {
+        case fromTextField:
+            field = .From
+            delegate?.textFieldActivated(field)
+        case toTextField:
+            field = .To
+            delegate?.textFieldActivated(field)
+        default:
+            println("unknown text field")
+        }
         return false
     }
     
